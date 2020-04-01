@@ -1,0 +1,19 @@
+typedef vector<vector<int>> matriz;
+fun matriz multiplica (matriz A, matriz B, int tam) {
+matriz C = creaVector(creaVector(0, m), m);
+int i = 0; # hola que tal
+char x = 'a';
+while (i < tam){
+int j = 0;
+while (j < tam){
+int k = 0;
+while (k < tam){
+C[i][j] = C[i][j] + A[i][k]*B[k][j];
+k = k + 1;
+}
+j = j + 1;
+}
+i = i+1;
+}
+return C;
+}
