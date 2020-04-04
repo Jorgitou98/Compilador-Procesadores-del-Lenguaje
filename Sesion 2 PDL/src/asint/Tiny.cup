@@ -19,15 +19,57 @@ init with {:
 :};
 
 
-terminal     IDEN, ENT, MAS,
-             MENOS, POR, DIV, IGUAL, COMA, PAP, PCIERRE, PRINT, LFILTER, LMAP, LREDUCE,
-             DISTINTO, MAYOR, MENOR, IGUALIGUAL, CONCAT, CORCHETEABRE, CORCHETECIERRA;
+terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR, 
+ 			SIZE, WHILE, DO, THEN, IF, CALL, ELSE, PROC, FUN, RETURN, 
+ 			STRUCT, TYPEDEF, ENUM, IDEN, ENT, REAL, CARACTER, SUMA, RESTA,
+ 			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
+ 			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
+			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
+ 			EOF, PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE;
 
 non terminal  P, Inst, Lista, TLista, NLista, RLista, CLista, ResultadoOp, ResFilter, 
 			  ResMap, ResReduce, Comp, Arit;
 
 
+
 P ::= Inst P | ;
+Inst ::= InsCond | InsDec | InsBucle | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
+
+
+
+InsIden ::= IDEN InsIdenElige;
+InsIdenElige ::= IDEN AsigDec | InsAsig;
+
+InsDec ::= TipoSinIden IDEN AsigDec;
+AsigDec ::= PUNTOYCOMA | IGUAL Exp PUNTOYCOMA;
+
+Tipo ::= INT | BOOL | CHAR | DOUBLE | VECTOR MENOR Tipo MENOR | IDEN;
+TipoSinIden ::= INT | BOOL | CHAR | DOUBLE | VECTOR MENOR Tipo MENOR;
+
+InsCond ::= IF Exp THEN LLAVESAP P LLAVESCIERRE ConElse;
+ConElse ::= ELSE LLAVESAP P LLAVESCIERRE | ;
+
+InsBucle ::= WHILE Exp DO LLAVESAP P LLAVESCIERRE;
+
+InsAsig ::= IGUAL Exp PUNTOYCOMA;
+
+InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp LLAVESCIERRE;
+Param ::= Tipo IDEN ParamElige | ;
+ParamElige ::= COMA Tipo IDEN ParamElige | ;
+
+InsProc ::= PROC IDEN PAP Param PCIERRE LLAVESAP P LLAVESCIERRE;
+
+InsCall ::= CALL IDEN PAP LIden PCIERRE PUNTOYCOMA;
+LIden ::= IDEN LIdenElige | ;
+LIdenElige ::= COMA IDEN LIdenElige | ;
+
+InsStruct ::= STRUCT IDEN LLAVESAP LAsig LLAVESCIERRE;
+LAsig ::= InsAsig LAsig | ;
+
+InsEnum ::= ENUM IDEN IGUAL LLAVESAP LEnum LLAVESCIERRE PUNTOYCOMA;
+LEnum ::= IDEN LEnumElige | ;
+LEnumElige ::= BARRA IDEN LEnumElige | ;
+
 Inst ::= IDEN IGUAL Lista | PRINT Lista ;
 Lista ::= TLista CONCAT Lista | TLista ;
 TLista ::= CORCHETEABRE CLista CORCHETECIERRA | ResultadoOp | IDEN;

@@ -40,7 +40,6 @@ size = size
 while = while
 do = do
 then = then
-call = call
 if = if
 else = else
 proc = proc
@@ -95,7 +94,6 @@ puntoYComa = \;
 {do}                      {return ops.unidadDo();}
 {then}                    {return ops.unidadThen();}
 {if}                      {return ops.unidadIf();}
-{call}                    {return ops.unidadCall();}
 {else}                    {return ops.unidadElse();}
 {proc}                    {return ops.unidadProc();}
 {fun}                     {return ops.unidadFun();}
