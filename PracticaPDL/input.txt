@@ -7,7 +7,7 @@ int j = 0;
 while (j < tam){
 int k = 0;
 while (k < tam){
-C[i][j] = C[i][j] + A[i][k]*B[k][j];
+C[i][j].hola.adios[3+5-1] = C[i][j] + A[i][k]*B[k][j];
 k = k + 1;
 }
 j = j + 1;

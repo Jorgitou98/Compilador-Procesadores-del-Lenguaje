@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Jorge/Downloads/cup.jar"/>
+	<classpathentry kind="lib" path="C:/Users/javig/git/PracticasProcesadoresDelLenguaje/PracticaPDL/cup.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

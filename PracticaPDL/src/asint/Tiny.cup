@@ -1,4 +1,4 @@
-package asint;
+ package asint;
 
 import java_cup.runtime.*;
 import alex.AnalizadorLexicoTiny;
@@ -29,7 +29,8 @@ terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR,
 
 non terminal  P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
               InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, InsEnum, LEnum, LEnumElige,
-			  InsTypeDef, Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, DecConNuevosTipos, LDec;
+			  InsTypeDef, Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, DecConNuevosTipos, LDec,
+			  CorchetesPuntosIzq;
 
 
 
@@ -37,8 +38,11 @@ P ::= Inst P | ;
 Inst ::= InsCond | InsDec | InsBucle | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
 
 
+
 InsIden ::= IDEN InsIdenElige;
-InsIdenElige ::= IDEN AsigDec | InsAsig;
+InsIdenElige ::= IDEN AsigDec | CorchetesPuntosIzq InsAsig;
+
+CorchetesPuntosIzq ::= CORCHETEAP Exp0 CORCHETECIERRE CorchetesPuntosIzq |  PUNTO IDEN CorchetesPuntosIzq | ;
 
 InsDec ::= TipoSinIden IDEN AsigDec;
 AsigDec ::= PUNTOYCOMA | IGUAL Exp PUNTOYCOMA;
@@ -53,7 +57,7 @@ InsBucle ::= WHILE Exp LLAVESAP P LLAVESCIERRE;
 
 InsAsig ::= IGUAL Exp PUNTOYCOMA;
 
-InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp LLAVESCIERRE;
+InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp PUNTOYCOMA LLAVESCIERRE;
 Param ::= Tipo IDEN ParamElige | ;
 ParamElige ::= COMA Tipo IDEN ParamElige | ;
 
@@ -80,7 +84,7 @@ Exp2 ::= Exp3 IGUALIGUAL Exp3 | Exp3 MAYOR Exp3 | Exp3 MENOR Exp3 | Exp3 MAYORIG
 Exp3 ::= Exp3 SUMA Exp4 | Exp3 RESTA Exp4 | Exp4;
 Exp4 ::= Exp4 MUL Exp5 | Exp4 DIVENT Exp5 | Exp4 DIVREAL Exp5 | Exp4 MODULO Exp5 | Exp5;
 Exp5 ::= NOT Exp5 | Exp6;
-Exp6 ::= Exp6 CORCHETEAP Exp0 CORCHETECIERRE | Exp6 PUNTO IDEN | Exp6 PUNTO SIZE | Exp7;
+Exp6 ::= Exp6 CORCHETEAP Exp0 CORCHETECIERRE| Exp6 PUNTO IDEN | Exp6 PUNTO SIZE | Exp7;
 Exp7 ::= RESTA Exp8 | SUMA Exp8 | Exp8;
 Exp8 ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN | PAP Exp0 PCIERRE;
 
