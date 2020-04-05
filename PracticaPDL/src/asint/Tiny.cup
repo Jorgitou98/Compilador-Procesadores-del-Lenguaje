@@ -1,0 +1,72 @@
+package asint;
+
+import java_cup.runtime.*;
+import alex.AnalizadorLexicoTiny;
+import alex.UnidadLexica;
+import errors.GestionErroresTiny;
+
+scan with {: return getScanner().next_token(); :};
+parser code {: 
+   private GestionErroresTiny errores;
+   public void syntax_error(Symbol unidadLexica) {
+     errores.errorSintactico((UnidadLexica)unidadLexica);
+   }
+:};
+init with {: 
+   errores = new GestionErroresTiny();
+   AnalizadorLexicoTiny alex = (AnalizadorLexicoTiny)getScanner();
+   alex.fijaGestionErrores(errores);
+:};
+
+
+terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR, 
+ 			SIZE, WHILE, DO, THEN, IF, CALL, ELSE, PROC, FUN, RETURN, 
+ 			STRUCT, TYPEDEF, ENUM, IDEN, ENT, REAL, CARACTER, SUMA, RESTA,
+ 			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
+ 			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
+			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
+ 			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE;
+
+non terminal  P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
+              InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, LAsig, InsEnum, LEnum, LEnumElige,
+			  InsTypeDef, Exp;
+
+
+
+P ::= Inst P | ;
+Inst ::= InsCond | InsDec | InsBucle | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
+
+
+
+InsIden ::= IDEN InsIdenElige;
+InsIdenElige ::= IDEN AsigDec | InsAsig;
+
+InsDec ::= TipoSinIden IDEN AsigDec;
+AsigDec ::= PUNTOYCOMA | IGUAL Exp PUNTOYCOMA;
+
+Tipo ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MENOR | IDEN;
+TipoSinIden ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MENOR;
+
+InsCond ::= IF Exp THEN LLAVESAP P LLAVESCIERRE ConElse;
+ConElse ::= ELSE LLAVESAP P LLAVESCIERRE | ;
+
+InsBucle ::= WHILE Exp DO LLAVESAP P LLAVESCIERRE;
+
+InsAsig ::= IGUAL Exp PUNTOYCOMA;
+
+InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp LLAVESCIERRE;
+Param ::= Tipo IDEN ParamElige | ;
+ParamElige ::= COMA Tipo IDEN ParamElige | ;
+
+InsProc ::= PROC IDEN PAP Param PCIERRE LLAVESAP P LLAVESCIERRE;
+
+InsCall ::= CALL IDEN PAP LIden PCIERRE PUNTOYCOMA;
+LIden ::= IDEN LIdenElige | ;
+LIdenElige ::= COMA IDEN LIdenElige | ;
+
+InsStruct ::= STRUCT IDEN LLAVESAP LAsig LLAVESCIERRE;
+LAsig ::= InsAsig LAsig | ;
+
+InsEnum ::= ENUM IDEN IGUAL LLAVESAP LEnum LLAVESCIERRE PUNTOYCOMA;
+LEnum ::= IDEN LEnumElige | ;
+LEnumElige ::= BARRA IDEN LEnumElige | ;
