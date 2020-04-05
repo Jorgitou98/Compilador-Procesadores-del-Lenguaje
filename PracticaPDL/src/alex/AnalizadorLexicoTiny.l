@@ -1,15 +1,22 @@
 package alex;
 
+import errors.GestionErroresTiny;
+
 %%
+%cup
 %line
 %class AnalizadorLexicoTiny
-%type  UnidadLexica
 %unicode
+%public
 
 %{
   private ALexOperations ops;
+  private GestionErroresTiny errores;
   public String lexema() {return yytext();}
   public int fila() {return yyline+1;}
+  public void fijaGestionErrores(GestionErroresTiny errores) {
+   this.errores = errores;
+  }
 %}
 
 %eofval{
@@ -38,8 +45,6 @@ vector = vector
 creaVector = creaVector
 size = size
 while = while
-do = do
-then = then
 call = call
 if = if
 else = else
@@ -51,8 +56,8 @@ typedef = typedef
 enum = enum
 barrabaja = _
 identificador = {letra}({letra}|{digito}|{barrabaja})*
-numeroEntero = [\+,\-]?({parteEntera}|0)
-numeroReal = [\+,\-]?{parteEntera}\.{parteDecimal}
+numeroEntero = ({parteEntera}|0)
+numeroReal = {parteEntera}\.{parteDecimal}
 operadorSuma = \+
 operadorResta = \-
 operadorMultiplicacion = \*
@@ -92,8 +97,6 @@ puntoYComa = \;
 {creaVector}              {return ops.unidadCreaVector();}
 {size}                    {return ops.unidadSize();}
 {while}                   {return ops.unidadWhile();}
-{do}                      {return ops.unidadDo();}
-{then}                    {return ops.unidadThen();}
 {if}                      {return ops.unidadIf();}
 {call}                    {return ops.unidadCall();}
 {else}                    {return ops.unidadElse();}

@@ -20,7 +20,7 @@ init with {:
 
 
 terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR, 
- 			SIZE, WHILE, DO, THEN, IF, CALL, ELSE, PROC, FUN, RETURN, 
+ 			SIZE, WHILE, IF, CALL, ELSE, PROC, FUN, RETURN, 
  			STRUCT, TYPEDEF, ENUM, IDEN, ENT, REAL, CARACTER, SUMA, RESTA,
  			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
@@ -28,14 +28,13 @@ terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR,
  			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE;
 
 non terminal  P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
-              InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, LAsig, InsEnum, LEnum, LEnumElige,
-			  InsTypeDef, Exp;
+              InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, InsEnum, LEnum, LEnumElige,
+			  InsTypeDef, Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, DecConNuevosTipos, LDec;
 
 
 
 P ::= Inst P | ;
 Inst ::= InsCond | InsDec | InsBucle | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
-
 
 
 InsIden ::= IDEN InsIdenElige;
@@ -44,13 +43,13 @@ InsIdenElige ::= IDEN AsigDec | InsAsig;
 InsDec ::= TipoSinIden IDEN AsigDec;
 AsigDec ::= PUNTOYCOMA | IGUAL Exp PUNTOYCOMA;
 
-Tipo ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MENOR | IDEN;
-TipoSinIden ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MENOR;
+Tipo ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR | IDEN;
+TipoSinIden ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR;
 
-InsCond ::= IF Exp THEN LLAVESAP P LLAVESCIERRE ConElse;
+InsCond ::= IF Exp LLAVESAP P LLAVESCIERRE ConElse;
 ConElse ::= ELSE LLAVESAP P LLAVESCIERRE | ;
 
-InsBucle ::= WHILE Exp DO LLAVESAP P LLAVESCIERRE;
+InsBucle ::= WHILE Exp LLAVESAP P LLAVESCIERRE;
 
 InsAsig ::= IGUAL Exp PUNTOYCOMA;
 
@@ -64,9 +63,26 @@ InsCall ::= CALL IDEN PAP LIden PCIERRE PUNTOYCOMA;
 LIden ::= IDEN LIdenElige | ;
 LIdenElige ::= COMA IDEN LIdenElige | ;
 
-InsStruct ::= STRUCT IDEN LLAVESAP LAsig LLAVESCIERRE;
-LAsig ::= InsAsig LAsig | ;
+InsStruct ::= STRUCT IDEN LLAVESAP LDec LLAVESCIERRE;
+LDec ::= DecConNuevosTipos LDec | ;
 
 InsEnum ::= ENUM IDEN IGUAL LLAVESAP LEnum LLAVESCIERRE PUNTOYCOMA;
 LEnum ::= IDEN LEnumElige | ;
 LEnumElige ::= BARRA IDEN LEnumElige | ;
+
+InsTypeDef ::= TYPEDEF Tipo IDEN PUNTOYCOMA;
+
+
+Exp ::= Exp0 | CreaVector;
+Exp0 ::= Exp1 OR Exp0 | Exp1;
+Exp1 ::= Exp2 AND Exp1 | Exp2;
+Exp2 ::= Exp3 IGUALIGUAL Exp3 | Exp3 MAYOR Exp3 | Exp3 MENOR Exp3 | Exp3 MAYORIGUAL Exp3 | Exp3 MENORIGUAL Exp3 | Exp3 DISTINTO Exp3 | Exp3;
+Exp3 ::= Exp3 SUMA Exp4 | Exp3 RESTA Exp4 | Exp4;
+Exp4 ::= Exp4 MUL Exp5 | Exp4 DIVENT Exp5 | Exp4 DIVREAL Exp5 | Exp4 MODULO Exp5 | Exp5;
+Exp5 ::= NOT Exp5 | Exp6;
+Exp6 ::= Exp6 CORCHETEAP Exp0 CORCHETECIERRE | Exp6 PUNTO IDEN | Exp6 PUNTO SIZE | Exp7;
+Exp7 ::= RESTA Exp8 | SUMA Exp8 | Exp8;
+Exp8 ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN | PAP Exp0 PCIERRE;
+
+
+CreaVector ::= CREAVECTOR PAP CreaVector COMA Exp0 PCIERRE | CREAVECTOR PAP Exp0 COMA Exp0 PCIERRE;

@@ -37,12 +37,6 @@ public class ALexOperations {
   public UnidadLexica unidadWhile() {
 	     return new UnidadLexicaUnivaluada(alex.fila(),ClaseLexica.WHILE); 
 	  } 
-  public UnidadLexica unidadDo() {
-	     return new UnidadLexicaUnivaluada(alex.fila(),ClaseLexica.DO); 
-	  } 
-  public UnidadLexica unidadThen() {
-	     return new UnidadLexicaUnivaluada(alex.fila(),ClaseLexica.THEN); 
-	  } 
   public UnidadLexica unidadIf() {
 	     return new UnidadLexicaUnivaluada(alex.fila(),ClaseLexica.IF); 
 	  } 
