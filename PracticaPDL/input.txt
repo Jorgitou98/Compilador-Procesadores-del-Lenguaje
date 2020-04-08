@@ -1,1 +1,1 @@
-true == 2 +2 -1 || hola[5].casa
+true == 2 +2 -1 || hola[5].casa.size + x div y

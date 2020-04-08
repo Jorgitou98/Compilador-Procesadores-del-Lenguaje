@@ -117,10 +117,6 @@ puntoYComa = \;
 {struct}                  {return ops.unidadStruct();}
 {typedef}                 {return ops.unidadTypedef();}
 {enum}                    {return ops.unidadEnum();}
-{identificador}           {return ops.unidadId();}
-{numeroEntero}            {return ops.unidadEnt();}
-{numeroReal}              {return ops.unidadReal();}
-{caracter}                {return ops.unidadCaracter();}
 {operadorSuma}            {return ops.unidadSuma();}
 {operadorResta}           {return ops.unidadResta();}
 {operadorMultiplicacion}  {return ops.unidadMul();}
@@ -148,4 +144,8 @@ puntoYComa = \;
 {coma}                    {return ops.unidadComa();}
 {dosPuntos}               {return ops.unidadDosPuntos();}   
 {puntoYComa}              {return ops.unidadPuntoYComa();}
+{identificador}           {return ops.unidadId();}
+{numeroEntero}            {return ops.unidadEnt();}
+{numeroReal}              {return ops.unidadReal();}
+{caracter}                {return ops.unidadCaracter();}
 [^]                       {ops.error();}  
