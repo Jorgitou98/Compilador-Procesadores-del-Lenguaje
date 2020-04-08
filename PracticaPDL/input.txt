@@ -1,1 +1,2 @@
-true == 2 +2 -1 || hola[5].casa.size + x div y
+#true == 2 +2 -1 || hola[5].casa.size + x div y
+creaVector(creaVector(creaVector(3,0),2),7)
