@@ -45,6 +45,11 @@ vector = vector
 creaVector = creaVector
 size = size
 while = while
+for = for
+switch = switch
+case = case
+break = break
+default = default
 call = call
 if = if
 else = else
@@ -83,6 +88,7 @@ parentesisApertura = \(
 parentesisCierre = \)
 igual = \=
 coma  = \,
+dosPuntos = \:
 puntoYComa = \;
 %%
 {separador}               {}
@@ -97,6 +103,11 @@ puntoYComa = \;
 {creaVector}              {return ops.unidadCreaVector();}
 {size}                    {return ops.unidadSize();}
 {while}                   {return ops.unidadWhile();}
+{for}                     {return ops.unidadFor();}
+{switch}                  {return ops.unidadSwitch();}
+{case}                    {return ops.unidadCase();}
+{break}                   {return ops.unidadBreak();}
+{default}                 {return ops.unidadDefault();}
 {if}                      {return ops.unidadIf();}
 {call}                    {return ops.unidadCall();}
 {else}                    {return ops.unidadElse();}
@@ -135,5 +146,6 @@ puntoYComa = \;
 {parentesisCierre}        {return ops.unidadPCierre();} 
 {igual}                   {return ops.unidadIgual();} 
 {coma}                    {return ops.unidadComa();}
+{dosPuntos}               {return ops.unidadDosPuntos();}   
 {puntoYComa}              {return ops.unidadPuntoYComa();}
 [^]                       {ops.error();}  

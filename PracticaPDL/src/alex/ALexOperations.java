@@ -37,6 +37,21 @@ public class ALexOperations {
   public UnidadLexica unidadWhile() {
 	     return new UnidadLexica(alex.fila(),ClaseLexica.WHILE, "while"); 
 	  } 
+  public UnidadLexica unidadFor() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.FOR, "for"); 
+	  } 
+  public UnidadLexica unidadSwitch() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.SWITCH, "switch"); 
+	  } 
+  public UnidadLexica unidadCase() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.CASE, "case"); 
+	  } 
+  public UnidadLexica unidadBreak() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.BREAK, "break"); 
+	  }
+  public UnidadLexica unidadDefault() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.DEFAULT, "default"); 
+	  } 
   public UnidadLexica unidadIf() {
 	     return new UnidadLexica(alex.fila(),ClaseLexica.IF, "if"); 
 	  } 
@@ -148,6 +163,9 @@ public class ALexOperations {
 	  }
   public UnidadLexica unidadIgual() {
 	     return new UnidadLexica(alex.fila(),ClaseLexica.IGUAL, "="); 
+	  }
+  public UnidadLexica unidadDosPuntos() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.DOSPUNTOS, ":"); 
 	  }
   public UnidadLexica unidadPuntoYComa() {
 	     return new UnidadLexica(alex.fila(),ClaseLexica.PUNTOYCOMA, ";"); 

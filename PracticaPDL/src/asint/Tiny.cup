@@ -4,8 +4,15 @@ import java_cup.runtime.*;
 import alex.AnalizadorLexicoTiny;
 import alex.UnidadLexica;
 import errors.GestionErroresTiny;
+import ast.E;
+import ast.ASExp;
+
 
 scan with {: return getScanner().next_token(); :};
+action code {:
+   private ASExp as = new ASExp();
+:};
+
 parser code {: 
    private GestionErroresTiny errores;
    public void syntax_error(Symbol unidadLexica) {
@@ -20,22 +27,26 @@ init with {:
 
 
 terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR, 
- 			SIZE, WHILE, IF, CALL, ELSE, PROC, FUN, RETURN, 
- 			STRUCT, TYPEDEF, ENUM, IDEN, ENT, REAL, CARACTER, SUMA, RESTA,
+ 			SIZE, WHILE, FOR, SWITCH, CASE, BREAK, IF, CALL, ELSE, PROC, FUN, RETURN, 
+ 			STRUCT, TYPEDEF, ENUM, SUMA, RESTA,
  			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
 			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
- 			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE;
+ 			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT;
+terminal    String IDEN, ENT, REAL, CARACTER; 
 
-non terminal  P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
+non terminal  Q, P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
               InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, InsEnum, LEnum, LEnumElige,
-			  InsTypeDef, Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, DecConNuevosTipos, LDec,
-			  CorchetesPuntosIzq;
+			  InsTypeDef, DecConNuevosTipos, LDec,
+			  CorchetesPuntosIzq, InsSwitch, ListaCase, TiposSwitch, InsIdenOInsDec;
+non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector;
 
 
-
+Q ::= Exp:valorExp
+	{: RESULT = valorExp; :};
+	
 P ::= Inst P | ;
-Inst ::= InsCond | InsDec | InsBucle | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
+Inst ::= InsCond | InsDec | InsBucle | InsSwitch | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
 
 
 
@@ -53,7 +64,12 @@ TipoSinIden ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR;
 InsCond ::= IF Exp LLAVESAP P LLAVESCIERRE ConElse;
 ConElse ::= ELSE LLAVESAP P LLAVESCIERRE | ;
 
-InsBucle ::= WHILE Exp LLAVESAP P LLAVESCIERRE;
+InsBucle ::= WHILE Exp LLAVESAP P LLAVESCIERRE | FOR PAP InsIdenOInsDec Exp0 PUNTOYCOMA Exp0 PCIERRE LLAVESAP P LLAVESCIERRE;
+InsIdenOInsDec ::= InsIden | InsDec;
+
+InsSwitch ::= SWITCH PAP IDEN CorchetesPuntosIzq PCIERRE LLAVESAP ListaCase LLAVESCIERRE;
+ListaCase ::= CASE TiposSwitch DOSPUNTOS P BREAK PUNTOYCOMA ListaCase | DEFAULT DOSPUNTOS P;
+TiposSwitch ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN;
 
 InsAsig ::= IGUAL Exp PUNTOYCOMA;
 
@@ -77,16 +93,94 @@ LEnumElige ::= BARRA IDEN LEnumElige | ;
 InsTypeDef ::= TYPEDEF Tipo IDEN PUNTOYCOMA;
 
 
-Exp ::= Exp0 | CreaVector;
-Exp0 ::= Exp1 OR Exp0 | Exp1;
-Exp1 ::= Exp2 AND Exp1 | Exp2;
-Exp2 ::= Exp3 IGUALIGUAL Exp3 | Exp3 MAYOR Exp3 | Exp3 MENOR Exp3 | Exp3 MAYORIGUAL Exp3 | Exp3 MENORIGUAL Exp3 | Exp3 DISTINTO Exp3 | Exp3;
-Exp3 ::= Exp3 SUMA Exp4 | Exp3 RESTA Exp4 | Exp4;
-Exp4 ::= Exp4 MUL Exp5 | Exp4 DIVENT Exp5 | Exp4 DIVREAL Exp5 | Exp4 MODULO Exp5 | Exp5;
-Exp5 ::= NOT Exp5 | Exp6;
-Exp6 ::= Exp6 CORCHETEAP Exp0 CORCHETECIERRE| Exp6 PUNTO IDEN | Exp6 PUNTO SIZE | Exp7;
-Exp7 ::= RESTA Exp8 | SUMA Exp8 | Exp8;
-Exp8 ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN | PAP Exp0 PCIERRE;
+Exp ::= Exp0: valorExp
+	{: RESULT= valorExp; :};
+Exp ::= CreaVector: valorExp
+	{: RESULT = valorExp; :};
+Exp0 ::= Exp1:valorExp1 OR Exp0:valorExp2
+	{:RESULT = as.or(valorExp1, valorExp2); :};
+Exp0 ::= Exp1:valorExp
+	{: RESULT = valorExp; :};
+Exp1 ::= Exp2:valorExp1 AND Exp1:valorExp2
+	{:RESULT = as.and(valorExp1, valorExp2); :};
+Exp1 ::= Exp2:valorExp
+	{: RESULT = valorExp; :};
+Exp2 ::= Exp3:valorExp1 IGUALIGUAL Exp3:valorExp2 
+	{:RESULT = as.igualIgual(valorExp1, valorExp2); :};
+Exp2 ::= Exp3:valorExp1 MAYOR Exp3:valorExp2
+	{:RESULT = as.mayor(valorExp1, valorExp2); :}; 
+Exp2 ::= Exp3:valorExp1 MENOR Exp3:valorExp2 
+	{:RESULT = as.menor(valorExp1, valorExp2); :}; 
+Exp2::= Exp3:valorExp1 MAYORIGUAL Exp3:valorExp2
+	{:RESULT = as.mayorIgual(valorExp1, valorExp2); :}; 
+Exp2::= Exp3:valorExp1 MENORIGUAL Exp3:valorExp2
+	{:RESULT = as.menorIgual(valorExp1, valorExp2); :}; 
+Exp2 ::= Exp3:valorExp1 DISTINTO Exp3:valorExp2
+	{:RESULT = as.distinto(valorExp1, valorExp2); :}; 
+Exp2 ::= Exp3: valorExp
+	{: RESULT = valorExp; :};
+	
+	
+Exp3 ::= Exp3:valorExp1 SUMA Exp4:valorExp2
+	{:RESULT = as.suma(valorExp1, valorExp2); :}; 
+Exp3 ::= Exp3:valorExp1 RESTA Exp4:valorExp2
+	{:RESULT = as.resta(valorExp1, valorExp2); :};  
+Exp3 ::= Exp4: valorExp
+	{: RESULT = valorExp; :};
+	
+
+Exp4 ::= Exp4:valorExp1 MUL Exp5:valorExp2
+	{:RESULT = as.mul(valorExp1, valorExp2); :};
+Exp4 ::= Exp4:valorExp1 DIVENT Exp5:valorExp2 
+	{:RESULT = as.divEnt(valorExp1, valorExp2); :};
+Exp4 ::= Exp4:valorExp1 DIVREAL Exp5:valorExp2
+	{:RESULT = as.divReal(valorExp1, valorExp2); :}; 
+Exp4 ::= Exp4:valorExp1 MODULO Exp5:valorExp2
+	{:RESULT = as.modulo(valorExp1, valorExp2); :}; 
+Exp4 ::= Exp5: valorExp
+	{: RESULT = valorExp; :};
 
 
-CreaVector ::= CREAVECTOR PAP CreaVector COMA Exp0 PCIERRE | CREAVECTOR PAP Exp0 COMA Exp0 PCIERRE;
+Exp5 ::= NOT Exp5:valorExp
+	{: RESULT = as.not(valorExp); :}; 
+Exp5 ::= Exp6: valorExp
+	{: RESULT = valorExp; :};
+	
+
+Exp6 ::= Exp6:valorExp1 CORCHETEAP Exp0:valorExp2 CORCHETECIERRE
+	{:RESULT = as.corchetes(valorExp1, valorExp2); :};
+Exp6 ::= Exp6:valorExp PUNTO IDEN:lexDeIden
+	{:RESULT = as.punto(valorExp, as.iden(lexDeIden)); :};
+Exp6 ::= Exp6:valorExp PUNTO SIZE
+	{: RESULT = as.size(valorExp); :}; 
+Exp6 ::= Exp7: valorExp
+	{: RESULT = valorExp; :};
+	
+
+Exp7 ::= RESTA Exp8:valorExp
+	{: RESULT = as.restaUnaria(valorExp); :}; 
+Exp7 ::= SUMA Exp8:valorExp
+	{: RESULT = as.sumaUnaria(valorExp); :};  
+Exp7 ::= Exp8: valorExp
+	{: RESULT = valorExp; :};
+	
+Exp8 ::= ENT: lexDeEnt
+	{: RESULT = as.ent(lexDeEnt); :}; 
+Exp8 ::= REAL: lexDeReal
+	{: RESULT = as.real(lexDeReal); :};  
+Exp8 ::= TRUE
+	{: RESULT = as.verdadero(); :};  
+Exp8 ::= FALSE
+	{: RESULT = as.falso(); :}; 
+Exp8 ::= CARACTER: lexDeCaracter
+	{: RESULT = as.caracter(lexDeCaracter); :};  
+Exp8 ::= IDEN: lexDeIden
+	{: RESULT = as.iden(lexDeIden); :};  
+Exp8 ::= PAP Exp0: valorExp PCIERRE
+	{: RESULT = valorExp; :};
+
+
+CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE
+	{: RESULT = as.vector(valorExp1, valorExp2); :};
+CreaVector ::= CREAVECTOR PAP Exp0:valorExp1 COMA Exp0:valorExp2 PCIERRE
+	{: RESULT = as.vector(valorExp1, valorExp2); :};

@@ -11,7 +11,8 @@ public class Main {
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);
-	 asint.parse();
+	 //asint.parse();
+	 System.out.println(asint.parse().value);
  }
 }   
    
