@@ -1,6 +1,8 @@
 package ast;
 
-public class ASExp {
+import java.util.ArrayList;
+
+public class AS {
 	public E and(E opnd1, E opnd2) {return new And(opnd1,opnd2);}
 	public E caracter(String v) {return new Caracter(v);}
 	public E corchetes(E opnd1, E opnd2) {return new Corchetes(opnd1,opnd2);}
@@ -11,6 +13,7 @@ public class ASExp {
 	public E falso() {return new False();}
 	public E iden(String v) {return new Iden(v);}
 	public E igualIgual(E opnd1, E opnd2) {return new IgualIgual(opnd1,opnd2);}
+	public E llamadaFun(E iden, ArrayList<E> arg) {return new LlamadaFun(iden,arg);}
 	public E mayor(E opnd1, E opnd2) {return new Mayor(opnd1,opnd2);}
 	public E mayorIgual(E opnd1, E opnd2) {return new MayorIgual(opnd1,opnd2);}  
 	public E menor(E opnd1, E opnd2) {return new Menor(opnd1,opnd2);}
@@ -28,6 +31,10 @@ public class ASExp {
 	public E sumaUnaria(E opnd1) {return new SumaUnaria(opnd1);}
 	public E verdadero() {return new True();}
 	public E vector(E tam, E valorIni) {return new Vector(tam,valorIni);}
+	public Ins ifConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
+	public Ins ifSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
+	public P programa(ArrayList<Ins> inst) {return new P(inst);}
+	
 	
 	
 	

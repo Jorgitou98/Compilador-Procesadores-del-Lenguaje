@@ -5,12 +5,16 @@ import alex.AnalizadorLexicoTiny;
 import alex.UnidadLexica;
 import errors.GestionErroresTiny;
 import ast.E;
-import ast.ASExp;
+import ast.AS;
+import ast.Ins;
+import java.util.ArrayList;
 
 
 scan with {: return getScanner().next_token(); :};
 action code {:
-   private ASExp as = new ASExp();
+   private AS as = new AS();
+   private String funcionOIdenh;
+   private ArrayList<E> argumentosh;
 :};
 
 parser code {: 
@@ -35,19 +39,28 @@ terminal    INT, BOOL, CHAR, TRUE, FALSE, FLOAT, VECTOR, CREAVECTOR,
  			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT;
 terminal    String IDEN, ENT, REAL, CARACTER; 
 
-non terminal  Q, P, Inst, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsCond, ConElse, InsBucle, InsAsig,
+non terminal  Q, InsIden, InsIdenElige, InsDec, AsigDec, Tipo, TipoSinIden, InsBucle, InsAsig,
               InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, InsEnum, LEnum, LEnumElige,
 			  InsTypeDef, DecConNuevosTipos, LDec,
 			  CorchetesPuntosIzq, InsSwitch, ListaCase, TiposSwitch, InsIdenOInsDec;
-non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector;
+non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, ListaArg, ListaArg1, FuncionOIden;
+non terminal  Ins Inst, InsCond, ConElse;
+non terminal  P P, P1;
 
 
-Q ::= Exp:valorExp
-	{: RESULT = valorExp; :};
+Q ::= InsCond:valorIns
+	{: RESULT = valorIns; :};
 	
-P ::= Inst P | ;
-Inst ::= InsCond | InsDec | InsBucle | InsSwitch | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
+P ::= {: ArrayList<Ins> listaIns = new ArrayList<Ins>(); :} Inst:valorIns {: listaIns.add(valorIns); :} P1:valorProg
+	{: RESULT = valorProg; :};
+P::= {: RESULT = as.programa(new ArrayList<Ins>()); :};
+P1 ::= Inst:valorInst {: listaIns.add(valorIns); :} P1:valorProg
+ {:RESULT = valorProg;:};
 
+P1::= {:RESULT = as.programa(listaIns); :};
+
+Inst ::= InsCond:valorIns | InsDec | InsBucle | InsSwitch | InsIden | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall
+{: RESULT = valorIns; :};
 
 
 InsIden ::= IDEN InsIdenElige;
@@ -61,8 +74,13 @@ AsigDec ::= PUNTOYCOMA | IGUAL Exp PUNTOYCOMA;
 Tipo ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR | IDEN;
 TipoSinIden ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR;
 
-InsCond ::= IF Exp LLAVESAP P LLAVESCIERRE ConElse;
-ConElse ::= ELSE LLAVESAP P LLAVESCIERRE | ;
+InsCond ::= IF Exp:valorExp {: E expCondh = valorExp; :} LLAVESAP P:insIf {:P insIfCondh=insIf:} LLAVESCIERRE ConElse:valorIns
+	{:RESULT = valorIns :};
+
+ConElse ::= ELSE LLAVESAP P:insElse LLAVESCIERRE
+	{: RESULT = as.ifConElse(expCondh, insIfCondh,insElse); :}; 
+ConElse ::= 
+	{:RESULT = as.ifSinElse(expCondh, insIfCondh); :};
 
 InsBucle ::= WHILE Exp LLAVESAP P LLAVESCIERRE | FOR PAP InsIdenOInsDec Exp0 PUNTOYCOMA Exp0 PCIERRE LLAVESAP P LLAVESCIERRE;
 InsIdenOInsDec ::= InsIden | InsDec;
@@ -164,6 +182,8 @@ Exp7 ::= SUMA Exp8:valorExp
 Exp7 ::= Exp8: valorExp
 	{: RESULT = valorExp; :};
 	
+
+	
 Exp8 ::= ENT: lexDeEnt
 	{: RESULT = as.ent(lexDeEnt); :}; 
 Exp8 ::= REAL: lexDeReal
@@ -174,10 +194,26 @@ Exp8 ::= FALSE
 	{: RESULT = as.falso(); :}; 
 Exp8 ::= CARACTER: lexDeCaracter
 	{: RESULT = as.caracter(lexDeCaracter); :};  
-Exp8 ::= IDEN: lexDeIden
-	{: RESULT = as.iden(lexDeIden); :};  
+Exp8 ::= IDEN:lexDeIden {: funcionOIdenh = lexDeIden; :} FuncionOIden:valorExp
+	{:  RESULT = valorExp; :};  
 Exp8 ::= PAP Exp0: valorExp PCIERRE
 	{: RESULT = valorExp; :};
+	
+FuncionOIden ::= PAP {:argumentosh = new ArrayList<E>(); :} ListaArg:valorExp PCIERRE
+	{: RESULT = valorExp; :};
+FuncionOIden ::= 
+	{: RESULT = as.iden(funcionOIdenh); :};
+
+ListaArg ::= ListaArg1:valorExp 
+	{: RESULT = valorExp; :};
+
+ListaArg ::= 
+	{: RESULT = as.llamadaFun(as.iden(funcionOIdenh), argumentosh); :};
+ListaArg1 ::= Exp0:elem {:argumentosh.add(elem); :} COMA ListaArg1:valorExp
+	{: RESULT = valorExp; :};
+ListaArg1 ::= Exp0:elem
+	{: argumentosh.add(elem);
+   	RESULT = as.llamadaFun(as.iden(funcionOIdenh), argumentosh); :};
 
 
 CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE

@@ -8,5 +8,5 @@ public abstract class EBin extends E {
 		    this.opnd2 = opnd2;
 	}
 	public E opnd1() {return opnd1;}
-	   public E opnd2() {return opnd2;}    
+	public E opnd2() {return opnd2;}    
 	}
