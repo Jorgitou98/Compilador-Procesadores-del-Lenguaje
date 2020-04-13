@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AS {
 	public E and(E opnd1, E opnd2) {return new And(opnd1,opnd2);}
@@ -13,7 +14,7 @@ public class AS {
 	public E falso() {return new False();}
 	public E iden(String v) {return new Iden(v);}
 	public E igualIgual(E opnd1, E opnd2) {return new IgualIgual(opnd1,opnd2);}
-	public E llamadaFun(E iden, ArrayList<E> arg) {return new LlamadaFun(iden,arg);}
+	public E llamadaFun(E iden, List<E> arg) {return new LlamadaFun(iden,arg);}
 	public E mayor(E opnd1, E opnd2) {return new Mayor(opnd1,opnd2);}
 	public E mayorIgual(E opnd1, E opnd2) {return new MayorIgual(opnd1,opnd2);}  
 	public E menor(E opnd1, E opnd2) {return new Menor(opnd1,opnd2);}
@@ -31,9 +32,26 @@ public class AS {
 	public E sumaUnaria(E opnd1) {return new SumaUnaria(opnd1);}
 	public E verdadero() {return new True();}
 	public E vector(E tam, E valorIni) {return new Vector(tam,valorIni);}
-	public Ins ifConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
-	public Ins ifSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
-	public P programa(ArrayList<Ins> inst) {return new P(inst);}
+	public Ins insIfConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
+	public Ins insIfSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
+	public Ins insWhile(E cond, P ins) {return new InsWhile(cond, ins);}
+	public Ins insFor(Ins decIni, E cond, E paso, P ins) {return new InsFor(decIni, cond, paso, ins);}
+	public Ins insDec(Tipos tipo, E var, boolean conValorIni, E valorIni) {return new InsDec(tipo, var, conValorIni, valorIni);}
+	public Ins insAsig(E var, List<CorchetesYPuntosIzq> cyp, E valor) { return new  InsAsig(var, cyp, valor); }
+  	public P programa() {return new P();}
+  	public Tipos tipoInt() {return new TipoInt();}
+  	public Tipos tipoBool() {return new TipoBool();}
+  	public Tipos tipoChar() {return new TipoChar();}
+  	public Tipos tipoFloat() {return new TipoFloat();}
+  	public Tipos tipoVector(Tipos tipo) {return new TipoVector(tipo);}
+  	public Tipos tipoUsuario(String nombre) {return new TipoUsuario(nombre);}
+  	public CorchetesYPuntosIzq corchetesIzq (E expr) {return new CorchetesIzq(expr); }
+  	public CorchetesYPuntosIzq puntosIzq (E id) {return new PuntosIzq(id); }
+	public FuncionOIden funcionOIden (boolean esIden, List<E> arg) {return new FuncionOIden ( esIden, arg);}
+	public IfConElse ifConElse (boolean vieneConElse, P insElse) {return new IfConElse ( vieneConElse, insElse);}
+	public DecConValorIni decConValorIni(boolean conValorIni, E valorIni) {return new DecConValorIni(conValorIni, valorIni);}
+	public AsigODec asigODec (boolean esDec, boolean conValorIni, E valor, E idenSiDec, List<CorchetesYPuntosIzq> lista) {return new AsigODec (esDec, conValorIni,valor, idenSiDec, lista);}
+	
 	
 	
 	

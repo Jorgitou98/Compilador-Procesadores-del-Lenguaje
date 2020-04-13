@@ -1,11 +1,11 @@
 package ast;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class LlamadaFun extends E{
-	private ArrayList<E> argumentos;
+	private List<E> argumentos;
 	private E iden ;
-	public LlamadaFun(E iden, ArrayList<E> argumentos) {
+	public LlamadaFun(E iden, List<E> argumentos) {
 		this.argumentos = argumentos;
 		this.iden = iden;
 	}
@@ -13,7 +13,7 @@ public class LlamadaFun extends E{
 		return TipoE.LLAMADAFUN;
 	}
 	
-	public ArrayList<E> getArgumentos() {
+	public List<E> getArgumentos() {
 		return argumentos;
 	}
 	public E getIden() {
