@@ -49,10 +49,6 @@ public class AS {
   	public CorchetesYPuntosIzq puntosIzq (E id) {return new PuntosIzq(id); }
 	public FuncionOIden funcionOIden (boolean esIden, List<E> arg) {return new FuncionOIden ( esIden, arg);}
 	public IfConElse ifConElse (boolean vieneConElse, P insElse) {return new IfConElse ( vieneConElse, insElse);}
-	public DecConValorIni decConValorIni(boolean conValorIni, E valorIni) {return new DecConValorIni(conValorIni, valorIni);}
-	public AsigODec asigODec (boolean esDec, boolean conValorIni, E valor, E idenSiDec, List<CorchetesYPuntosIzq> lista) {return new AsigODec (esDec, conValorIni,valor, idenSiDec, lista);}
-	
-	
 	
 	
 	

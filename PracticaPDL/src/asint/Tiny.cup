@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import ast.FuncionOIden;
 import ast.IfConElse;
 import ast.P;
-import ast.DecConValorIni;
 import ast.Tipos;
-import ast.AsigODec;
 import ast.CorchetesYPuntosIzq;
 
 
@@ -54,13 +52,9 @@ non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaV
 non terminal  FuncionOIden ListaArg, ListaArg1, FuncionOIden;
 non terminal  IfConElse ConElse;
 non terminal  P P;
-non terminal  Ins InsCond, Inst, InsBucle, InsIdenOInsDec, InsDec, InsIden;
-non terminal  DecConValorIni AsigDec;
-non terminal  AsigODec InsIdenElige, InsAsig;
+non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig;
 non terminal  List<CorchetesYPuntosIzq> CorchetesPuntosIzq;
-non terminal  Tipos TipoSinIden, Tipo;
-
-
+non terminal  Tipos Tipo;
 
 	
 P ::= Inst:ins P:prog 
@@ -79,34 +73,23 @@ Inst ::= InsBucle:valorInsBucle
 Inst ::= InsDec:valorInsDec
 {: RESULT = valorInsDec; :};
 
+Inst ::= InsAsig:valorInsAsig
+{: RESULT = valorInsAsig; :};
+
 Inst ::=  InsSwitch | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
 
-Inst ::= InsIden:valorInsIden
-{: RESULT = valorInsIden; :};
+InsDec ::= Tipo: tipo IDEN: lexDeIden PUNTOYCOMA
+{:RESULT = as.insDec(tipo, as.iden(lexDeIden), false, null); :};
 
 
-
-InsIden ::= IDEN:lexDeIden InsIdenElige:valorAsigODec
-	{: if (valorAsigODec.isEsDec()){
-			if (valorAsigODec.isConValorIni()){
-				RESULT = as.insDec(as.tipoUsuario(lexDeIden), valorAsigODec.getIdenSiDec(), true, valorAsigODec.getValor());
-			}
-			else{
-				RESULT = as.insDec(as.tipoUsuario(lexDeIden), valorAsigODec.getIdenSiDec(), false, null);
-			}
-		}
-		else{
-			RESULT = as.insAsig(as.iden(lexDeIden), valorAsigODec.getLista(), valorAsigODec.getValor());
-		}
-	:};
+InsDec ::= Tipo: tipo IDEN: lexDeIden IGUAL Exp:valorExp PUNTOYCOMA
+{:RESULT = as.insDec(tipo, as.iden(lexDeIden), true, valorExp); :};
 
 
-InsIdenElige ::= IDEN:lexDeIden AsigDec:valorAsig 
-	{: RESULT = as.asigODec(true, valorAsig.isConValorIni(), valorAsig.getValorIni(), as.iden(lexDeIden), null); :};
+InsAsig ::= IDEN: lexDeIden CorchetesPuntosIzq: listaPuntosCorchetes IGUAL Exp:valorExp PUNTOYCOMA
+{: RESULT = as.insAsig(as.iden(lexDeIden), listaPuntosCorchetes, valorExp); :};
 
-InsIdenElige ::= CorchetesPuntosIzq:lista InsAsig:asig
-	{: asig.setLista(lista);
-		RESULT = asig; :};
+
 
 CorchetesPuntosIzq ::= CORCHETEAP Exp0:valorExp CORCHETECIERRE CorchetesPuntosIzq:valorCorchPunto 
 	{: valorCorchPunto.add(0, as.corchetesIzq(valorExp));
@@ -117,34 +100,19 @@ CorchetesPuntosIzq ::= PUNTO IDEN:lexDeIden CorchetesPuntosIzq:valorCorchPunto
 CorchetesPuntosIzq ::= 
 	{: RESULT = new ArrayList<CorchetesYPuntosIzq>(); :};
 
-InsDec ::= TipoSinIden:tipo IDEN:lexDeIden AsigDec:valorIni
-{: if(valorIni.isConValorIni()){
-		RESULT = as.insDec(tipo, as.iden(lexDeIden), true, valorIni.getValorIni());
-	}
-	else {
-		RESULT = as.insDec(tipo, as.iden(lexDeIden), false, null);
-	}
-:} ;
 
-
-AsigDec ::= PUNTOYCOMA
-	{:RESULT = as.decConValorIni(false, null); :}; 
-	
-AsigDec ::= IGUAL Exp:valorExp PUNTOYCOMA
-	{:RESULT = as.decConValorIni (true, valorExp); :};
-
-Tipo ::= INT | BOOL | CHAR | FLOAT | VECTOR MENOR Tipo MAYOR | IDEN;
-
-TipoSinIden ::= INT
+Tipo ::= INT
 	{:RESULT = as.tipoInt(); :}; 
-TipoSinIden ::= BOOL
+Tipo ::= BOOL
 	{:RESULT = as.tipoBool(); :}; 
-TipoSinIden ::= CHAR
+Tipo ::= CHAR
 	{:RESULT = as.tipoChar(); :};
-TipoSinIden ::= FLOAT 
+Tipo ::= FLOAT 
 	{:RESULT = as.tipoFloat(); :};
-TipoSinIden ::= VECTOR MENOR Tipo:tipo MAYOR
+Tipo ::= VECTOR MENOR Tipo:tipo MAYOR
 	{:RESULT = as.tipoVector(tipo); :};
+Tipo ::= IDEN:lexIden
+	{:RESULT = as.tipoUsuario(lexIden); :};
 
 
 InsCond ::= IF Exp:cond LLAVESAP P:insIf LLAVESCIERRE ConElse:insElse
@@ -167,21 +135,17 @@ ConElse ::=
 
 InsBucle ::= WHILE Exp:cond LLAVESAP P:ins LLAVESCIERRE 
 {: RESULT = as.insWhile(cond, ins); :};
-InsBucle ::= FOR PAP InsIdenOInsDec:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+
+InsBucle ::= FOR PAP InsDec:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
 {: RESULT = as.insFor(insDec, cond, paso, inst); :};
 
-InsIdenOInsDec ::= InsIden:ins 
-	{: RESULT = ins; :};
-InsIdenOInsDec ::= InsDec:ins
-	{: RESULT = ins; :};
-	
+InsBucle ::= FOR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+{: RESULT = as.insFor(insAsig, cond, paso, inst); :};
+
 	
 InsSwitch ::= SWITCH PAP IDEN CorchetesPuntosIzq PCIERRE LLAVESAP ListaCase LLAVESCIERRE;
 ListaCase ::= CASE TiposSwitch DOSPUNTOS P BREAK PUNTOYCOMA ListaCase | DEFAULT DOSPUNTOS P;
 TiposSwitch ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN;
-
-InsAsig ::= IGUAL Exp:valorExp PUNTOYCOMA
-	{: RESULT = as.asigODec(false, true, valorExp, null, null); :};
 
 InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp PUNTOYCOMA LLAVESCIERRE;
 Param ::= Tipo IDEN ParamElige | ;

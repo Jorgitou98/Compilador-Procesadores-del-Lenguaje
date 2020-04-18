@@ -11,10 +11,11 @@ public class P {
 	}
 	
 	public String toString() {
-		String s = "";
+		String s = "Programa(";
 		for(Ins i:instr) {
-			s = s + ", "+ i.toString();
+			s += i.toString() + ", ";
 		}
+		s += ")";
 		return s;
 	}
 	public void anadeIns(Ins ins) {
