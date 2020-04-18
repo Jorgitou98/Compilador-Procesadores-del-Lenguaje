@@ -54,6 +54,9 @@ public class AS {
 	public IfConElse ifConElse (boolean vieneConElse, P insElse) {return new IfConElse ( vieneConElse, insElse);}
 	public Case createCase(E var, P instr) { return new Case(var, instr); }
 	public Param param(Tipos tipo, TipoParam tipoDeParam, E iden) { return new Param(tipo, tipoDeParam, iden); }
+	public InsStruct insStruct(E nombreTipo, List<Ins> declaraciones) {return new InsStruct(nombreTipo, declaraciones);}
+	public InsEnum insEnum(E nombre, List<E> listaConstantes) {return new InsEnum(nombre, listaConstantes);}
+	public InsTypeDef insTypeDef(Tipos tipo, E nombreNuevo) {return new InsTypeDef(tipo, nombreNuevo);}
 	
 	
 	
