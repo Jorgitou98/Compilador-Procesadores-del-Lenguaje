@@ -1,4 +1,4 @@
- package asint;
+  package asint;
 
 import java_cup.runtime.*;
 import alex.AnalizadorLexicoTiny;
@@ -9,11 +9,13 @@ import ast.AS;
 import ast.Ins;
 import java.util.List;
 import java.util.ArrayList;
-import ast.FuncionOIden;
 import ast.IfConElse;
 import ast.P;
 import ast.Tipos;
 import ast.CorchetesYPuntosIzq;
+import ast.Case;
+import ast.TipoParam;
+import ast.Param;
 
 
 scan with {: return getScanner().next_token(); :};
@@ -40,20 +42,22 @@ terminal    TRUE, FALSE, CREAVECTOR,
  			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
 			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
- 			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT;
+ 			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT,
+ 			AMPERSAND;
 terminal    String IDEN, ENT, REAL, CARACTER; 
 terminal    Tipos INT, BOOL, CHAR, FLOAT, VECTOR;
 
  
-non terminal  InsFun, Param, ParamElige, InsProc, InsCall, LIden, LIdenElige, InsStruct, InsEnum, LEnum, LEnumElige,
-			  InsTypeDef, DecConNuevosTipos, LDec,  
-			  InsSwitch, ListaCase, TiposSwitch;
-non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector;
-non terminal  FuncionOIden ListaArg, ListaArg1, FuncionOIden;
+non terminal  InsStruct, InsEnum, LEnum, LEnumElige,
+			  InsTypeDef, DecConNuevosTipos, LDec;
+non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, TiposSwitch; 
 non terminal  IfConElse ConElse;
 non terminal  P P;
-non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig;
+non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc;
 non terminal  List<CorchetesYPuntosIzq> CorchetesPuntosIzq;
+non terminal  List<E> ListaArg, ListaArg1;
+non terminal  List<Case> ListaCase;
+non terminal  List<Param> Parametros, ParamElige;
 non terminal  Tipos Tipo;
 
 	
@@ -68,7 +72,7 @@ Inst ::= InsCond:valorInsCond
 {: RESULT = valorInsCond; :};
 
 Inst ::= InsBucle:valorInsBucle
-{:RESULT = valorInsBucle; :};
+{: RESULT = valorInsBucle; :};
 
 Inst ::= InsDec:valorInsDec
 {: RESULT = valorInsDec; :};
@@ -76,7 +80,19 @@ Inst ::= InsDec:valorInsDec
 Inst ::= InsAsig:valorInsAsig
 {: RESULT = valorInsAsig; :};
 
-Inst ::=  InsSwitch | InsFun | InsProc | InsStruct | InsEnum | InsTypeDef | InsCall;
+Inst ::=  InsCall:valorInsCall
+{: RESULT = valorInsCall; :};
+
+Inst ::= InsSwitch:valorInsSwitch
+{: RESULT = valorInsSwitch; :};
+
+Inst ::= InsFun:valorInsFun
+{: RESULT = valorInsFun; :};
+
+Inst ::= InsProc:valorInsProc
+{: RESULT = valorInsProc; :};
+
+Inst ::= InsStruct | InsEnum | InsTypeDef;
 
 InsDec ::= Tipo: tipo IDEN: lexDeIden PUNTOYCOMA
 {:RESULT = as.insDec(tipo, as.iden(lexDeIden), false, null); :};
@@ -143,19 +159,66 @@ InsBucle ::= FOR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAV
 {: RESULT = as.insFor(insAsig, cond, paso, inst); :};
 
 	
-InsSwitch ::= SWITCH PAP IDEN CorchetesPuntosIzq PCIERRE LLAVESAP ListaCase LLAVESCIERRE;
-ListaCase ::= CASE TiposSwitch DOSPUNTOS P BREAK PUNTOYCOMA ListaCase | DEFAULT DOSPUNTOS P;
-TiposSwitch ::= ENT | REAL | TRUE | FALSE | CARACTER | IDEN;
+InsSwitch ::= SWITCH PAP IDEN:lexDeIden CorchetesPuntosIzq:listaPyC PCIERRE LLAVESAP ListaCase:lista LLAVESCIERRE
+	{: RESULT = as.insSwitch(as.iden(lexDeIden), listaPyC, lista); :};
 
-InsFun ::= FUN Tipo IDEN PAP Param PCIERRE LLAVESAP P RETURN Exp PUNTOYCOMA LLAVESCIERRE;
-Param ::= Tipo IDEN ParamElige | ;
-ParamElige ::= COMA Tipo IDEN ParamElige | ;
+ListaCase ::= CASE TiposSwitch:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
+	 {:lista.add(0, as.createCase(var, instr));
+       RESULT = lista; :};
+	 
+ListaCase ::= DEFAULT DOSPUNTOS P:instr
+	 {: List<Case> lista = new ArrayList<Case>();
+	 	lista.add(0, as.createCase(as.iden("default"), instr));
+	 	RESULT = lista;
+	 :};
+	    
 
-InsProc ::= PROC IDEN PAP Param PCIERRE LLAVESAP P LLAVESCIERRE;
+TiposSwitch ::= ENT:lexDeEnt
+	{: RESULT = as.ent(lexDeEnt); :}; 
+TiposSwitch ::= REAL:lexDeReal
+	{: RESULT = as.real(lexDeReal); :};  
+TiposSwitch ::= TRUE
+	{: RESULT = as.verdadero(); :};     
+TiposSwitch ::= FALSE
+	{: RESULT = as.falso(); :};    
+TiposSwitch ::= CARACTER:lexDeCaracter
+	{: RESULT = as.caracter(lexDeCaracter); :};
+TiposSwitch ::= IDEN:lexDeIden
+	{: RESULT = as.iden(lexDeIden); :};
 
-InsCall ::= CALL IDEN PAP LIden PCIERRE PUNTOYCOMA;
-LIden ::= IDEN LIdenElige | ;
-LIdenElige ::= COMA IDEN LIdenElige | ;
+InsFun ::= FUN Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr RETURN Exp:valorReturn PUNTOYCOMA LLAVESCIERRE
+	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden), params, instr, valorReturn); :};
+
+Parametros ::= Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
+	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden)));
+		RESULT = lista; :};
+	 
+Parametros ::= Tipo:tipoParam IDEN:lexDeIden ParamElige:lista
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden)));
+		RESULT = lista; :};
+
+Parametros ::= 
+	{: RESULT = new ArrayList<Param>(); :};
+	
+ParamElige ::= COMA Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
+	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden)));
+		RESULT = lista; :};
+		 
+ParamElige ::= COMA Tipo:tipoParam IDEN:lexDeIden ParamElige:lista  
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden)));
+		RESULT = lista; :};
+		
+ParamElige ::= 
+	{: RESULT = new ArrayList<Param>(); :};
+
+InsProc ::= PROC IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr LLAVESCIERRE
+    {: RESULT = as.insProc(as.iden(lexDeIden), params, instr); :};
+
+InsCall ::= CALL IDEN:lexDeIden PAP ListaArg:lista PCIERRE PUNTOYCOMA
+ {: RESULT = as.insCall(as.iden(lexDeIden), lista); :};
+
+
+
 
 InsStruct ::= STRUCT IDEN LLAVESAP LDec LLAVESCIERRE;
 LDec ::= DecConNuevosTipos LDec | ;
@@ -250,34 +313,28 @@ Exp8 ::= FALSE
 	{: RESULT = as.falso(); :}; 
 Exp8 ::= CARACTER: lexDeCaracter
 	{: RESULT = as.caracter(lexDeCaracter); :};  
-Exp8 ::= IDEN:lexDeIden FuncionOIden:valorExp
-	{:  if (valorExp.isEsIden()){
-		 	RESULT = as.iden(lexDeIden);
-		 }
-		 else{
-		 	RESULT = as.llamadaFun(as.iden(lexDeIden), valorExp.getArgumentos());
-		 }
-	:};  
+	
+Exp8 ::= IDEN:lexDeIden PAP ListaArg:lista PCIERRE
+	{: RESULT = as.llamadaFun(as.iden(lexDeIden), lista); :};
+
+Exp8 ::= IDEN:lexDeIden
+	{: RESULT = as.iden(lexDeIden); :};
+
 Exp8 ::= PAP Exp0: valorExp PCIERRE
 	{: RESULT = valorExp; :};
 	
-FuncionOIden ::= PAP ListaArg:valorExp PCIERRE
-	{: RESULT = valorExp; :};
-FuncionOIden ::= 
-	{: RESULT = as.funcionOIden(true, null); :};
-
 ListaArg ::= ListaArg1:valorExp 
 	{: RESULT = valorExp; :};
 
 ListaArg ::= 
-	{: RESULT = as.funcionOIden(false, new ArrayList<E>()); :};
-ListaArg1 ::= Exp0:elem COMA ListaArg1:valorExp
-	{: valorExp.anadeElem(elem);
-	   RESULT = valorExp; :};
+	{: RESULT = new ArrayList<E>(); :};
+ListaArg1 ::= Exp0:elem COMA ListaArg1:lista
+	{: lista.add(0, elem);
+	   RESULT = lista; :};
 ListaArg1 ::= Exp0:elem
 	{: List<E> args = new ArrayList<E>();
 	   args.add(elem);
-	   RESULT = as.funcionOIden(false, args); :};
+	   RESULT = args; :};
 
 
 CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE

@@ -13,7 +13,7 @@ public class P {
 	public String toString() {
 		String s = "Programa(";
 		for(Ins i:instr) {
-			s += i.toString() + ", ";
+			s = s + ", " + i.toString();
 		}
 		s += ")";
 		return s;

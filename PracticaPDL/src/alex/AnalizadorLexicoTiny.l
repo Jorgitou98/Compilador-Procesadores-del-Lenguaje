@@ -63,6 +63,7 @@ barrabaja = _
 identificador = {letra}({letra}|{digito}|{barrabaja})*
 numeroEntero = ({parteEntera}|0)
 numeroReal = {parteEntera}\.{parteDecimal}
+ampersand = &
 operadorSuma = \+
 operadorResta = \-
 operadorMultiplicacion = \*
@@ -144,6 +145,7 @@ puntoYComa = \;
 {coma}                    {return ops.unidadComa();}
 {dosPuntos}               {return ops.unidadDosPuntos();}   
 {puntoYComa}              {return ops.unidadPuntoYComa();}
+{ampersand}               {return ops.unidadAmpersand();}
 {identificador}           {return ops.unidadId();}
 {numeroEntero}            {return ops.unidadEnt();}
 {numeroReal}              {return ops.unidadReal();}

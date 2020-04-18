@@ -38,7 +38,11 @@ public class AS {
 	public Ins insFor(Ins decIni, E cond, E paso, P ins) {return new InsFor(decIni, cond, paso, ins);}
 	public Ins insDec(Tipos tipo, E var, boolean conValorIni, E valorIni) {return new InsDec(tipo, var, conValorIni, valorIni);}
 	public Ins insAsig(E var, List<CorchetesYPuntosIzq> cyp, E valor) { return new  InsAsig(var, cyp, valor); }
-  	public P programa() {return new P();}
+	public Ins insCall(E iden, List<E> argumentos) {return new InsCall(iden, argumentos); }
+  	public Ins insSwitch(E varSwitch, List<CorchetesYPuntosIzq> cyp, List<Case> lista) {return new InsSwitch(varSwitch, cyp, lista); }
+	public Ins insFun(Tipos tipoReturn, E nombre, List<Param> parametros, P instr, E valorReturn) { return new InsFun(tipoReturn, nombre, parametros, instr, valorReturn); }
+  	public Ins insProc(E nombre, List<Param> parametros, P instr) { return new InsProc(nombre, parametros, instr); }
+	public P programa() {return new P();}
   	public Tipos tipoInt() {return new TipoInt();}
   	public Tipos tipoBool() {return new TipoBool();}
   	public Tipos tipoChar() {return new TipoChar();}
@@ -47,8 +51,9 @@ public class AS {
   	public Tipos tipoUsuario(String nombre) {return new TipoUsuario(nombre);}
   	public CorchetesYPuntosIzq corchetesIzq (E expr) {return new CorchetesIzq(expr); }
   	public CorchetesYPuntosIzq puntosIzq (E id) {return new PuntosIzq(id); }
-	public FuncionOIden funcionOIden (boolean esIden, List<E> arg) {return new FuncionOIden ( esIden, arg);}
 	public IfConElse ifConElse (boolean vieneConElse, P insElse) {return new IfConElse ( vieneConElse, insElse);}
+	public Case createCase(E var, P instr) { return new Case(var, instr); }
+	public Param param(Tipos tipo, TipoParam tipoDeParam, E iden) { return new Param(tipo, tipoDeParam, iden); }
 	
 	
 	

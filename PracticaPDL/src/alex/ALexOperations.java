@@ -179,7 +179,10 @@ public class ALexOperations {
 
   public UnidadLexica unidadComa() {
      return new UnidadLexica(alex.fila(),ClaseLexica.COMA, ","); 
-  } 
+  }
+  public UnidadLexica unidadAmpersand() {
+	     return new UnidadLexica(alex.fila(),ClaseLexica.AMPERSAND, ","); 
+	  }
   public UnidadLexica unidadEof() {
      return new UnidadLexica(alex.fila(),ClaseLexica.EOF, "<EOF>"); 
   }
