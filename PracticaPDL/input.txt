@@ -1,8 +1,1 @@
-struct tPersona{
-bool existe = true;
-nuevoTipo nuevo;
-int persona = 4;
-}
-enum juan = {A|B|C};
-
-typedef bool laCosaDeLosTRueYfalse;
+hola paco

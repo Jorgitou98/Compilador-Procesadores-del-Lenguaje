@@ -12,6 +12,7 @@ public class Main {
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);
 	 asint.parse();
+	 System.out.println(asint.parse().value);
  }
 }   
    

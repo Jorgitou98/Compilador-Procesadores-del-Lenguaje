@@ -19,25 +19,25 @@ init with {:
 :};
 
 
-terminal     IDEN, ENT, MAS,
-             MENOS, POR, DIV, IGUAL, COMA, PAP, PCIERRE, PRINT, LFILTER, LMAP, LREDUCE,
-             DISTINTO, MAYOR, MENOR, IGUALIGUAL, CONCAT, CORCHETEABRE, CORCHETECIERRA;
+terminal INT, BOOL, FLOAT, CHAR, TRUE, FALSE, WHILE, IF, ELSE, FOR, RETURN, 
+VOID, STRUCT, SWITCH, CASE, BREAK, DEFAULT, PUNTO, DOSPUNTOS, PUNTOYCOMA, 
+ENTERO, REAL, CARACTER, COMA, IDEN, CA, CC, PA, PC, LLA, LLC, SUMA, 
+RESTA, MULT, DIV, MOD, MAYOR, MENOR, MAI, MEI, IGIG, DIST, NEG, AND, 
+OR, IG;
 
-non terminal  P, Inst, Lista, TLista, NLista, RLista, CLista, ResultadoOp, ResFilter, 
-			  ResMap, ResReduce, Comp, Arit;
+non terminal  S, E0, E1, E2, E3, E4, E5, E6, E7, E8, Ins, InsIf;
 
+S   ::= Ins | ;
+E0  ::= E1 OR E0 | E1;
+E1  ::= E2 AND E1  | E2;
+E2	::= E3 DIST E3 | E3 MEI E3 | E3 MAI E3 | E3 MAYOR E3 | E3 MENOR E3 | E3 IGIG E3 | E3;
+E3	::= RESTA E4| SUMA E4 | E4; 
+E4	::= E4 SUMA E5 | E4 RESTA E5 | E5; 
+E5	::= E5 MULT E6 | E5 DIV E6 | E5 MOD E6 | E6;
+E6	::= NEG E6 | E7;
+E7	::= E7 CA E0 CC | E7 PUNTO IDEN | E8;
+E8	::= ENTERO | REAL | CARACTER | TRUE | FALSE | IDEN | PA E0 PC;
 
-P ::= Inst P | ;
-Inst ::= IDEN IGUAL Lista | PRINT Lista ;
-Lista ::= TLista CONCAT Lista | TLista ;
-TLista ::= CORCHETEABRE CLista CORCHETECIERRA | ResultadoOp | IDEN;
-CLista ::= NLista RLista | ;
-RLista ::= COMA NLista RLista|  ;
-NLista ::= ENT | Lista ;
-ResultadoOp ::= ResFilter | ResMap | ResReduce ;
-ResFilter ::= LFILTER Comp  ENT TLista | LFILTER Comp ENT PAP Lista PCIERRE ;
-ResMap ::= LMAP Arit ENT TLista | LMAP Arit ENT PAP Lista PCIERRE ;
-ResReduce ::= LREDUCE Arit TLista | LREDUCE Arit PAP Lista PCIERRE ;
-Comp ::= MAYOR | MENOR | IGUALIGUAL | DISTINTO;
-Arit ::= MAS | MENOS | POR | DIV;
+Ins ::= InsIf;
+InsIf ::= IF PA E0 PC LLA S LLC | IF PA E0 PC LLA S LLC ELSE LLA S LLC;
 

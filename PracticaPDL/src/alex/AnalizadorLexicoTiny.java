@@ -17,6 +17,7 @@ public class AnalizadorLexicoTiny implements java_cup.runtime.Scanner {
   private GestionErroresTiny errores;
   public String lexema() {return yytext();}
   public int fila() {return yyline+1;}
+  public int columna() {return yychar+1;}
   public void fijaGestionErrores(GestionErroresTiny errores) {
    this.errores = errores;
   }
@@ -26,6 +27,7 @@ public class AnalizadorLexicoTiny implements java_cup.runtime.Scanner {
 	private int yy_buffer_start;
 	private int yy_buffer_end;
 	private char yy_buffer[];
+	private int yychar;
 	private int yyline;
 	private boolean yy_at_bol;
 	private int yy_lexical_state;
@@ -52,6 +54,7 @@ public class AnalizadorLexicoTiny implements java_cup.runtime.Scanner {
 		yy_buffer_index = 0;
 		yy_buffer_start = 0;
 		yy_buffer_end = 0;
+		yychar = 0;
 		yyline = 0;
 		yy_at_bol = true;
 		yy_lexical_state = YYINITIAL;
@@ -132,6 +135,8 @@ public class AnalizadorLexicoTiny implements java_cup.runtime.Scanner {
 				yy_last_was_cr=true;
 			} else yy_last_was_cr=false;
 		}
+		yychar = yychar
+			+ yy_buffer_index - yy_buffer_start;
 		yy_buffer_start = yy_buffer_index;
 	}
 	private void yy_mark_end () {

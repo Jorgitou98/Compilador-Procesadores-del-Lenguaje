@@ -8,12 +8,14 @@ import errors.GestionErroresTiny;
 %class AnalizadorLexicoTiny
 %unicode
 %public
+%char
 
 %{
   private ALexOperations ops;
   private GestionErroresTiny errores;
   public String lexema() {return yytext();}
   public int fila() {return yyline+1;}
+  public int columna() {return yychar+1;}
   public void fijaGestionErrores(GestionErroresTiny errores) {
    this.errores = errores;
   }
