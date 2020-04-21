@@ -12,7 +12,7 @@ public class PuntosIzq extends CorchetesYPuntosIzq{
 
 
 	public PuntosIzq(E id) {
-		super();
+		super("PuntosIzq", id);
 		this.id = id;
 	}
 

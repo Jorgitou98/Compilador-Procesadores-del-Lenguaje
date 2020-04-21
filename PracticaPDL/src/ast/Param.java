@@ -24,5 +24,38 @@ public class Param {
 		return "Param( Tipo: " + tipo.toString() + ", tipo de parametro: " + tipoDeParam.name() + ", iden: " + iden.toString() + ")";
 	}
 	
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__Parametro\n";
+		String next = prev;
+		if (barra) next+= "|";
+		else next += " ";
+		s = s + next + "   \\__Tipo\n";
+		String nextTipo = next + "   |";
+		for(int i = 0; i < "__Tipo".length(); ++i) {
+			nextTipo += " ";
+		}
+		s += tipo.imprime(nextTipo, false);
+		s = s + next + "   \\__Identificador\n";
+		String nextIden = next + "   |";
+		for(int i = 0; i < "__Identificador".length(); ++i) {
+			nextIden += " ";
+		}
+		s += iden.imprime(nextIden, false);
+		s = s + next + "   \\__Tipo de parametro\n";
+		String nextParam = next;
+		for(int i = 0; i < "   \\__Tipo de parametro".length(); ++i) {
+			nextParam += " ";
+		}
+		s += imprimeParam(nextParam);
+		return s;
+		
+		
+		
+	}
+	
+	public String imprimeParam(String prev) {
+		return prev + "\\__" + tipoDeParam.name() + "\n";
+	}
+	
 	
 }

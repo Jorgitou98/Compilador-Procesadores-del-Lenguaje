@@ -40,5 +40,30 @@ public class InsStruct extends Ins{
 		s += ")";
 		return s;
 	}
+
+	@Override
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__Inst Struct\n";
+		String next = prev;
+		if (barra) next += "|";
+		else next += " ";
+		s = s + next + "   \\__Nombre\n";
+		String nextNombre = next + "   |";
+		for(int i = 0; i < "__Nombre".length(); ++i) {
+			nextNombre += " ";
+		}
+		s += nombreTipo.imprime(nextNombre, false);
+		s = s + next + "   \\__Declaraciones\n";
+		String nextDec = next;
+		for(int i = 0; i < "   \\__Declaraciones".length(); ++i) {
+			nextDec += " ";
+		}
+		for(int i = 0; i < declaraciones.size(); ++i) {
+			if(i == declaraciones.size()-1) s += declaraciones.get(i).imprime(nextDec, false);
+			else s += declaraciones.get(i).imprime(nextDec, true);		
+		}
+		return s;
+	}
+
 	
 }

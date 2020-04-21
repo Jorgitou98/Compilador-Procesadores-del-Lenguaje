@@ -8,4 +8,9 @@ public class TipoChar extends Tipos{
 		return "char";
 	}
 
+	@Override
+	public String imprime(String prev, boolean barra) {
+		return prev + "\\__char\n";
+	}
+
 }

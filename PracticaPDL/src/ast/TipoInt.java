@@ -8,4 +8,9 @@ public class TipoInt extends Tipos{
 		return "int";
 	}
 
+	@Override
+	public String imprime(String prev, boolean barra) {
+		return prev + "\\__int\n";
+	}
+
 }

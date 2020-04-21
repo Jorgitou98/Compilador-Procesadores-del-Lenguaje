@@ -49,13 +49,33 @@ public class InsAsig extends Ins{
 		
 		return TipoIns.INSASIG;
 	}
-	
-	public String toString() {
-		String s = "InsAsig( variable: " + var;
-		for(CorchetesYPuntosIzq c:cyp) {
-				s  = s + ", " + c.toString();
+
+
+
+	@Override
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__Inst Asig\n";
+		String next = prev;
+		if(barra) next += "|";
+		else next += " ";
+		s = s + next + "   \\__Variable\n";
+		String nextVar = next + "   |";
+		for(int i = 0; i < "__Variable".length(); ++i) {
+			nextVar += " ";
 		}
-		s = s + " valor inicial: " + valor.toString() + ")";
+		s += var.imprime(nextVar, false);
+		String nextPyc = nextVar + "    ";
+		for (int i = 0; i < cyp.size(); ++i ) {
+			if(i == cyp.size()-1) s+= (cyp.get(i)).imprime(nextPyc, false);
+			else s+= (cyp.get(i)).imprime(nextPyc, true);
+			
+		}
+		s += next + "   \\__Valor\n";
+		String nextValor = next;
+		for(int i = 0; i < "   \\__Valor".length(); ++i) {
+			nextValor += " ";
+		}
+		s = s + valor.imprime(nextValor, false);
 		return s;
 	}
 

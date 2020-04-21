@@ -27,5 +27,30 @@ public class LlamadaFun extends E{
 		return "funcion( iden: " + iden.toString() + ", argumentos: " + args + ")";
 		
 	}
+	@Override
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__LlamadaFun\n";
+	    String next = prev;
+		if(barra) next += "|";
+		else next += " ";
+		s = s + next + "  \\__Identificador\n";
+		String nextIden = next + "  |";
+		for (int i = 0; i < "__Identificador".length(); ++i) {
+			nextIden += " ";
+		}
+		s = s + iden.imprime(nextIden, true);
+		
+		s = s + next +"  \\__Argumentos\n";
+		String nextArg = next + "   ";
+		
+		for (int i = 0; i < "__Argumentos".length(); ++i) {
+			nextArg += " ";
+		}
+		for (int i = 0; i < argumentos.size(); ++i) {
+			if(i == argumentos.size()-1) s += argumentos.get(i).imprime(nextArg, false);
+			else s += argumentos.get(i).imprime(nextArg, true);
+		}
+		return s;
+	}
 
 }

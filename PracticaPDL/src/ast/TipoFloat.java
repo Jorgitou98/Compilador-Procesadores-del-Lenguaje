@@ -8,4 +8,9 @@ public class TipoFloat extends Tipos{
 		return "float";
 	}
 
+	@Override
+	public String imprime(String prev, boolean barra) {
+		return prev + "\\__float\n";
+	}
+
 }

@@ -31,7 +31,7 @@ public class AS {
 	public E suma(E opnd1, E opnd2) {return new Suma(opnd1,opnd2);}
 	public E sumaUnaria(E opnd1) {return new SumaUnaria(opnd1);}
 	public E verdadero() {return new True();}
-	public E vector(E tam, E valorIni) {return new Vector(tam,valorIni);}
+	public E vector(E valorIni, E tam) {return new Vector(valorIni, tam);}
 	public Ins insIfConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
 	public Ins insIfSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
 	public Ins insWhile(E cond, P ins) {return new InsWhile(cond, ins);}

@@ -19,6 +19,11 @@ public class TipoUsuario extends Tipos{
 		// TODO Auto-generated method stub
 		return nombreTipo;
 	}
+
+	@Override
+	public String imprime(String prev, boolean barra) {
+		return prev + "\\__" + nombreTipo + "\n";
+	}
 	
 
 }

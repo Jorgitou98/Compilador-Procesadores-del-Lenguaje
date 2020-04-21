@@ -22,5 +22,21 @@ public class P {
 		this.instr.add(0, ins);
 	}
 	
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__Programa\n";
+		String next = prev;
+		if(barra) next += "|";
+		else next += " ";
+		for(int i = 0; i < "\\__".length(); ++i) {
+			next+= " ";
+		}
+		for(int i = 0; i < instr.size(); ++i) {
+			if (i == instr.size() -1) s += instr.get(i).imprime(next, false);
+			else s += instr.get(i).imprime(next, true);
+			
+		}
+		return s;
+	}
+	
 
 }

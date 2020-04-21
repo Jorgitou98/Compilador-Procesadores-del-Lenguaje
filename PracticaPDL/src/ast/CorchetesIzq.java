@@ -6,7 +6,7 @@ public class CorchetesIzq extends CorchetesYPuntosIzq{
 	
 
 	public CorchetesIzq(E expr) {
-		super();
+		super("CorchetesIzq", expr);
 		this.expr = expr;
 	}
 	
@@ -17,15 +17,4 @@ public class CorchetesIzq extends CorchetesYPuntosIzq{
 	public E getExpr() {
 		return expr;
 	}
-
-
-
-
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return "CorchetesIzq( " + expr.toString() + ")";
-	}
-
 }

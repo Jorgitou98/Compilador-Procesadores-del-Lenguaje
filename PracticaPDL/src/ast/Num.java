@@ -7,5 +7,7 @@ public abstract class Num extends E {
 	  this.v = v;   
 }
 public String num() {return v;} 
-  public String toString() {return v;}  
+
+@Override
+public String imprime(String prev, boolean barra) {return prev + "\\" + "__" + v + "\n";}  
 }

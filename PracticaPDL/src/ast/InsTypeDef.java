@@ -30,4 +30,33 @@ public class InsTypeDef extends Ins{
 		return "InsTypeDef(tipo: " + tipo.toString() + " nuevoNombre: " + nombreNuevo.toString();
 	}
 
+
+
+	public String imprime(String prev) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String imprime(String prev, boolean barra) {
+		String s = prev + "\\__Inst TypeDef\n";
+		String next = prev;
+		if (barra) next += "|";
+		else next += " ";
+		s = s + next + "   \\__Tipo antiguo\n";
+		String nextTipo = next + "   |";
+		for(int i = 0; i < "__Tipo antiguo".length(); ++i) {
+			nextTipo += " ";
+		}
+		s+= tipo.imprime(nextTipo, false);
+		s = s + next + "   \\__Nuevo nombre\n";
+		String nextNuevoNombre = next;
+		for(int i = 0; i < "   \\__Nuevo nombre".length(); ++i) {
+			nextNuevoNombre += " ";
+		}
+		s += nombreNuevo.imprime(nextNuevoNombre, false);
+		return s;
+	}
+
 }
