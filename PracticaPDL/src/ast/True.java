@@ -2,6 +2,10 @@ package ast;
 
 public class True extends E{
 	
+	public True(boolean asignable) {
+		super(asignable);
+		// TODO Auto-generated constructor stub
+	}
 	public TipoE tipo() {
 		return TipoE.TRUE;
 	}

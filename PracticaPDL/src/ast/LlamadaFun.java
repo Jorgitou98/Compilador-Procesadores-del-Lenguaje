@@ -5,7 +5,8 @@ import java.util.List;
 public class LlamadaFun extends E{
 	private List<E> argumentos;
 	private E iden ;
-	public LlamadaFun(E iden, List<E> argumentos) {
+	public LlamadaFun(E iden, List<E> argumentos, boolean asignable) {
+		  super(asignable);
 		this.argumentos = argumentos;
 		this.iden = iden;
 	}

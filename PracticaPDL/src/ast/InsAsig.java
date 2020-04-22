@@ -4,15 +4,13 @@ import java.util.List;
 
 public class InsAsig extends Ins{
 	private E var;
-	private List<CorchetesYPuntosIzq> cyp;
 	private E valor;
 	
 	
 	
-	public InsAsig(E var, List<CorchetesYPuntosIzq> cyp, E valor) {
+	public InsAsig(E var, E valor) {
 		super();
 		this.var = var;
-		this.cyp = cyp;
 		this.valor = valor;
 	}
 	
@@ -24,13 +22,6 @@ public class InsAsig extends Ins{
 		return var;
 	}
 
-
-
-
-
-	public List<CorchetesYPuntosIzq> getCyp() {
-		return cyp;
-	}
 
 
 
@@ -64,12 +55,7 @@ public class InsAsig extends Ins{
 			nextVar += " ";
 		}
 		s += var.imprime(nextVar, false);
-		String nextPyc = nextVar + "    ";
-		for (int i = 0; i < cyp.size(); ++i ) {
-			if(i == cyp.size()-1) s+= (cyp.get(i)).imprime(nextPyc, false);
-			else s+= (cyp.get(i)).imprime(nextPyc, true);
-			
-		}
+		
 		s += next + "   \\__Valor\n";
 		String nextValor = next;
 		for(int i = 0; i < "   \\__Valor".length(); ++i) {

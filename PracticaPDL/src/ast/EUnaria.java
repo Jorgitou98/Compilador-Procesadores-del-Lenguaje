@@ -3,7 +3,8 @@ package ast;
 public abstract class EUnaria extends E {
 	   private E opnd1;
 	   private String name;
-	   public EUnaria(E opnd1, String name) {
+	   public EUnaria(E opnd1, String name, boolean asignable) {
+			  super(asignable);
 	     this.opnd1 = opnd1;
 	     this.name = name;
 	   }

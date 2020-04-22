@@ -4,7 +4,8 @@ public abstract class EBin extends E {
 	   private E opnd1;
 	   private E opnd2;
 	   private String name;
-	   public EBin(E opnd1, E opnd2, String name) {
+	   public EBin(E opnd1, E opnd2, String name, boolean asignable) {
+			  super(asignable);
 		   this.opnd1 = opnd1;
 		    this.opnd2 = opnd2;
 		    this.name = name;

@@ -2,7 +2,8 @@ package ast;
 
 public class Iden extends E{
 private String v;
-public Iden(String v) {
+public Iden(String v, boolean asignable) {
+	  super(asignable);
 	   this.v = v;   
 	  }
 	  public String id() {return v;} 

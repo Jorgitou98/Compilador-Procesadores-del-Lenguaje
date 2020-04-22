@@ -2,6 +2,9 @@ package ast;
 
 public class False extends E{
 	
+	public False(boolean asignable) {
+		super(asignable);
+	}
 	public TipoE tipo() {
 		return TipoE.FALSE;
 	}

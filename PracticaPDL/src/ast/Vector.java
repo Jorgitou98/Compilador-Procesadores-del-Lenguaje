@@ -3,7 +3,8 @@ package ast;
 public class Vector extends E {
 	  private E tam;
 	  private E valorIni;
-	  public Vector(E valorIni, E tam) {
+	  public Vector(E valorIni, E tam, boolean asignable) {
+		  super(asignable);
 	   this.tam = tam;
 	   this.valorIni = valorIni;
 	   
