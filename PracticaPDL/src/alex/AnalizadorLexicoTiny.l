@@ -151,7 +151,7 @@ saltoDeLinea = \n
 {puntoYComa}              {return ops.unidadPuntoYComa();}
 {ampersand}               {return ops.unidadAmpersand();}
 {identificador}           {return ops.unidadId();}
-{numeroEntero}            {return ops.unidadEnt();}
 {numeroReal}              {return ops.unidadReal();}
+{numeroEntero}            {return ops.unidadEnt();}
 {caracter}                {return ops.unidadCaracter();}
 [^]                       {ops.error();}  
