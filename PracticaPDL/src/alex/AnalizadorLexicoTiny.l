@@ -35,7 +35,7 @@ caracter = '[^\n]'
 digito = ({digitoPositivo}|0)
 parteEntera = {digitoPositivo}{digito}*
 parteDecimal = {digito}* {digitoPositivo}
-separador = [ \t\r\b\n]
+separador = [ \t\r\b]
 comentario = #[^\n]*
 int = int
 bool = bool
@@ -93,8 +93,10 @@ igual = \=
 coma  = \,
 dosPuntos = \:
 puntoYComa = \;
+saltoDeLinea = \n
 %%
 {separador}               {}
+{saltoDeLinea}			  {yychar=-1;}
 {comentario}              {}
 {int}                     {return ops.unidadInt();}
 {bool}                    {return ops.unidadBool();}

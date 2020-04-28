@@ -1,4 +1,4 @@
-x.casa[3] = 2;
+x.casa[3] = 2.8;
 x = 3+2-4 + castillo(torre, 3+2-false*true+cara[3]);
 call casa (3, 2, 4+5, hola, 3 div 0);
 if(x>3){
@@ -17,7 +17,7 @@ fun int suma(int x, bool & y, vector<int> casa){
 	if(y == true){
 		x = y;
 	}
-	x.adios = 3;
+	x.adios = 3.8;
 	int a = x;
 	return a;
 }
@@ -29,7 +29,6 @@ struct hola{
 	int x = 0;
 	bool adios;
 }
-
 typedef vector<vector<int>> matriz;
 fun matriz multiplica (matriz A, matriz B, int tam) {
 	matriz C = creaVector(creaVector(0, m), m);
