@@ -102,17 +102,17 @@ Inst ::= InsTypeDef:valorInsTypeDef
 
 
 
-InsCond ::= IF Exp:cond LLAVESAP P:insIf LLAVESCIERRE
+InsCond ::= IF Exp0:cond LLAVESAP P:insIf LLAVESCIERRE
 	 {: RESULT = as.insIfSinElse(cond, insIf); :};
 
-InsCond ::= IF Exp:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insElse LLAVESCIERRE
+InsCond ::= IF Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insElse LLAVESCIERRE
 	{: RESULT = as.insIfConElse(cond, insIf, insElse); :};
 
 
 
 
 
-InsBucle ::= WHILE Exp:cond LLAVESAP P:ins LLAVESCIERRE 
+InsBucle ::= WHILE Exp0:cond LLAVESAP P:ins LLAVESCIERRE 
 {: RESULT = as.insWhile(cond, ins); :};
 
 InsBucle ::= FOR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
