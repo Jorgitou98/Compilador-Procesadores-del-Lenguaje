@@ -15,6 +15,7 @@ public class Main {
 	 //asint.parse();
 	 //System.out.println(asint.parse().value);
 	 P prog = (P) asint.parse().value;
+	 System.out.println(CUP$AnalizadorSintacticoTiny$actions.numErrores);
 	 System.out.println(prog.imprime("", false));
  }
 }   

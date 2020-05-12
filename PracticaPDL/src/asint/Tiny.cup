@@ -19,6 +19,7 @@ import ast.Param;
 scan with {: return getScanner().next_token(); :};
 action code {:
    private AS as = new AS();
+   public static int numErrores = 0;
 :};
 
 parser code {: 
@@ -41,12 +42,13 @@ terminal    TRUE, FALSE, CREAVECTOR,
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
 			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
  			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT,
- 			AMPERSAND;
+ 			AMPERSAND, NEW, NULL;
 terminal    String IDEN, ENT, REAL, CARACTER; 
 terminal    Tipos INT, BOOL, CHAR, FLOAT, VECTOR;
 
 non terminal  P P;
-non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, InsDecConValorIni;
+non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, 
+				InsDecConValorIni, InsNew;
 non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, TiposSwitch; 
 non terminal  List<E> ListaArg, ListaArg1, LEnum, LEnumElige;
 non terminal  List<Case> ListaCase;
@@ -60,8 +62,6 @@ P ::= Inst:ins P:prog
 	   RESULT = prog; :};
 P ::= 
 	{: RESULT = as.programa(); :};
-
-
 
 
 
@@ -98,8 +98,15 @@ Inst ::= InsEnum:valorInsEnum
 Inst ::= InsTypeDef:valorInsTypeDef
 {: RESULT = valorInsTypeDef; :};
 
+Inst ::= InsNew:valorInsNew
+{: RESULT = valorInsNew; :};
+
+Inst ::= error PUNTOYCOMA
+{: numErrores += 1; RESULT = null; :};
 
 
+InsNew ::= Exp0:var IGUAL NEW Tipo:tipo PAP Exp:valor PCIERRE PUNTOYCOMA
+{: RESULT = as.insNew(tipo, var, valor); :};
 
 
 InsCond ::= IF Exp:cond LLAVESAP P:insIf LLAVESCIERRE
@@ -146,6 +153,8 @@ Tipo ::= VECTOR MENOR Tipo:tipo MAYOR
 	{:RESULT = as.tipoVector(tipo); :};
 Tipo ::= IDEN:lexIden
 	{:RESULT = as.tipoUsuario(lexIden); :};
+Tipo ::= MENOR Tipo: tipo MAYOR MUL
+	{:RESULT = as.tipoPuntero(tipo); :};
 
 
 
@@ -366,7 +375,9 @@ Exp6 ::= Exp7: valorExp
 Exp7 ::= RESTA Exp8:valorExp
 	{: RESULT = as.restaUnaria(valorExp, false); :}; 
 Exp7 ::= SUMA Exp8:valorExp
-	{: RESULT = as.sumaUnaria(valorExp, false); :};  
+	{: RESULT = as.sumaUnaria(valorExp, false); :}; 
+Exp7 ::= MUL Exp8:valorExp
+	{: RESULT = as.accesoPuntero(valorExp, true); :};  
 Exp7 ::= Exp8: valorExp
 	{: RESULT = valorExp; :};
 	
@@ -379,15 +390,21 @@ Exp8 ::= REAL: lexDeReal
 Exp8 ::= TRUE
 	{: RESULT = as.verdadero(false); :};  
 Exp8 ::= FALSE
-	{: RESULT = as.falso(false); :}; 
+	{: RESULT = as.falso(false); :};
+Exp8 ::= NULL
+	{: RESULT = as.nulo(false); :}; 
 Exp8 ::= CARACTER: lexDeCaracter
 	{: RESULT = as.caracter(lexDeCaracter, false); :};  
 Exp8 ::= IDEN:lexDeIden PAP ListaArg:lista PCIERRE
 	{: RESULT = as.llamadaFun(as.iden(lexDeIden, true), lista, false); :};
+Exp8 ::= IDEN PAP error PCIERRE
+	{: numErrores += 1; RESULT = null; :};
 Exp8 ::= IDEN:lexDeIden
 	{: RESULT = as.iden(lexDeIden, true); :};
 Exp8 ::= PAP Exp0: valorExp PCIERRE
 	{: RESULT = valorExp; :};
+Exp8 ::= PAP error PCIERRE
+{: numErrores += 1; RESULT = null; :};
 
 
 CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE

@@ -8,8 +8,8 @@ public class GestionErroresTiny {
      System.exit(1);
    }  
    public void errorSintactico(UnidadLexica unidadLexica) {
-     System.err.print("***ERROR sintactico. Fila: "+ unidadLexica.fila() + ", Columna: " + unidadLexica.columna() + ": Elemento inesperado "+ unidadLexica.value);
-     System.exit(1);
+     System.err.println("***ERROR sintactico. Fila: "+ unidadLexica.fila() + ", Columna: " + unidadLexica.columna() + ": Elemento inesperado "+ unidadLexica.value);
+     //System.exit(1);
    }
 }
 

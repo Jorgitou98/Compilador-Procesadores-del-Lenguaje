@@ -23,6 +23,12 @@ public class ALexOperations {
   public UnidadLexica unidadFalse() {
 	     return new UnidadLexica(alex.fila(),alex.columna(), ClaseLexica.FALSE, "false"); 
 	  } 
+  public UnidadLexica unidadNew() {
+	     return new UnidadLexica(alex.fila(),alex.columna(), ClaseLexica.NEW, "new"); 
+	  } 
+  public UnidadLexica unidadNull() {
+	     return new UnidadLexica(alex.fila(),alex.columna(), ClaseLexica.NULL, "null"); 
+	  } 
   public UnidadLexica unidadFloat() {
 	     return new UnidadLexica(alex.fila(),alex.columna(), ClaseLexica.FLOAT, "float"); 
 	  } 

@@ -27,10 +27,12 @@ public class AS {
 	public E real(String v, boolean asignable) {return new Real(v, asignable);}
 	public E resta(E opnd1, E opnd2, boolean asignable) {return new Resta(opnd1,opnd2, asignable);}
 	public E restaUnaria(E opnd1, boolean asignable) {return new RestaUnaria(opnd1, asignable);}
+	public E accesoPuntero(E opnd1, boolean asignable) {return new AccesoPuntero(opnd1, asignable);}
 	public E size(E opnd1, boolean asignable) {return new Size(opnd1, asignable);}
 	public E suma(E opnd1, E opnd2, boolean asignable) {return new Suma(opnd1,opnd2, asignable);}
 	public E sumaUnaria(E opnd1, boolean asignable) {return new SumaUnaria(opnd1, asignable);}
 	public E verdadero(boolean asignable) {return new True(asignable);}
+	public E nulo(boolean asignable) {return new Null(asignable);}
 	public E vector(E valorIni, E tam, boolean asignable) {return new Vector(valorIni, tam, asignable);}
 	public Ins insIfConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
 	public Ins insIfSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
@@ -42,19 +44,22 @@ public class AS {
   	public Ins insSwitch(E varSwitch, List<Case> lista) {return new InsSwitch(varSwitch, lista); }
 	public Ins insFun(Tipos tipoReturn, E nombre, List<Param> parametros, P instr, E valorReturn) { return new InsFun(tipoReturn, nombre, parametros, instr, valorReturn); }
   	public Ins insProc(E nombre, List<Param> parametros, P instr) { return new InsProc(nombre, parametros, instr); }
+	public Ins insStruct(E nombreTipo, List<Ins> declaraciones) {return new InsStruct(nombreTipo, declaraciones);}
+	public Ins insEnum(E nombre, List<E> listaConstantes) {return new InsEnum(nombre, listaConstantes);}
+	public Ins insTypeDef(Tipos tipo, E nombreNuevo) {return new InsTypeDef(tipo, nombreNuevo);}
+	public Ins insNew(Tipos tipo, E var, E valor) {return new InsNew(tipo, var, valor);}
+  	
 	public P programa() {return new P();}
   	public Tipos tipoInt() {return new TipoInt();}
   	public Tipos tipoBool() {return new TipoBool();}
   	public Tipos tipoChar() {return new TipoChar();}
   	public Tipos tipoFloat() {return new TipoFloat();}
+  	public Tipos tipoPuntero(Tipos tipo) {return new TipoPuntero(tipo);}
   	public Tipos tipoVector(Tipos tipo) {return new TipoVector(tipo);}
   	public Tipos tipoUsuario(String nombre) {return new TipoUsuario(nombre);}
 	public Case createCase(E var, P instr) { return new Case(var, instr); }
 	public Param param(Tipos tipo, TipoParam tipoDeParam, E iden) { return new Param(tipo, tipoDeParam, iden); }
-	public InsStruct insStruct(E nombreTipo, List<Ins> declaraciones) {return new InsStruct(nombreTipo, declaraciones);}
-	public InsEnum insEnum(E nombre, List<E> listaConstantes) {return new InsEnum(nombre, listaConstantes);}
-	public InsTypeDef insTypeDef(Tipos tipo, E nombreNuevo) {return new InsTypeDef(tipo, nombreNuevo);}
-	
+
 	
 	
 	
