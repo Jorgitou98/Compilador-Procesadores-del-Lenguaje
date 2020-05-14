@@ -6,7 +6,7 @@ public class InsCall extends Ins{
 	private E nombre;
 	private List<E> argumentos;
 	
-	
+	private NodoArbol ref;
 
 	public InsCall(E nombre, List<E> argumentos) {
 		super();
@@ -15,6 +15,14 @@ public class InsCall extends Ins{
 	}
 	
 	
+
+
+
+	public void setRef(NodoArbol ref) {
+		this.ref = ref;
+	}
+
+
 
 
 
@@ -63,6 +71,12 @@ public class InsCall extends Ins{
 			nextNombre += " ";
 		}
 		s+= nombre.imprime(nextNombre, false);
+		s = s + next + "   \\__Ref\n";
+		String nextRef = next + "   |";
+		for (int i = 0; i < "__Ref".length(); ++i ) {
+			nextRef += " ";
+		}
+		s+= ref.imprime(nextRef, false);
 		s = s + next + "   \\__Argumentos\n";
 		String nextArgs = next;
 		for(int i = 0; i < "   \\__Argumentos".length(); ++i ) {

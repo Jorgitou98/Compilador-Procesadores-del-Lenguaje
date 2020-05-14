@@ -13,6 +13,10 @@ public abstract class EBin extends E {
 	public E opnd1() {return opnd1;}
 	public E opnd2() {return opnd2;}
 	
+	public TipoN tipoNodo() {
+		return TipoN.EBIN;
+	}
+	
 	@Override
 	public String imprime(String prev, boolean barra) {
 		String s = prev + "\\__"+ name + '\n';

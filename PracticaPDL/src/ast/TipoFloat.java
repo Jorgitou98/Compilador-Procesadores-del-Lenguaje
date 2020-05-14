@@ -12,5 +12,7 @@ public class TipoFloat extends Tipos{
 	public String imprime(String prev, boolean barra) {
 		return prev + "\\__float\n";
 	}
-
+	public TipoT tipo() {
+		return TipoT.FLOAT;
+	}
 }

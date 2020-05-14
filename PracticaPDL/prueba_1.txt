@@ -1,16 +1,19 @@
-for(int x= 2; x < 10; i+1){}
-x.casa[3] = 2.8;
-x = 3+2-4 + castillo(torre, 3+2-false*true+cara[3]);
-call casa (3, 2, 4+5, hola, 3 div 0);
+int x = (x+++y)
+%++ 6;
 if(x>3){
 	hola.adios = 3;
 }
 else{
-	adios.hola = 4+5;
-	for(int i = 0; i == 3; i + 3*2){
+	adios.hola 4+5;
+	for(int i 0; i == 3; i + 3*2){
 		x = x+3;
 	}
 }
+pepe = new (3+4);
+for(int x= 2; x < 10; i+1){}
+x.casa[3] = 2.8;
+x = 3+2-4 + castillo(torre, 3+2-false*true+cara[3]);
+call casa (3, 2, 4+5, hola, 3 div 0);
 int x;
 vector<vector<int>> hola = creaVector(creaVector(3, 4), 5);
 enum meses = {enero | diciembre | julio};
@@ -64,3 +67,7 @@ fun matriz multiplica (matriz A, matriz B, int tam) {
 	return C;
 }
 int x = -2 +3;
+
+<int>* pepe = juan;
+
+pepe = new int(3+4);

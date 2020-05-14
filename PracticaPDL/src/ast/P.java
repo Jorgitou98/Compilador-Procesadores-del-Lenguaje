@@ -3,7 +3,7 @@ package ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class P {
+public class P extends NodoArbol{
 	private List<Ins> instr;
 
 	public P() {
@@ -22,6 +22,11 @@ public class P {
 		this.instr.add(0, ins);
 	}
 	
+	
+	public List<Ins> getInstr() {
+		return instr;
+	}
+
 	public String imprime(String prev, boolean barra) {
 		String s = prev + "\\__Programa\n";
 		String next = prev;
@@ -37,6 +42,8 @@ public class P {
 		}
 		return s;
 	}
-	
+	public TipoN tipoNodo() {
+		return TipoN.PROG;
+	}
 
 }

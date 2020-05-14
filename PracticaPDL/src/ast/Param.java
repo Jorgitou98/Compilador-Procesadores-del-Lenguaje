@@ -1,6 +1,6 @@
 package ast;
 
-public class Param {
+public class Param extends NodoArbol{
 	private Tipos tipo;
 	private TipoParam tipoDeParam;
 	private E iden;
@@ -55,6 +55,10 @@ public class Param {
 	
 	public String imprimeParam(String prev) {
 		return prev + "\\__" + tipoDeParam.name() + "\n";
+	}
+	@Override
+	public TipoN tipoNodo() {
+		return TipoN.PARAM;
 	}
 	
 	

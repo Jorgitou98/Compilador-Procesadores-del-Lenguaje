@@ -10,6 +10,9 @@ public abstract class EUnaria extends E {
 	   }
 	   public E opnd1() {return opnd1;}
 	   
+		public TipoN tipoNodo() {
+			return TipoN.EUNARIA;
+		}
 	   
 	   @Override
 	   public String imprime(String prev, boolean barra) {

@@ -24,6 +24,8 @@ public class TipoVector extends Tipos{
 		s += tipoVector.imprime(next, false);
 		return s;
 	}
-	
+	public TipoT tipo() {
+		return TipoT.VECTOR;
+	}
 	
 }

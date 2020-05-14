@@ -12,5 +12,7 @@ public class TipoChar extends Tipos{
 	public String imprime(String prev, boolean barra) {
 		return prev + "\\__char\n";
 	}
-
+	public TipoT tipo() {
+		return TipoT.CHAR;
+	}
 }
