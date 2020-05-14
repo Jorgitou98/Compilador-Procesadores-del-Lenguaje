@@ -2,6 +2,7 @@ package ast;
 
 public class TipoUsuario extends Tipos{
 	private String nombreTipo;
+	private NodoArbol ref;
 
 	
 	public TipoUsuario(String nombreTipo) {
@@ -14,6 +15,10 @@ public class TipoUsuario extends Tipos{
 	}
 
 
+	public void setRef(NodoArbol ref) {
+		this.ref = ref;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -22,8 +27,10 @@ public class TipoUsuario extends Tipos{
 
 	@Override
 	public String imprime(String prev, boolean barra) {
-		return prev + "\\__" + nombreTipo + "\n";
+		return prev + "\\__" + nombreTipo + "Ref: " + ref.imprime(prev+ "    ", false)+ "\n";
 	}
-	
+	public TipoT tipo() {
+		return TipoT.USUARIO;
+	}
 
 }

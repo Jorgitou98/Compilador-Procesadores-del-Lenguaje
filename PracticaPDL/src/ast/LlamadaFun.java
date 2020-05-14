@@ -5,11 +5,19 @@ import java.util.List;
 public class LlamadaFun extends E{
 	private List<E> argumentos;
 	private E iden ;
+	private NodoArbol ref;
 	public LlamadaFun(E iden, List<E> argumentos, boolean asignable) {
 		  super(asignable);
 		this.argumentos = argumentos;
 		this.iden = iden;
 	}
+	
+	
+	public void setRef(NodoArbol ref) {
+		this.ref = ref;
+	}
+
+
 	public TipoE tipo() {
 		return TipoE.LLAMADAFUN;
 	}
@@ -40,6 +48,13 @@ public class LlamadaFun extends E{
 			nextIden += " ";
 		}
 		s = s + iden.imprime(nextIden, true);
+		
+		s = s + next + "   \\__Ref\n";
+		String nextRef = next + "   |";
+		for (int i = 0; i < "__Ref".length(); ++i ) {
+			nextRef += " ";
+		}
+		s+= ref.imprime(nextRef, false);
 		
 		s = s + next +"  \\__Argumentos\n";
 		String nextArg = next + "   ";

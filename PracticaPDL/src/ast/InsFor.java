@@ -5,7 +5,7 @@ public class InsFor extends Ins{
 	private E cond;
 	private E paso;
 	private P inst;
-	
+	private NodoArbol varBucle;
 	
 
 	public InsFor(Ins decIni, E cond, E paso, P inst) {
@@ -17,6 +17,14 @@ public class InsFor extends Ins{
 	}
 	
 	
+
+
+
+	public void setVarBucle(NodoArbol varBucle) {
+		this.varBucle = varBucle;
+	}
+
+
 
 
 

@@ -14,6 +14,10 @@ public class InsNew extends Ins {
 		this.valor = valor;
 	}
 
+	public E getVar() {
+		return var;
+	}
+
 	public Tipos getTipo() {
 		return tipo;
 	}

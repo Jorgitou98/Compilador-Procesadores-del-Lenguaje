@@ -24,4 +24,8 @@ public class TipoPuntero extends Tipos{
 		s += tipoPuntero.imprime(next, false);
 		return s;
 	}
+	
+	public TipoT tipo() {
+		return TipoT.PUNTERO;
+	}
 }

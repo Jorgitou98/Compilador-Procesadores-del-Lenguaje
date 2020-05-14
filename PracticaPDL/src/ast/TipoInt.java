@@ -12,5 +12,7 @@ public class TipoInt extends Tipos{
 	public String imprime(String prev, boolean barra) {
 		return prev + "\\__int\n";
 	}
-
+	public TipoT tipo() {
+		return TipoT.INT;
+	}
 }

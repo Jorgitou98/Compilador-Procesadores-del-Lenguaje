@@ -1,6 +1,6 @@
 package ast;
 
-public class Case {
+public class Case extends NodoArbol{
 	private E nombreCase;
 	private P instr;
 	public Case(E nombreCase, P instr) {
@@ -40,4 +40,8 @@ public class Case {
 		return s;
 		
 	}
+	public TipoN tipoNodo() {
+		return TipoN.CASE;
+	}
+	
 }
