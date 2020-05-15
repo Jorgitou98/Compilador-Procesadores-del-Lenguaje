@@ -45,10 +45,13 @@ public class InsSwitch extends Ins{
 		
 		s = s + next + "   \\__Ref\n";
 		String nextRef = next + "   |";
-		for (int i = 0; i < "__Ref".length(); ++i ) {
+		for (int i = 0; i < "__Ref".length(); ++i) {
 			nextRef += " ";
 		}
-		s+= ref.imprime(nextRef, false);
+		if (ref != null)
+			s += ref.imprime(nextRef, false);
+		else
+			s += nextRef + "\\__ERROR\n";
 		
 		s = s + next + "   \\__Cases\n";
 		String nextCases = next;

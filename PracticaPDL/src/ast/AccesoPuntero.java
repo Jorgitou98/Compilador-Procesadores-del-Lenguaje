@@ -6,6 +6,8 @@ public class AccesoPuntero extends EUnaria {
 		super(opnd1, "(* unario)", asignable);
 	}
 
-	public TipoE tipo() {return TipoE.ACCESOPUNTERO;}
+	public TipoE tipo() {
+		return TipoE.ACCESOPUNTERO;
+	}
 
 }

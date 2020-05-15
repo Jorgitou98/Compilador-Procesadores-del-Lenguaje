@@ -84,6 +84,17 @@ public class InsFor extends Ins{
 			nextIni += " ";
 		}
 		s += decIni.imprime(nextIni, false);
+		
+		s = s + next + "   \\__Ref\n";
+		String nextRef = next + "   |";
+		for (int i = 0; i < "__Ref".length(); ++i) {
+			nextRef += " ";
+		}
+		if (varBucle != null)
+			s += varBucle.imprime(nextRef, false);
+		else
+			s += nextRef + "\\__ERROR\n";
+		
 		s = s + next + "   \\__Condicion\n";
 		String nextCond = next + "   |";
 		for(int i = 0; i < "__Condicion".length(); ++i) {

@@ -27,7 +27,21 @@ public class TipoUsuario extends Tipos{
 
 	@Override
 	public String imprime(String prev, boolean barra) {
-		return prev + "\\__" + nombreTipo + "Ref: " + ref.imprime(prev+ "    ", false)+ "\n";
+		String s = prev + "\\__" + nombreTipo + '\n';
+		s += prev + "\\__Ref\n";
+		if (ref != null) {
+			String next = prev;
+			if (barra)
+				next += "|";
+			else
+				next += " ";
+			for (int i = 0; i < "__Ref".length(); ++i) {
+				next+=" ";
+			}
+			s+= ref.imprime(next, false);
+		}
+
+		return s;
 	}
 	public TipoT tipo() {
 		return TipoT.USUARIO;

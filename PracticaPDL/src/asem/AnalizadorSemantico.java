@@ -30,7 +30,7 @@ public class AnalizadorSemantico {
 			case INSCALL:
 				InsCall inscall = (InsCall) nodo;
 				NodoArbol ref = tabla.declaracionDe(((Iden) inscall.getNombre()).id());
-				if (ref != null) GestionErroresTiny.errorSemantico("Variable " + ((Iden) inscall.getNombre()).id() + " no declarada");
+				if (ref == null) GestionErroresTiny.errorSemantico("Procedimiento " + ((Iden) inscall.getNombre()).id() + " no declarado");
 				inscall.setRef(ref);
 				for(E arg: inscall.getArgumentos()) {
 					vincula(arg);
@@ -61,12 +61,12 @@ public class AnalizadorSemantico {
 				if(insfor.getDecIni().tipo() == TipoIns.INSASIG) {
 					NodoArbol refFor = tabla.declaracionDe(((Iden)((InsAsig)insfor.getDecIni()).getVar()).id());
 					insfor.setVarBucle(refFor);
-					if (refFor != null) GestionErroresTiny.errorSemantico("Variable " + (((Iden)((InsAsig)insfor.getDecIni()).getVar()).id()) + " no declarada");
+					if (refFor == null) GestionErroresTiny.errorSemantico("Variable " + (((Iden)((InsAsig)insfor.getDecIni()).getVar()).id()) + " no declarada");
 				}
 				else {
 					NodoArbol refFor2 = tabla.declaracionDe(((Iden)((InsDec)insfor.getDecIni()).getVar()).id());
 					insfor.setVarBucle(refFor2);
-					if (refFor2 != null) GestionErroresTiny.errorSemantico("Variable " + (((Iden)((InsDec)insfor.getDecIni()).getVar()).id()) + " no declarada");
+					if (refFor2 == null) GestionErroresTiny.errorSemantico("Variable " + (((Iden)((InsDec)insfor.getDecIni()).getVar()).id()) + " no declarada");
 				}
 				vincula(insfor.getCond());
 				vincula(insfor.getPaso());
@@ -171,7 +171,7 @@ public class AnalizadorSemantico {
 				LlamadaFun llamada = (LlamadaFun) exp;
 				NodoArbol refLlamada = tabla.declaracionDe(((Iden) llamada.getIden()).id());
 				llamada.setRef(refLlamada);
-				if(refLlamada == null) GestionErroresTiny.errorSemantico("Variable " + ((Iden) llamada.getIden()).id() + " no declarada");
+				if(refLlamada == null) GestionErroresTiny.errorSemantico("Funcion " + ((Iden) llamada.getIden()).id() + " no declarada");
 				for(E arg: llamada.getArgumentos()) {
 					vincula(arg);
 				}
