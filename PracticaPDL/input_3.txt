@@ -1,0 +1,23 @@
+int x = 3;
+
+int y = x+2;
+struct tpersona{
+int dni;
+}
+
+
+tpersona javi;
+
+proc suma(int x){
+y = y+1;
+}
+
+
+javi.dni = false;
+
+y = x;
+
+for(int i= 0; i < 3; i+1){
+	x = x+3;
+	i = i+2;
+}
