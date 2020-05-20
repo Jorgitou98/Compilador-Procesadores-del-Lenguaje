@@ -18,7 +18,7 @@ public class AnalizadorSemantico {
 		vincula(raizArbol);
 		tabla.cierraBloque();
 		if (comprobacionTipos(raizArbol))
-			System.out.println("Comporbación de tipos correcta");
+			System.out.println("Comprobación de tipos correcta");
 	}
 
 	private void vincula(NodoArbol nodo) {
@@ -179,10 +179,16 @@ public class AnalizadorSemantico {
 			if (exp.tipo() == TipoE.IDEN) {
 				Iden identif = (Iden) exp;
 				NodoArbol refIden = tabla.declaracionDe(identif.id());
-				identif.setRef(refIden);
-				identif.setTipo(((InsDec) refIden).getTipo());
 				if (refIden == null)
 					GestionErroresTiny.errorSemantico("Variable " + identif.id() + " no declarada");
+				else {
+					identif.setRef(refIden);
+					if(refIden.tipoNodo() == TipoN.PARAM) 
+						identif.setTipo(((Param) refIden).getTipo());
+					else 
+						identif.setTipo(((InsDec) refIden).getTipo());
+				}
+
 			} else if (exp.tipo() == TipoE.VECTOR) {
 				Vector vector = (Vector) exp;
 				vincula(vector.getTam());
@@ -227,8 +233,6 @@ public class AnalizadorSemantico {
 
 	private Tipos comprobacionTiposExp(NodoArbol nodo) {
 		switch (nodo.tipoNodo()) {
-		case CASE:
-			break;
 		case EBIN:
 			EBin ebin = (EBin) nodo;
 			switch (ebin.tipo()) {
@@ -378,8 +382,11 @@ public class AnalizadorSemantico {
 							return ((InsDec) ins).getTipo();
 						}
 					}
+					GestionErroresTiny.errorSemantico(
+							"Error tipos punto: el campo sobre el que accedemos no se corresponde con ningún campo del struct");
 				}
-				GestionErroresTiny.errorSemantico("Error tipos punto");
+				GestionErroresTiny.errorSemantico(
+						"Error tipos punto: el tipo sobre el que queremos acceder a un campo no es un struct");
 				break;
 			case RESTA:
 				TipoT tipo1Resta = comprobacionTiposExp(ebin.opnd1()).tipo();
@@ -429,9 +436,9 @@ public class AnalizadorSemantico {
 			switch (eunaria.tipo()) {
 			case ACCESOPUNTERO:
 				Tipos tipoAcceso = comprobacionTiposExp(eunaria.opnd1());
-				if (tipoAcceso.tipo() == TipoT.PUNTERO) {
+				if (tipoAcceso.tipo() == TipoT.PUNTERO)
 					return ((TipoPuntero) tipoAcceso).getTipoPuntero();
-				} else
+				else
 					GestionErroresTiny.errorSemantico("Error tipos acceso a puntero");
 				break;
 			case NOT:
@@ -449,10 +456,10 @@ public class AnalizadorSemantico {
 					GestionErroresTiny.errorSemantico("Error de tipos restaUnaria");
 				break;
 			case SIZE:
-				if (comprobacionTiposExp(eunaria.opnd1()).tipo() == TipoT.VECTOR) {
+				if (comprobacionTiposExp(eunaria.opnd1()).tipo() == TipoT.VECTOR)
 					return new TipoInt();
-				} else
-					GestionErroresTiny.errorSemantico("Error de tipos size");
+				else
+					GestionErroresTiny.errorSemantico("Error de tipos size: no lo estamos aplicando sobre un vector");
 				break;
 			case SUMAUNARIA:
 				Tipos tipo1SumaUnaria = comprobacionTiposExp(eunaria.opnd1());
@@ -491,7 +498,8 @@ public class AnalizadorSemantico {
 					if (coincide)
 						return llamada.getTipo();
 				}
-				GestionErroresTiny.errorSemantico("Error llamada funcion");
+				GestionErroresTiny
+						.errorSemantico("Error llamada funcion: los arumentos no coinciden con el tipo de parámetros");
 				break;
 			case NULL:
 				return new TipoPuntero(null);
@@ -500,7 +508,7 @@ public class AnalizadorSemantico {
 			case VECTOR:
 				Vector v = (Vector) exp;
 				if (comprobacionTiposExp(v.getTam()).tipo() == TipoT.INT) {
-					return comprobacionTiposExp(v.getValorIni());
+					return new TipoVector(comprobacionTiposExp(v.getValorIni()));
 				} else
 					GestionErroresTiny.errorSemantico("El tamaño del vector no es de tipo entero");
 				break;
@@ -510,11 +518,6 @@ public class AnalizadorSemantico {
 			}
 
 			break;
-		case INS:
-			break;
-		case PROG:
-			break;
-
 		default:
 			break;
 
@@ -529,7 +532,7 @@ public class AnalizadorSemantico {
 			if (((InsDec) caso.getRef()).getTipo().tipo() == comprobacionTiposExp(caso.getNombreCase()).tipo())
 				return comprobacionTipos(caso.getInstr());
 			else
-				GestionErroresTiny.errorSemantico("Error tipo Case");
+				GestionErroresTiny.errorSemantico("Error tipos Case: El tipo del case no es igual al del switch");
 			break;
 		case INS:
 			Ins ins = (Ins) nodo;
@@ -537,10 +540,14 @@ public class AnalizadorSemantico {
 			case INSASIG:
 				InsAsig insAsig = (InsAsig) ins;
 				if (insAsig.getVar().isAsignable()) {
-					return comprobacionTiposExp(insAsig.getVar()).tipo() == comprobacionTiposExp(insAsig.getValor())
-							.tipo();
-				}
-				GestionErroresTiny.errorSemantico("Error tipo no asignable");
+					if (comprobacionTiposExp(insAsig.getVar()).tipo() == comprobacionTiposExp(insAsig.getValor())
+							.tipo())
+						return true;
+					else
+						GestionErroresTiny.errorSemantico(
+								"Error de tipos en la asignación: el tipo de la expresión a la derecha del igual no coincide con el tipo de la variable");
+				} else
+					GestionErroresTiny.errorSemantico("Error tipo no asignable");
 				break;
 			case INSCALL:
 				InsCall llamada = (InsCall) nodo;
@@ -551,9 +558,13 @@ public class AnalizadorSemantico {
 						coincide = coincide && (parametros.get(i).getTipo())
 								.tipo() == comprobacionTiposExp(llamada.getArgumentos().get(i)).tipo();
 					}
+					if (!coincide)
+						GestionErroresTiny.errorSemantico(
+								"Error insCall: los parámetros no son del mismo tipo que los declarados");
+
 					return coincide;
 				}
-				GestionErroresTiny.errorSemantico("Error insCall");
+				GestionErroresTiny.errorSemantico("Error insCall: numero de parametros incorrecto");
 
 				break;
 			case INSCOND:
@@ -565,7 +576,7 @@ public class AnalizadorSemantico {
 					}
 					return correcto;
 				}
-				GestionErroresTiny.errorSemantico("Error InsCond");
+				GestionErroresTiny.errorSemantico("Error InsCond: la condición no es una expresión booleana");
 				break;
 			case INSDEC:
 				InsDec insDec = (InsDec) ins;
@@ -617,9 +628,9 @@ public class AnalizadorSemantico {
 					}
 					GestionErroresTiny.errorSemantico(
 							"Error tipos InsNew: El tipo del new o del valor inicial no coinciden con el del valor apuntado");
-				}
-				GestionErroresTiny
-						.errorSemantico("Error tipos InsNew: La parte izquierda de la expresión no es de tipo puntero");
+				} else
+					GestionErroresTiny.errorSemantico(
+							"Error tipos InsNew: La parte izquierda de la expresión no es de tipo puntero");
 				break;
 			case INSPROC:
 				return comprobacionTipos(((InsProc) ins).getInstr());
@@ -648,7 +659,7 @@ public class AnalizadorSemantico {
 					return comprobacionTipos(insWhile.getInsWhile());
 
 				}
-				GestionErroresTiny.errorSemantico("Error InsWhile");
+				GestionErroresTiny.errorSemantico("Error InsWhile: la condición no es de tipo booleano");
 				break;
 			default:
 				break;
