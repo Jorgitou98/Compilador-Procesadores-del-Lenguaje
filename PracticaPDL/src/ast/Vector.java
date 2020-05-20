@@ -42,5 +42,6 @@ public class Vector extends E {
 		return s;
 		
 		
-	}  
+	}
+	
 	}

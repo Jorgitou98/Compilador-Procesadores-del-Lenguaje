@@ -47,4 +47,10 @@ public class TipoUsuario extends Tipos{
 		return TipoT.USUARIO;
 	}
 
+	public NodoArbol getRef() {
+		return ref;
+	}
+	
+	
+
 }

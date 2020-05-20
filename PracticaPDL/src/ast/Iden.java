@@ -3,6 +3,9 @@ package ast;
 public class Iden extends E {
 	private String v;
 	private NodoArbol ref;
+	private Tipos tipo;
+
+	
 
 	public Iden(String v, boolean asignable) {
 		super(asignable);
@@ -40,5 +43,15 @@ public class Iden extends E {
 	public void setRef(NodoArbol ref) {
 		this.ref = ref;
 	}
+	
+	public void setTipo(Tipos tipo) {
+		this.tipo = tipo;
+	}
+
+	public Tipos getTipo() {
+		return tipo;
+	}
+	
+	
 
 }

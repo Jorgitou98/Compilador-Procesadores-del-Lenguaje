@@ -3,6 +3,7 @@ package ast;
 public class Case extends NodoArbol{
 	private E nombreCase;
 	private P instr;
+	private NodoArbol ref;
 	public Case(E nombreCase, P instr) {
 		super();
 		this.nombreCase = nombreCase;
@@ -43,5 +44,13 @@ public class Case extends NodoArbol{
 	public TipoN tipoNodo() {
 		return TipoN.CASE;
 	}
+	public NodoArbol getRef() {
+		return ref;
+	}
+	public void setRef(NodoArbol ref) {
+		this.ref = ref;
+	}
+	
+	
 	
 }

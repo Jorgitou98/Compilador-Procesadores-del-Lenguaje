@@ -10,7 +10,7 @@ proc suma(int x){
 y = y+1;
 }
 
-call p(3);
+int x = false;
 
 y = x;
 

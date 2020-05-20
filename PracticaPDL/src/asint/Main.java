@@ -9,7 +9,7 @@ import ast.P;
 
 public class Main {
    public static void main(String[] args) throws Exception {
-     Reader input = new InputStreamReader(new FileInputStream("prueba_2.txt"));
+     Reader input = new InputStreamReader(new FileInputStream("input_3.txt"));
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);

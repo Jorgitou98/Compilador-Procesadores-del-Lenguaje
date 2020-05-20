@@ -77,4 +77,10 @@ public class InsCall extends Ins {
 		return s;
 	}
 
+	public NodoArbol getRef() {
+		return ref;
+	}
+	
+	
+
 }

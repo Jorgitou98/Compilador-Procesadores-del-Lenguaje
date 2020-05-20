@@ -7,6 +7,7 @@ import java.util.Map;
 
 import ast.Ins;
 import ast.NodoArbol;
+import errors.GestionErroresTiny;
 
 public class TablaDeSimbolos {
 	private List<Map<String, NodoArbol>> tabla = new ArrayList<>();
@@ -21,6 +22,9 @@ public class TablaDeSimbolos {
 		boolean insertable = !tabla.get(tabla.size()-1).containsKey(iden);
 		if(insertable) {
 			tabla.get(tabla.size()-1).put(iden, instruccion);
+		}
+		else {
+			GestionErroresTiny.errorSemantico("Warning: la variable "+ iden + " ya estaba declarada, me quedo con su primer valor");
 		}
 		return insertable;
 	}

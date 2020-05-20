@@ -6,6 +6,7 @@ public class LlamadaFun extends E {
 	private List<E> argumentos;
 	private E iden;
 	private NodoArbol ref;
+	private Tipos tipo;
 
 	public LlamadaFun(E iden, List<E> argumentos, boolean asignable) {
 		super(asignable);
@@ -77,5 +78,20 @@ public class LlamadaFun extends E {
 		}
 		return s;
 	}
+
+	public void setTipo(Tipos tipo) {
+		this.tipo = tipo;
+	}
+
+	public Tipos getTipo() {
+		return tipo;
+	}
+
+	public NodoArbol getRef() {
+		return ref;
+	}
+	
+	
+	
 
 }
