@@ -1,0 +1,8 @@
+{0} ssp 10;
+\\ Esto es una asignación
+{1} ldc 5;
+{2} ldc 3;
+{3} ldc 2;
+{4} add;
+{5} sto;
+{6} stp;

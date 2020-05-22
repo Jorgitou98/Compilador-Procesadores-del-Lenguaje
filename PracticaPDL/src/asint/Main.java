@@ -6,6 +6,7 @@ import java.io.Reader;
 import alex.AnalizadorLexicoTiny;
 import asem.AnalizadorSemantico;
 import ast.P;
+import code.GeneradorCodigo;
 
 public class Main {
    public static void main(String[] args) throws Exception {
@@ -20,6 +21,8 @@ public class Main {
 	 asem.analizaSemantica();
 	 //System.out.println(CUP$AnalizadorSintacticoTiny$actions.numErrores);
 	 System.out.println(prog.imprime("", false));
+	 GeneradorCodigo gc= new GeneradorCodigo();
+	 gc.generaCodigo(prog);
  }
 }   
    

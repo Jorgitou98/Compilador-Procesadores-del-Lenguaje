@@ -221,7 +221,11 @@ public class AnalizadorSemantico {
 			if (tipo.tipo() == TipoT.USUARIO) {
 				TipoUsuario tipousuario = (TipoUsuario) tipo;
 				NodoArbol refUsuario = tabla.declaracionDe(tipousuario.getNombreTipo());
-				tipousuario.setRef(refUsuario);
+				if(refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
+					//nodo = ((InsTypeDef) refUsuario).getTipo();
+					tipousuario.setTipoOrig(((InsTypeDef) refUsuario).getTipo());
+				}
+				else tipousuario.setRef(refUsuario);
 				if (refUsuario == null)
 					GestionErroresTiny.errorSemantico("Tipo" + tipousuario.getNombreTipo() + " no declarado");
 			}

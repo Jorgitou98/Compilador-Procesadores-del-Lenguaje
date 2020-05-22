@@ -3,6 +3,7 @@ package ast;
 public class TipoUsuario extends Tipos{
 	private String nombreTipo;
 	private NodoArbol ref;
+	private Tipos tipoOrig; // Solo para typedef
 
 	
 	public TipoUsuario(String nombreTipo) {
@@ -44,12 +45,19 @@ public class TipoUsuario extends Tipos{
 		return s;
 	}
 	public TipoT tipo() {
-		return TipoT.USUARIO;
+		if(tipoOrig == null) return TipoT.USUARIO;
+		else return tipoOrig.tipo();
 	}
 
 	public NodoArbol getRef() {
 		return ref;
 	}
+
+	public void setTipoOrig(Tipos tipoOrig) {
+		this.tipoOrig = tipoOrig;
+	}
+	
+	
 	
 	
 
