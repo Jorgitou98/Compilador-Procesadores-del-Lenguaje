@@ -47,9 +47,12 @@ public class AnalizadorSemantico {
 				vincula(inscond.getCondicion());
 				tabla.abreBloque();
 				vincula(inscond.getInsIf());
-				if (inscond.isTieneElse())
-					vincula(inscond.getInsElse());
 				tabla.cierraBloque();
+				if (inscond.isTieneElse()) {
+					tabla.abreBloque();
+					vincula(inscond.getInsElse());
+				    tabla.cierraBloque();
+				}
 				break;
 			case INSDEC:
 				InsDec insdec = (InsDec) nodo;
