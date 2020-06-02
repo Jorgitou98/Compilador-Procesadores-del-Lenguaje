@@ -6,6 +6,9 @@ public class InsProc extends Ins{
 	private E nombre;
 	private List<Param> parametros;
 	private P instr;
+	private int dirIni;
+	private int tamParams = 0;
+	private int pa;
 	
 	
 
@@ -88,6 +91,56 @@ public class InsProc extends Ins{
 		s += instr.imprime(nextInstr, false);
 		return s;
 	}
+
+
+
+
+
+	public int getDirIni() {
+		return dirIni;
+	}
+
+
+
+
+
+	public void setDirIni(int dirIni) {
+		this.dirIni = dirIni;
+	}
+
+
+
+
+
+	public int getTamParams() {
+		return tamParams;
+	}
+
+
+
+
+
+	public void incTamParams(int inc) {
+		this.tamParams += inc;
+	}
+
+
+
+
+
+	public int getPa() {
+		return pa;
+	}
+
+
+
+
+
+	public void setPa(int pa) {
+		this.pa = pa;
+	}
+	
+	
 
 
 }

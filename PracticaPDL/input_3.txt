@@ -1,12 +1,13 @@
 int x = 0;
-
-fun int p(int x, int y){
-	int a = 3;
-	int b = 8;
-	int c = a+b;
-	if(a ==0){
-		int z = 22;
+proc p(int y){
+	proc q (int z){
+		if( x > 0){
+			x = y + z;
+		}
+		else {
+			x = y*z;
+		}
 	}
-	return c;
+	call q(y);
 }
-int y = 3;
+call p(5);

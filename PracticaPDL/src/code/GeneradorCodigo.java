@@ -16,9 +16,7 @@ public class GeneradorCodigo {
 	private int nextDir = 5;
 	private File archivo = new File("codigo.txt");
 	private PrintWriter pw;
-	private int nlinea = 0;
 	private int nivelAmbito = 0;
-	private int sp_ini = nextDir;
 	private List<InsMaquina> codigo = new ArrayList<>();
 	private Bloque bloqueAct = null;
 	private int maxAmbitos = 0;
@@ -41,7 +39,7 @@ public class GeneradorCodigo {
 				break;
 			case INSDEC:
 				InsDec insDec = (InsDec) ins;
-
+				((Iden) insDec.getVar()).setPa(bloqueAct.getPa() + 1);
 				if (insDec.getTipo().tipo() == TipoT.USUARIO) {
 					int tamano = queTamano(((TipoUsuario) insDec.getTipo()).getNombreTipo());
 					insertaId(((Iden) insDec.getVar()).id(), tamano);
@@ -64,6 +62,7 @@ public class GeneradorCodigo {
 			case INSFUN:
 				abreAmbito(true);
 				InsFun insFun = (InsFun) ins;
+				insFun.setPa(bloqueAct.getPa());
 				for (Param p : insFun.getParametros())
 					declaraciones(p);
 				for (Ins i : insFun.getInstr().getInstr())
@@ -73,6 +72,7 @@ public class GeneradorCodigo {
 			case INSPROC:
 				abreAmbito(true);
 				InsProc insProc = (InsProc) ins;
+				insProc.setPa(bloqueAct.getPa());
 				for (Param p : insProc.getParametros())
 					declaraciones(p);
 				for (Ins i : insProc.getInstr().getInstr())
@@ -107,6 +107,7 @@ public class GeneradorCodigo {
 			break;
 		case PARAM:
 			Param param = (Param) nodo;
+			((Iden) param.getIden()).setPa(bloqueAct.getPa() + 1);
 			if (param.getTipo().tipo() == TipoT.USUARIO) {
 				int tamano = queTamano(((TipoUsuario) param.getTipo()).getNombreTipo());
 				insertaId(((Iden) param.getIden()).id(), tamano);
@@ -126,7 +127,7 @@ public class GeneradorCodigo {
 
 		}
 	}
-	
+
 	private void declaraciones(P nodo, boolean ini) {
 		P prog = (P) nodo;
 		abreAmbito(ini);
@@ -142,7 +143,7 @@ public class GeneradorCodigo {
 		case AND:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("and", TipoInsMaquina.RESTA1);
+			insertIns("and", -1);
 			break;
 		case CARACTER:
 			// No esta en la maquina P
@@ -152,55 +153,63 @@ public class GeneradorCodigo {
 		case DISTINTO:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("neq", TipoInsMaquina.RESTA1);
+			insertIns("neq", -1);
 			break;
 		case DIVENT:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("div", TipoInsMaquina.RESTA1);
+			insertIns("div", -1);
 			break;
 		case DIVREAL:
 			// No esta en la maquina P
 			break;
 		case FALSE:
-			insertIns("ldc false", TipoInsMaquina.SUMA1);
+			insertIns("ldc false", 1);
 			break;
 		case FLOAT:
 			// No esta en la maquina P
 			break;
 		case IDEN:
-			insertIns("ldc " + bloqueActGenera().dirVar(((Iden) exp).id()), TipoInsMaquina.SUMA1);
-			insertIns("ind", TipoInsMaquina.IGUAL);
+			generaCodigoL(exp);
+			insertIns("ind", 0);
 			break;
 		case IGUALIGUAL:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("equ", TipoInsMaquina.RESTA1);
+			insertIns("equ", -1);
 			break;
 		case INT:
-			insertIns("ldc " + ((Num) exp).num(), TipoInsMaquina.SUMA1);
+			insertIns("ldc " + ((Num) exp).num(), 1);
 			break;
 		case LLAMADAFUN:
+			LlamadaFun llamadaFun = (LlamadaFun) exp;
+			int l = ((InsFun) llamadaFun.getRef()).getDirIni();
+			int s = ((InsFun) llamadaFun.getRef()).getTamParams();
+			int n = ((InsFun) llamadaFun.getRef()).getPa();
+			int m = bloqueActGenera().getPa() + 1;
+			insertIns("mst " + (m - n), 5);
+			generaCodigoA(((InsFun) llamadaFun.getRef()).getParametros(), llamadaFun.getArgumentos());
+			insertIns("cup " + s + " " + l, 0);
 			break;
 		case MAYOR:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("grt", TipoInsMaquina.RESTA1);
+			insertIns("grt", -1);
 			break;
 		case MAYORIGUAL:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("geq", TipoInsMaquina.RESTA1);
+			insertIns("geq", -1);
 			break;
 		case MENOR:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("les", TipoInsMaquina.RESTA1);
+			insertIns("les", -1);
 			break;
 		case MENORIGUAL:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("leq", TipoInsMaquina.RESTA1);
+			insertIns("leq", -1);
 			break;
 		case MODULO:
 			// pw.println("\\\\ Esto es un modulo");
@@ -210,42 +219,42 @@ public class GeneradorCodigo {
 		case MUL:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("mul", TipoInsMaquina.RESTA1);
+			insertIns("mul", -1);
 			break;
 		case NOT:
 			generaCodigoExp(exp.opnd1());
-			insertIns("not", TipoInsMaquina.IGUAL);
+			insertIns("not", 0);
 			break;
 		case NULL:
 			break;
 		case OR:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("or", TipoInsMaquina.RESTA1);
+			insertIns("or", -1);
 			break;
 		case PUNTO:
 			break;
 		case RESTA:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("sub", TipoInsMaquina.RESTA1);
+			insertIns("sub", -1);
 			break;
 		case RESTAUNARIA:
 			generaCodigoExp(exp.opnd1());
-			insertIns("neg", TipoInsMaquina.IGUAL);
+			insertIns("neg", 0);
 			break;
 		case SIZE:
 			break;
 		case SUMA:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
-			insertIns("add", TipoInsMaquina.RESTA1);
+			insertIns("add", -1);
 			break;
 		case SUMAUNARIA:
 			generaCodigoExp(exp.opnd1());
 			break;
 		case TRUE:
-			insertIns("ldc true", TipoInsMaquina.SUMA1);
+			insertIns("ldc true", 1);
 			break;
 		case VECTOR:
 			break;
@@ -254,12 +263,25 @@ public class GeneradorCodigo {
 		}
 	}
 
-	private int generaCodigoL(E exp) {
+	private void generaCodigoL(E exp) {
 		if (exp.tipo() == TipoE.IDEN) {
-			insertIns("ldc " + bloqueActGenera().dirVar(((Iden) exp).id()), TipoInsMaquina.SUMA1);
-			return 1;
+			Iden id;
+			if (((Iden) exp).getRef().tipoNodo() == TipoN.INS) {
+				id = ((Iden) ((InsDec) ((Iden) exp).getRef()).getVar());
+			}
+			else {
+				id = ((Iden) ((Param) ((Iden) exp).getRef()).getIden());
+			}
+			insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+			System.out.println((bloqueActGenera().getPa() + 1 + " " + id.getPa()));
 		}
-		return 0;
+
+	}
+
+	private void generaCodigoL1(E exp) {
+		if (exp.tipo() == TipoE.IDEN) {
+			insertIns("lda " + 0 + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+		}
 	}
 
 	private void generaCodigoIns(Ins ins) {
@@ -269,8 +291,18 @@ public class GeneradorCodigo {
 			InsAsig insAsig = (InsAsig) ins;
 			generaCodigoL(insAsig.getVar());
 			generaCodigoExp(insAsig.getValor());
-			insertIns("sto", TipoInsMaquina.RESTA2);
+			insertIns("sto", -2);
+			break;
 		case INSCALL:
+			InsCall insCall = (InsCall) ins;
+			int l = ((InsProc) insCall.getRef()).getDirIni();
+			int s = ((InsProc) insCall.getRef()).getTamParams();
+			int n = ((InsProc) insCall.getRef()).getPa();
+			int m = bloqueActGenera().getPa() + 1;
+			insertIns("mst " + (m - n), 5);
+			generaCodigoA(((InsProc) insCall.getRef()).getParametros(), insCall.getArgumentos());
+			insertIns("cup " + s + " " + l, 0);
+
 			break;
 		case INSCOND:
 			InsCond insCond = (InsCond) ins;
@@ -278,14 +310,14 @@ public class GeneradorCodigo {
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
 			int posSalto1 = codigo.size();
-			insertIns("fjp ", TipoInsMaquina.RESTA1);
+			insertIns("fjp ", -1);
 			generaCodigoProg(insCond.getInsIf());
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			if (insCond.isTieneElse()) {
 				maxAmbitos++;
 				nivelAmbito = maxAmbitos;
 				int posSalto2 = codigo.size();
-				insertIns("ujp ", TipoInsMaquina.IGUAL);
+				insertIns("ujp ", 0);
 				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + codigo.size());
 				generaCodigoProg(insCond.getInsElse());
 				codigo.get(posSalto2).setName(codigo.get(posSalto2).getName() + codigo.size());
@@ -296,9 +328,9 @@ public class GeneradorCodigo {
 		case INSDEC:
 			InsDec insDec = (InsDec) ins;
 			if (insDec.isConValorInicial()) {
-				generaCodigoL(insDec.getVar());
+				generaCodigoL1(insDec.getVar());
 				generaCodigoExp(insDec.getValorInicial());
-				insertIns("sto", TipoInsMaquina.RESTA2);
+				insertIns("sto", -2);
 				break;
 			}
 			break;
@@ -312,7 +344,7 @@ public class GeneradorCodigo {
 			int posCond = codigo.size();
 			generaCodigoExp(insFor.getCond());
 			int posFjpFor = codigo.size();
-			insertIns("fjp ", TipoInsMaquina.RESTA1);
+			insertIns("fjp ", -1);
 			generaCodigoProg(insFor.getInst());
 			Iden var;
 			if (insFor.getDecIni().tipo() == TipoIns.INSDEC) {
@@ -320,7 +352,7 @@ public class GeneradorCodigo {
 			} else
 				var = (Iden) ((InsAsig) insFor.getDecIni()).getVar();
 			generaCodigoIns(new InsAsig(var, insFor.getPaso()));
-			insertIns("ujp " + posCond, TipoInsMaquina.IGUAL);
+			insertIns("ujp " + posCond, 0);
 			codigo.get(posFjpFor).setName(codigo.get(posFjpFor).getName() + codigo.size());
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
@@ -328,16 +360,24 @@ public class GeneradorCodigo {
 			InsFun insFun = (InsFun) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
-			insertIns("ssp " + bloqueActGenera().getSsp(), TipoInsMaquina.IGUAL);
+			insFun.setDirIni(codigo.size());
+			for (Param p : insFun.getParametros()) {
+				if (p.getTipo().tipo() == TipoT.USUARIO) {
+					insFun.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
+				} else {
+					insFun.incTamParams(1);
+				}
+			}
+			insertIns("ssp " + bloqueActGenera().getSsp(), 0);
 			int posSepFun = codigo.size();
-			insertIns("sep ", TipoInsMaquina.IGUAL);
+			insertIns("sep ", 0);
 			generaCodigoProg(insFun.getInstr());
-			insertIns("lod 0 0", TipoInsMaquina.SUMA1);
+			insertIns("lda 0 0", 1);
 			generaCodigoExp(insFun.getValorReturn());
-			insertIns("sto", TipoInsMaquina.RESTA2);
+			insertIns("sto", -2);
 			int tamPilaFun = tamPilaEvaluacion(posSepFun);
 			codigo.get(posSepFun).setName(codigo.get(posSepFun).getName() + tamPilaFun);
-			insertIns("retf", TipoInsMaquina.IGUAL);
+			insertIns("retf", 0);
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSNEW:
@@ -346,18 +386,27 @@ public class GeneradorCodigo {
 			InsProc insProc = (InsProc) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
-			insertIns("ssp " + bloqueActGenera().getSsp(), TipoInsMaquina.IGUAL);
+			insProc.setDirIni(codigo.size());
+			for (Param p : insProc.getParametros()) {
+				if (p.getTipo().tipo() == TipoT.USUARIO) {
+					insProc.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
+				} else {
+					insProc.incTamParams(1);
+				}
+			}
+			insertIns("ssp " + bloqueActGenera().getSsp(), 0);
 			int posSep = codigo.size();
-			insertIns("sep ", TipoInsMaquina.IGUAL);
+			insertIns("sep ", 0);
 			generaCodigoProg(insProc.getInstr());
 			int tamPila = tamPilaEvaluacion(posSep);
 			codigo.get(posSep).setName(codigo.get(posSep).getName() + tamPila);
-			insertIns("retp", TipoInsMaquina.IGUAL);
+			insertIns("retp", 0);
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSSTRUCT:
 			break;
 		case INSSWITCH:
+			
 			break;
 		case INSTYPEDEF:
 			break;
@@ -368,9 +417,9 @@ public class GeneradorCodigo {
 			int posSaltoW1 = codigo.size();
 			generaCodigoExp(insWhile.getCondicion());
 			int posFjp = codigo.size();
-			insertIns("fjp ", TipoInsMaquina.RESTA1);
+			insertIns("fjp ", -1);
 			generaCodigoProg(insWhile.getInsWhile());
-			insertIns("ujp " + posSaltoW1, TipoInsMaquina.IGUAL);
+			insertIns("ujp " + posSaltoW1, 0);
 			codigo.get(posFjp).setName(codigo.get(posFjp).getName() + codigo.size());
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
@@ -380,11 +429,28 @@ public class GeneradorCodigo {
 		}
 	}
 
+	private void generaCodigoA(List<Param> params, List<E> args) {
+		for (int i = 0; i < params.size(); ++i) {
+			if (params.get(i).getTipoDeParam() == TipoParam.VALOR) {
+				Tipos tipo = params.get(i).getTipo();
+				if (tipo.tipo() == TipoT.USUARIO) {
+					generaCodigoL(args.get(i));
+					insertIns("movs " + bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()),
+							bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()) - 1);
+				} else {
+					generaCodigoExp(args.get(i));
+				}
+			} else {
+				generaCodigoL(args.get(i));
+			}
+		}
+	}
+
 	private void generaCodigoProg(P prog) {
 		for (Ins ins : prog.getInstr()) {
 			if (ins.tipo() == TipoIns.INSPROC || ins.tipo() == TipoIns.INSFUN) {
 				int posUjp = codigo.size();
-				insertIns("ujp ", TipoInsMaquina.IGUAL);
+				insertIns("ujp ", 0);
 				generaCodigoIns(ins);
 				codigo.get(posUjp).setName(codigo.get(posUjp).getName() + codigo.size());
 			} else
@@ -399,13 +465,13 @@ public class GeneradorCodigo {
 			}
 
 			pw = new PrintWriter(archivo);
-			declaraciones((P)raiz, true);
-			insertIns("ssp " + listaBloques.get(0).getSsp(), TipoInsMaquina.IGUAL);
-			insertIns("sep ", TipoInsMaquina.IGUAL);
+			declaraciones((P) raiz, true);
+			insertIns("ssp " + listaBloques.get(0).getSsp(), 0);
+			insertIns("sep ", 0);
 			generaCodigoProg((P) raiz);
 			int tamPila = tamPilaEvaluacion(1);
 			codigo.get(1).setName(codigo.get(1).getName() + tamPila);
-			insertIns("stp", TipoInsMaquina.IGUAL);
+			insertIns("stp", 0);
 			write();
 			pw.close();
 		} catch (IOException e) {
@@ -428,7 +494,7 @@ public class GeneradorCodigo {
 	}
 
 	public void insertaId(String iden, int tam) {
-		bloqueAct.insertaId(iden, nextDir, tam);
+		bloqueAct.insertaId(iden, tam);
 		nextDir += tam;
 		bloqueAct.setSsp(bloqueAct.getSsp() + tam);
 	}
@@ -456,7 +522,7 @@ public class GeneradorCodigo {
 		}
 	}
 
-	private void insertIns(String ins, TipoInsMaquina tipo) {
+	private void insertIns(String ins, int tipo) {
 		codigo.add(new InsMaquina(ins, tipo));
 	}
 
@@ -473,20 +539,7 @@ public class GeneradorCodigo {
 				if (codigo.get(i).getName().substring(0, 3).equals("ssp")) {
 					cuenta++;
 				} else {
-					switch (codigo.get(i).getTipo()) {
-					case RESTA1:
-						tam--;
-						break;
-					case RESTA2:
-						tam -= 2;
-						break;
-					case SUMA1:
-						tam++;
-						break;
-					default:
-						break;
-
-					}
+					tam += codigo.get(i).getTipo();
 				}
 			} else {
 				if (codigo.get(i).getName().length() > 3 && (codigo.get(i).getName().substring(0, 4).equals("retp")

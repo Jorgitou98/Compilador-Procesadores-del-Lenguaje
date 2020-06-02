@@ -2,8 +2,8 @@ package code;
 
 public class InsMaquina {
 	private String name;
-	private TipoInsMaquina tipo;
-	public InsMaquina(String name, TipoInsMaquina tipo) {
+	private int tipo;
+	public InsMaquina(String name, int tipo) {
 		super();
 		this.name = name;
 		this.tipo = tipo;
@@ -11,13 +11,13 @@ public class InsMaquina {
 	public String getName() {
 		return name;
 	}
-	public TipoInsMaquina getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void setTipo(TipoInsMaquina tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 	

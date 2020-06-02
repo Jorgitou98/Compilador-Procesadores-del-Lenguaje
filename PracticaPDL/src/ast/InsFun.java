@@ -8,6 +8,10 @@ public class InsFun extends Ins{
 	private List<Param> parametros;
 	private P instr;
 	private E valorReturn;
+	private int dirIni;
+	private int tamParams = 0;
+	private int pa;
+	
 	
 	
 
@@ -114,5 +118,51 @@ public class InsFun extends Ins{
 		s += valorReturn.imprime(nextInstReturn, false);
 		return s;
 	}
+
+
+
+
+	public int getDirIni() {
+		return dirIni;
+	}
+
+
+
+
+	public void setDirIni(int dirIni) {
+		this.dirIni = dirIni;
+	}
+
+
+
+
+	public int getTamParams() {
+		return tamParams;
+	}
+
+
+
+
+	public void incTamParams(int inc) {
+		this.tamParams += inc;
+	}
+
+
+
+
+	public int getPa() {
+		return pa;
+	}
+
+
+
+
+	public void setPa(int pa) {
+		this.pa = pa;
+	}
+	
+	
+	
+	
 
 }

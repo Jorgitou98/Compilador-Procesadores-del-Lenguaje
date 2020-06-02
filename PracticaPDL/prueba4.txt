@@ -1,0 +1,9 @@
+int x = 0;
+fun int suma(int x, int y){
+	fun int mul(int x, int y, int z){
+		z = x*y;
+		return z + x + y;
+	}
+	return x + y + mul(x,y,3);
+}
+int z = 3 + suma(x,7);

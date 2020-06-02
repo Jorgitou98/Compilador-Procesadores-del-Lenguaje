@@ -5,6 +5,7 @@ public class Iden extends E {
 	private NodoArbol ref;
 	private Tipos tipo;
 	private int dir;
+	private int pa;
 
 	
 
@@ -60,6 +61,20 @@ public class Iden extends E {
 	public void setDir(int dir) {
 		this.dir = dir;
 	}
+
+	public int getPa() {
+		return pa;
+	}
+
+	public void setPa(int pa) {
+		this.pa = pa;
+	}
+
+	public NodoArbol getRef() {
+		return ref;
+	}
+	
+	
 	
 	
 	
