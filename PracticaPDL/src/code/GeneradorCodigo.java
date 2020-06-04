@@ -43,16 +43,18 @@ public class GeneradorCodigo {
 				if (insDec.getTipo().tipo() == TipoT.USUARIO) {
 					int tamano = queTamano(((TipoUsuario) insDec.getTipo()).getNombreTipo());
 					insertaId(((Iden) insDec.getVar()).id(), tamano);
-				} 
-				else if(insDec.getTipo().tipo() == TipoT.VECTOR){
-					if(insDec.isConValorInicial()) {
+					int dirBase = bloqueAct.dirVar(((Iden) insDec.getVar()).id());
+					insertaDirStruct(insDec, dirBase);
+					
+				} else if (insDec.getTipo().tipo() == TipoT.VECTOR) {
+					if (insDec.isConValorInicial()) {
 						int tamano = calculaTamVector(insDec.getTipo(), insDec.getValorInicial());
-						((Iden)insDec.getVar()).setDimensiones(dimensionesVector(insDec.getTipo(), insDec.getValorInicial()));
+						((Iden) insDec.getVar())
+								.setDimensiones(dimensionesVector(insDec.getTipo(), insDec.getValorInicial()));
 						insertaId(((Iden) insDec.getVar()).id(), tamano);
 						insertaTipo(((Iden) insDec.getVar()).id(), tamano);
 					}
-				}
-				else {
+				} else {
 					insertaId(((Iden) insDec.getVar()).id(), 1);
 				}
 				break;
@@ -93,10 +95,12 @@ public class GeneradorCodigo {
 				int tamTipo = 0;
 				for (Ins i : insStruct.getDeclaraciones()) {
 					InsDec decStruct = (InsDec) i;
+					bloqueAct.insertaCampoStruct(((Iden) insStruct.getNombreTipo()).id() + "." + ((Iden)decStruct.getVar()).id(), tamTipo);
 					if (decStruct.getTipo().tipo() == TipoT.USUARIO)
 						tamTipo += queTamano(((TipoUsuario) decStruct.getTipo()).getNombreTipo());
 					else
 						tamTipo++;
+					
 				}
 				insertaTipo(((Iden) insStruct.getNombreTipo()).id(), tamTipo);
 				break;
@@ -134,6 +138,25 @@ public class GeneradorCodigo {
 		default:
 			break;
 
+		}
+	}
+	
+	private void insertaDirStruct(InsDec dec, int dirBase) {
+		if(dec.getTipo().tipo() == TipoT.USUARIO) {
+			for(Ins insDec: ((InsStruct)((TipoUsuario) dec.getTipo()).getRef()).getDeclaraciones()) {
+				InsDec insDec1 = (InsDec) insDec;
+				int dir = dirBase + bloqueAct.dirVar(((TipoUsuario) dec.getTipo()).getNombreTipo() + "." + ((Iden)insDec1.getVar()).id());
+				insertaDirStruct(new InsDec(insDec1.getTipo(), new Iden(((Iden)dec.getVar()).id() + "." + ((Iden)insDec1.getVar()).id(), true), insDec1.isConValorInicial(),  insDec1.getValorInicial()), dir);
+			}
+			bloqueAct.insertaTipo(((Iden)dec.getVar()).id(), queTamano(((TipoUsuario) dec.getTipo()).getNombreTipo()));
+		}
+		else if(dec.getTipo().tipo() == TipoT.VECTOR) {
+			bloqueAct.insertaTipo(((Iden)dec.getVar()).id(), calculaTamVector(dec.getTipo(), dec.getValorInicial()));
+			bloqueAct.insertaCampoStruct(((Iden)dec.getVar()).id(), dirBase);
+			((Iden) dec.getVar()).setDimensiones(dimensionesVector(dec.getTipo(), dec.getValorInicial()));
+		}
+		else {
+			bloqueAct.insertaCampoStruct(((Iden)dec.getVar()).id(), dirBase);
 		}
 	}
 
@@ -181,8 +204,18 @@ public class GeneradorCodigo {
 			// No esta en la maquina P
 			break;
 		case IDEN:
-			generaCodigoL(exp);
-			insertIns("ind", 0);
+			System.out.println(((Iden) exp).getTipo());
+			if (((Iden) exp).getTipo().tipo() == TipoT.USUARIO) {
+				for (Ins ins : ((InsStruct) ((TipoUsuario) ((Iden) exp).getTipo()).getRef()).getDeclaraciones()) {
+					Iden iden = new Iden(((Iden) exp).id() + "." + ((Iden)((InsDec) ins).getVar()).id(), true);
+					iden.setTipo(((InsDec) ins).getTipo());
+					generaCodigoL1(iden);
+					insertIns("ind", 0);
+				}
+			} else {
+				generaCodigoL(exp);
+				insertIns("ind", 0);
+			}
 			break;
 		case IGUALIGUAL:
 			generaCodigoExp(exp.opnd1());
@@ -244,6 +277,8 @@ public class GeneradorCodigo {
 			insertIns("or", -1);
 			break;
 		case PUNTO:
+			generaCodigoL(exp);
+			insertIns("ind", 0);
 			break;
 		case RESTA:
 			generaCodigoExp(exp.opnd1());
@@ -278,26 +313,30 @@ public class GeneradorCodigo {
 			Iden id;
 			if (((Iden) exp).getRef().tipoNodo() == TipoN.INS) {
 				id = ((Iden) ((InsDec) ((Iden) exp).getRef()).getVar());
-				List<Integer> lista = ((Iden)((InsDec) ((Iden) exp).getRef()).getVar()).getDimensiones();
+				List<Integer> lista = ((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).getDimensiones();
 				par = new Pair<>(lista, 0);
-			}
-			else {
+			} else {
 				id = ((Iden) ((Param) ((Iden) exp).getRef()).getIden());
 			}
-			insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
-			System.out.println((bloqueActGenera().getPa() + 1 + " " + id.getPa()));			
-		}
-		else if (exp.tipo() == TipoE.CORCHETES) {
+			insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " "
+					+ bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+			System.out.println((bloqueActGenera().getPa() + 1 + " " + id.getPa()));
+		} else if (exp.tipo() == TipoE.CORCHETES) {
 			par = generaCodigoL(exp.opnd1());
 			generaCodigoExp(exp.opnd2());
 			int prod = 1;
-			for(int i = par.getValue() + 1; i < par.getKey().size(); ++i) {
+			for (int i = par.getValue() + 1; i < par.getKey().size(); ++i) {
 				prod *= par.getKey().get(i);
 			}
-			insertIns("chk 0 " + (par.getKey().get(par.getValue())-1), 0);
+			insertIns("chk 0 " + (par.getKey().get(par.getValue()) - 1), 0);
 			insertIns("ixa " + prod, -1);
-			par.setValue(par.getValue()+1);
-			
+			par.setValue(par.getValue() + 1);
+
+		}
+		else if (exp.tipo() == TipoE.PUNTO) {
+			generaCodigoL(exp.opnd1());
+			int despl = bloqueActGenera().dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) exp.opnd2()).id());
+			insertIns("inc " + despl, 0);
 		}
 		return par;
 
@@ -353,18 +392,29 @@ public class GeneradorCodigo {
 		case INSDEC:
 			InsDec insDec = (InsDec) ins;
 			if (insDec.isConValorInicial()) {
-				if(insDec.getTipo().tipo() == TipoT.VECTOR) {
+				if (insDec.getTipo().tipo() == TipoT.VECTOR) {
 					int dirIni = bloqueActGenera().dirVar(((Iden) insDec.getVar()).id());
-					for(int i = 0; i < bloqueActGenera().queTamano(((Iden)insDec.getVar()).id()); i++) {
-						insertIns("lda 0 " + (dirIni+i), 1);
+					//((Iden) insDec.getVar()).setDimensiones(dimensionesVector(insDec.getTipo(), insDec.getValorInicial()));
+					for (int i = 0; i < bloqueActGenera().queTamano(((Iden) insDec.getVar()).id()); i= i + ((Iden)insDec.getVar()).getDimensiones().get(((Iden)insDec.getVar()).getDimensiones().size() -1)) {
+						int posAct = codigo.size();
 						generaCodigoExp(calculaValorIni(insDec.getValorInicial()));
-						insertIns("sto", -2);
+						for( int j = 0; j < ((Iden)insDec.getVar()).getDimensiones().get(((Iden)insDec.getVar()).getDimensiones().size() -1); j++) {
+							codigo.add(posAct, new InsMaquina("lda 0 " + (dirIni + i+ j), 1));
+							codigo.add(posAct + 3, new InsMaquina("sto", -2));
+							posAct += 4;
+						}
 					}
-				}
-				else {
+				} else {
 					generaCodigoL1(insDec.getVar());
 					generaCodigoExp(insDec.getValorInicial());
 					insertIns("sto", -2);
+				}
+			} else if (insDec.getTipo().tipo() == TipoT.USUARIO) {
+				for (Ins decStruct : (((InsStruct) ((TipoUsuario) insDec.getTipo()).getRef()).getDeclaraciones())) {
+					InsDec decStr = (InsDec) decStruct;
+					generaCodigoIns(new InsDec(decStr.getTipo(),
+							new Iden(((Iden) insDec.getVar()).id() + "." + ((Iden)decStr.getVar()).id(), true),
+							decStr.isConValorInicial(), decStr.getValorInicial()));
 				}
 			}
 			break;
@@ -437,10 +487,8 @@ public class GeneradorCodigo {
 			insertIns("retp", 0);
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
-		case INSSTRUCT:
-			break;
 		case INSSWITCH:
-			
+
 			break;
 		case INSTYPEDEF:
 			break;
@@ -585,36 +633,35 @@ public class GeneradorCodigo {
 		}
 		return max;
 	}
-	
+
 	private int calculaTamVector(Tipos tipo, E v) {
-		if(tipo.tipo() == TipoT.VECTOR) {
-			return Integer.parseInt(((Num)((Vector)v).getTam()).num())*calculaTamVector(((TipoVector)tipo).getTipoVector(), ((Vector) v).getValorIni());
-		}
-		else if (tipo.tipo() == TipoT.USUARIO) {
-			return queTamano(((TipoUsuario) tipo).getNombreTipo());	
-		}
-		else return 1;
+		if (tipo.tipo() == TipoT.VECTOR) {
+			return Integer.parseInt(((Num) ((Vector) v).getTam()).num())
+					* calculaTamVector(((TipoVector) tipo).getTipoVector(), ((Vector) v).getValorIni());
+		} else if (tipo.tipo() == TipoT.USUARIO) {
+			return queTamano(((TipoUsuario) tipo).getNombreTipo());
+		} else
+			return 1;
 	}
-	
+
 	private E calculaValorIni(E v) {
-		if(v.tipo() == TipoE.VECTOR) {
-			return calculaValorIni(((Vector)v).getValorIni());
-		}
-		else return v;
+		if (v.tipo() == TipoE.VECTOR) {
+			return calculaValorIni(((Vector) v).getValorIni());
+		} else
+			return v;
 	}
-	
-	private List<Integer> dimensionesVector(Tipos tipo, E exp){
-		if(exp.tipo() != TipoE.VECTOR) {
+
+	private List<Integer> dimensionesVector(Tipos tipo, E exp) {
+		if (exp.tipo() != TipoE.VECTOR) {
 			List<Integer> lista = new ArrayList<>();
-			if(tipo.tipo() == TipoT.USUARIO) {
+			if (tipo.tipo() == TipoT.USUARIO) {
 				lista.add(queTamano(((TipoUsuario) tipo).getNombreTipo()));
-			}
-			else lista.add(1);
+			} else
+				lista.add(1);
 			return lista;
-		}
-		else {
+		} else {
 			List<Integer> lista = dimensionesVector(((TipoVector) tipo).getTipoVector(), ((Vector) exp).getValorIni());
-			lista.add(0, Integer.parseInt(((Num)((Vector) exp).getTam()).num()));
+			lista.add(0, Integer.parseInt(((Num) ((Vector) exp).getTam()).num()));
 			return lista;
 		}
 	}

@@ -1,3 +1,10 @@
-vector<vector<vector<int>>> x = creaVector(creaVector(creaVector(0,3),4),5);
-x[2][2][2] = 3;
-x[0][0][0] = x[2][2][2] + 7;
+struct persona{
+	int nombre;
+	int edad;
+}
+
+persona pepe;
+pepe.edad = 44;
+
+vector<persona> lista = creaVector(pepe, 3);
+lista[2].nombre = 898;

@@ -194,7 +194,7 @@ public class AnalizadorSemantico {
 
 			} else if (exp.tipo() == TipoE.VECTOR) {
 				Vector vector = (Vector) exp;
-				vincula(vector.getTam());
+				vincula(vector.getTam()); //Como es un entero no hace falta vincular
 				vincula(vector.getValorIni());
 			} else if (exp.tipo() == TipoE.LLAMADAFUN) {
 				LlamadaFun llamada = (LlamadaFun) exp;
@@ -231,6 +231,9 @@ public class AnalizadorSemantico {
 				else tipousuario.setRef(refUsuario);
 				if (refUsuario == null)
 					GestionErroresTiny.errorSemantico("Tipo" + tipousuario.getNombreTipo() + " no declarado");
+			}
+			else if (tipo.tipo() == TipoT.VECTOR) {
+				vincula(((TipoVector) tipo).getTipoVector());
 			}
 			break;
 		default:
@@ -387,6 +390,7 @@ public class AnalizadorSemantico {
 			case PUNTO:
 				Tipos tipo1 = comprobacionTiposExp(ebin.opnd1());
 				if (tipo1.tipo() == TipoT.USUARIO) {
+					((Punto) ebin).setTipo((TipoUsuario) tipo1);
 					Iden opnd2 = (Iden) ebin.opnd2();
 					for (Ins ins : ((InsStruct) ((TipoUsuario) tipo1).getRef()).getDeclaraciones()) {
 						if (((Iden) ((InsDec) ins).getVar()).id().equals(opnd2.id())) {

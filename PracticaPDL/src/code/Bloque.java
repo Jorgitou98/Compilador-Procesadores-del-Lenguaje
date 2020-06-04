@@ -97,5 +97,9 @@ public class Bloque {
 	public void setNextDir(int nextDir) {
 		this.nextDir = nextDir;
 	}
+	
+	public void insertaCampoStruct(String id, int dirRel) {
+		identificadores.put(id, dirRel);
+	}
 
 }
