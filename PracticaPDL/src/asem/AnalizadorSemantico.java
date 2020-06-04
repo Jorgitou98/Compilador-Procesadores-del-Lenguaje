@@ -252,9 +252,13 @@ public class AnalizadorSemantico {
 				}
 				break;
 			case CORCHETES:
+				Tipos tipo1qef = comprobacionTiposExp(ebin.opnd1());
+				Tipos tipo2 = comprobacionTiposExp(ebin.opnd2());
 				if (comprobacionTiposExp(ebin.opnd1()).tipo() == TipoT.VECTOR
 						&& comprobacionTiposExp(ebin.opnd2()).tipo() == TipoT.INT) {
-					return comprobacionTiposExp(((Vector) ebin.opnd1()).getValorIni());
+					Tipos tipo3 = comprobacionTiposExp(((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector());
+					//return ((TipoVector) comprobacionTiposExp((TipoVector)comprobacionTiposExp(ebin.opnd1()))).getTipoVector();
+					return ((TipoVector)comprobacionTiposExp(ebin.opnd1())).getTipoVector();
 				} else {
 					GestionErroresTiny.errorSemantico("Error tipos corchetes");
 				}
@@ -547,8 +551,13 @@ public class AnalizadorSemantico {
 			case INSASIG:
 				InsAsig insAsig = (InsAsig) ins;
 				if (insAsig.getVar().isAsignable()) {
-					if (comprobacionTiposExp(insAsig.getVar()).tipo() == comprobacionTiposExp(insAsig.getValor())
-							.tipo())
+					Tipos tipoDer = comprobacionTiposExp(insAsig.getValor());
+					if(tipoDer.tipo() == TipoT.VECTOR || tipoDer.tipo() == TipoT.USUARIO) {
+						GestionErroresTiny.errorSemantico(
+								"Error de tipos en la asignación: el tipo de la expresión de la derecha no puede ser un vector o un tipo definido por el usuario");
+						return false;
+					}
+					if (compruebaTiposDecAsig(comprobacionTiposExp(insAsig.getVar()), comprobacionTiposExp(insAsig.getValor())))
 						return true;
 					else
 						GestionErroresTiny.errorSemantico(
@@ -589,13 +598,19 @@ public class AnalizadorSemantico {
 				InsDec insDec = (InsDec) ins;
 				if (insDec.getVar().tipo() == TipoE.IDEN) {
 					if (insDec.isConValorInicial())
-						if (insDec.getTipo().tipo() == comprobacionTiposExp(insDec.getValorInicial()).tipo())
+						if (compruebaTiposDecAsig(insDec.getTipo(), comprobacionTiposExp(insDec.getValorInicial())))
 							return true;
 						else
 							GestionErroresTiny.errorSemantico(
 									"Error tipos InsDec: el tipo del valor inicial no coincide con el tipo declarado");
-					else
+					else {
+						if(insDec.getTipo().tipo() == TipoT.VECTOR) {
+							GestionErroresTiny.errorSemantico(
+									"Error tipos InsDec: los vectores tiene que tener valor inicial. Usa creaVector(valorIni, tam)");
+							return false;
+						}
 						return true;
+					}
 				} else
 					GestionErroresTiny.errorSemantico("Error InsDec, la variable no es un identificador");
 				break;
@@ -683,5 +698,17 @@ public class AnalizadorSemantico {
 
 		}
 		return false;
+	}
+	
+	private boolean compruebaTiposDecAsig (Tipos v1, Tipos v2) {
+		if(v1.tipo() != TipoT.VECTOR && v2.tipo() != TipoT.VECTOR ) {
+			return v1.tipo() == v2.tipo();
+		}
+		else if(v1.tipo() != TipoT.VECTOR || v2.tipo() != TipoT.VECTOR) {
+			return false;
+		}
+		else {
+			return compruebaTiposDecAsig(((TipoVector)v1).getTipoVector(), ((TipoVector) v2).getTipoVector());
+		}	
 	}
 }

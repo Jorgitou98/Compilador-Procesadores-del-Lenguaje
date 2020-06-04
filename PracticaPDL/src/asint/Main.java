@@ -17,6 +17,7 @@ public class Main {
 	 //asint.parse();
 	 //System.out.println(asint.parse().value);
 	 P prog = (P) asint.parse().value;
+
 	 AnalizadorSemantico asem = new AnalizadorSemantico(prog);
 	 asem.analizaSemantica();
 	 //System.out.println(CUP$AnalizadorSintacticoTiny$actions.numErrores);

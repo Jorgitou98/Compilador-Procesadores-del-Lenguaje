@@ -161,7 +161,7 @@ Tipo ::= MENOR Tipo: tipo MAYOR MUL
 
 
 
-InsAsig ::= Exp0:var IGUAL Exp:valorExp PUNTOYCOMA
+InsAsig ::= Exp0:var IGUAL Exp0:valorExp PUNTOYCOMA
 {: RESULT = as.insAsig(var, valorExp); :};
 
 

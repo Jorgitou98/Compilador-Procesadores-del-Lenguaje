@@ -1,11 +1,15 @@
 package ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Iden extends E {
 	private String v;
 	private NodoArbol ref;
 	private Tipos tipo;
 	private int dir;
 	private int pa;
+	private List<Integer> dimensiones = new ArrayList<>();
 
 	
 
@@ -73,6 +77,15 @@ public class Iden extends E {
 	public NodoArbol getRef() {
 		return ref;
 	}
+
+	public List<Integer> getDimensiones() {
+		return dimensiones;
+	}
+
+	public void setDimensiones(List<Integer> dimensiones) {
+		this.dimensiones = dimensiones;
+	}
+	
 	
 	
 	
