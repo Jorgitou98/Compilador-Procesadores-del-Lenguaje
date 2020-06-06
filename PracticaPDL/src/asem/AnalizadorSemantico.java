@@ -51,14 +51,13 @@ public class AnalizadorSemantico {
 				if (inscond.isTieneElse()) {
 					tabla.abreBloque();
 					vincula(inscond.getInsElse());
-				    tabla.cierraBloque();
+					tabla.cierraBloque();
 				}
 				break;
 			case INSDEC:
 				InsDec insdec = (InsDec) nodo;
 				vincula(insdec.getTipo());
-				if (insdec.getVar().tipo() == TipoE.IDEN)
-					tabla.insertaId(((Iden) insdec.getVar()).id(), insdec);
+				tabla.insertaId(((Iden) insdec.getVar()).id(), insdec);
 				if (insdec.isConValorInicial())
 					vincula(insdec.getValorInicial());
 				break;
@@ -100,12 +99,6 @@ public class AnalizadorSemantico {
 				vincula(insfun.getInstr());
 				vincula(insfun.getValorReturn());
 				tabla.cierraBloque();
-				break;
-			case INSNEW:
-				InsNew insnew = (InsNew) nodo;
-				vincula(insnew.getTipo());
-				vincula(insnew.getVar());
-				vincula(insnew.getValor());
 				break;
 			case INSPROC:
 				InsProc insproc = (InsProc) nodo;
@@ -186,15 +179,15 @@ public class AnalizadorSemantico {
 					GestionErroresTiny.errorSemantico("Variable " + identif.id() + " no declarada");
 				else {
 					identif.setRef(refIden);
-					if(refIden.tipoNodo() == TipoN.PARAM) 
+					if (refIden.tipoNodo() == TipoN.PARAM)
 						identif.setTipo(((Param) refIden).getTipo());
-					else 
+					else
 						identif.setTipo(((InsDec) refIden).getTipo());
 				}
 
 			} else if (exp.tipo() == TipoE.VECTOR) {
 				Vector vector = (Vector) exp;
-				vincula(vector.getTam()); //Como es un entero no hace falta vincular
+				vincula(vector.getTam()); // Como es un entero no hace falta vincular
 				vincula(vector.getValorIni());
 			} else if (exp.tipo() == TipoE.LLAMADAFUN) {
 				LlamadaFun llamada = (LlamadaFun) exp;
@@ -224,16 +217,17 @@ public class AnalizadorSemantico {
 			if (tipo.tipo() == TipoT.USUARIO) {
 				TipoUsuario tipousuario = (TipoUsuario) tipo;
 				NodoArbol refUsuario = tabla.declaracionDe(tipousuario.getNombreTipo());
-				if(refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
-					//nodo = ((InsTypeDef) refUsuario).getTipo();
+				if (refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
+					// nodo = ((InsTypeDef) refUsuario).getTipo();
 					tipousuario.setTipoOrig(((InsTypeDef) refUsuario).getTipo());
-				}
-				else tipousuario.setRef(refUsuario);
+				} else
+					tipousuario.setRef(refUsuario);
 				if (refUsuario == null)
 					GestionErroresTiny.errorSemantico("Tipo" + tipousuario.getNombreTipo() + " no declarado");
-			}
-			else if (tipo.tipo() == TipoT.VECTOR) {
+			} else if (tipo.tipo() == TipoT.VECTOR) {
 				vincula(((TipoVector) tipo).getTipoVector());
+			} else if (tipo.tipo() == TipoT.PUNTERO) {
+				vincula(((TipoPuntero) tipo).getTipoPuntero());
 			}
 			break;
 		default:
@@ -259,9 +253,11 @@ public class AnalizadorSemantico {
 				Tipos tipo2 = comprobacionTiposExp(ebin.opnd2());
 				if (comprobacionTiposExp(ebin.opnd1()).tipo() == TipoT.VECTOR
 						&& comprobacionTiposExp(ebin.opnd2()).tipo() == TipoT.INT) {
-					Tipos tipo3 = comprobacionTiposExp(((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector());
-					//return ((TipoVector) comprobacionTiposExp((TipoVector)comprobacionTiposExp(ebin.opnd1()))).getTipoVector();
-					return ((TipoVector)comprobacionTiposExp(ebin.opnd1())).getTipoVector();
+					Tipos tipo3 = comprobacionTiposExp(
+							((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector());
+					// return ((TipoVector)
+					// comprobacionTiposExp((TipoVector)comprobacionTiposExp(ebin.opnd1()))).getTipoVector();
+					return ((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector();
 				} else {
 					GestionErroresTiny.errorSemantico("Error tipos corchetes");
 				}
@@ -527,6 +523,20 @@ public class AnalizadorSemantico {
 				} else
 					GestionErroresTiny.errorSemantico("El tamaño del vector no es de tipo entero");
 				break;
+			case NEW:
+				New n = (New) exp;
+				if (n.getTipo().tipo() == TipoT.VECTOR) {
+					if (compruebaVectorNew(n.getTipo(), n.getTamanos().size())) {
+						return new TipoPuntero(n.getTipo());
+					} else
+						GestionErroresTiny.errorSemantico(
+								"Error tipos InsNew: Puntero a tipo Vector no tiene las dimensiones correctas");
+				} else if (n.getTamanos().size() == 0) {
+					return new TipoPuntero(n.getTipo());
+				} else
+					GestionErroresTiny.errorSemantico(
+							"Error tipos InsNew: No se puede indicar tamaños a un puntero que no es a un vector");
+
 			default:
 				break;
 
@@ -556,12 +566,13 @@ public class AnalizadorSemantico {
 				InsAsig insAsig = (InsAsig) ins;
 				if (insAsig.getVar().isAsignable()) {
 					Tipos tipoDer = comprobacionTiposExp(insAsig.getValor());
-					if(tipoDer.tipo() == TipoT.VECTOR || tipoDer.tipo() == TipoT.USUARIO) {
+					if (tipoDer.tipo() == TipoT.VECTOR || tipoDer.tipo() == TipoT.USUARIO) {
 						GestionErroresTiny.errorSemantico(
 								"Error de tipos en la asignación: el tipo de la expresión de la derecha no puede ser un vector o un tipo definido por el usuario");
 						return false;
 					}
-					if (compruebaTiposDecAsig(comprobacionTiposExp(insAsig.getVar()), comprobacionTiposExp(insAsig.getValor())))
+					if (compruebaTiposDecAsig(comprobacionTiposExp(insAsig.getVar()),
+							comprobacionTiposExp(insAsig.getValor())))
 						return true;
 					else
 						GestionErroresTiny.errorSemantico(
@@ -608,7 +619,7 @@ public class AnalizadorSemantico {
 							GestionErroresTiny.errorSemantico(
 									"Error tipos InsDec: el tipo del valor inicial no coincide con el tipo declarado");
 					else {
-						if(insDec.getTipo().tipo() == TipoT.VECTOR) {
+						if (insDec.getTipo().tipo() == TipoT.VECTOR) {
 							GestionErroresTiny.errorSemantico(
 									"Error tipos InsDec: los vectores tiene que tener valor inicial. Usa creaVector(valorIni, tam)");
 							return false;
@@ -644,20 +655,6 @@ public class AnalizadorSemantico {
 				break;
 			case INSFUN:
 				return comprobacionTipos(((InsFun) ins).getInstr());
-			case INSNEW:
-				InsNew insNew = (InsNew) ins;
-				Tipos tipoVar = comprobacionTiposExp(insNew.getVar());
-				if (tipoVar.tipo() == TipoT.PUNTERO) {
-					if (((TipoPuntero) tipoVar).getTipoPuntero().tipo() == insNew.getTipo().tipo()
-							&& comprobacionTiposExp(insNew.getValor()).tipo() == insNew.getTipo().tipo()) {
-						return true;
-					}
-					GestionErroresTiny.errorSemantico(
-							"Error tipos InsNew: El tipo del new o del valor inicial no coinciden con el del valor apuntado");
-				} else
-					GestionErroresTiny.errorSemantico(
-							"Error tipos InsNew: La parte izquierda de la expresión no es de tipo puntero");
-				break;
 			case INSPROC:
 				return comprobacionTipos(((InsProc) ins).getInstr());
 			case INSSTRUCT:
@@ -703,16 +700,36 @@ public class AnalizadorSemantico {
 		}
 		return false;
 	}
-	
-	private boolean compruebaTiposDecAsig (Tipos v1, Tipos v2) {
-		if(v1.tipo() != TipoT.VECTOR && v2.tipo() != TipoT.VECTOR ) {
+
+	private boolean compruebaTiposDecAsig(Tipos v1, Tipos v2) {
+		// Si ninguno es vector o puntero
+		if (v1.tipo() != TipoT.VECTOR && v2.tipo() != TipoT.VECTOR && v2.tipo() != TipoT.PUNTERO
+				&& v2.tipo() != TipoT.PUNTERO) {
 			return v1.tipo() == v2.tipo();
+			// Si uno es vector y otro no
 		}
-		else if(v1.tipo() != TipoT.VECTOR || v2.tipo() != TipoT.VECTOR) {
+		/*
+		 * else if ((v1.tipo() != TipoT.VECTOR && v2.tipo() == TipoT.VECTOR) ||
+		 * (v1.tipo() == TipoT.VECTOR && v2.tipo() != TipoT.VECTOR)) { return false; }
+		 * //Si uno es puntero y otro no else if((v1.tipo() != TipoT.PUNTERO &&
+		 * v2.tipo() == TipoT.PUNTERO) || (v1.tipo() == TipoT.PUNTERO && v2.tipo() !=
+		 * TipoT.PUNTERO)) { return false; }
+		 */
+		// Si los dos son vectores
+		else if (v1.tipo() == TipoT.VECTOR && v2.tipo() == TipoT.VECTOR) {
+			return compruebaTiposDecAsig(((TipoVector) v1).getTipoVector(), ((TipoVector) v2).getTipoVector());
+		}
+		// Si los dos son punteros
+		else if (v1.tipo() == TipoT.PUNTERO && v2.tipo() == TipoT.PUNTERO) {
+			return compruebaTiposDecAsig(((TipoPuntero) v1).getTipoPuntero(), ((TipoPuntero) v2).getTipoPuntero());
+		} else
 			return false;
-		}
-		else {
-			return compruebaTiposDecAsig(((TipoVector)v1).getTipoVector(), ((TipoVector) v2).getTipoVector());
-		}	
+	}
+
+	private boolean compruebaVectorNew(Tipos tipo, int tam) {
+		if (tipo.tipo() == TipoT.VECTOR) {
+			return compruebaVectorNew(((TipoVector) tipo).getTipoVector(), tam - 1);
+		} else
+			return tam == 0;
 	}
 }

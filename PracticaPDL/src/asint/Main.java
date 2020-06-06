@@ -10,7 +10,7 @@ import code.GeneradorCodigo;
 
 public class Main {
    public static void main(String[] args) throws Exception {
-     Reader input = new InputStreamReader(new FileInputStream("prueba4.txt"));
+     Reader input = new InputStreamReader(new FileInputStream("prueba_6.txt"));
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);

@@ -34,6 +34,8 @@ public class AS {
 	public E verdadero(boolean asignable) {return new True(asignable);}
 	public E nulo(boolean asignable) {return new Null(asignable);}
 	public E vector(E valorIni, E tam, boolean asignable) {return new Vector(valorIni, tam, asignable);}
+	public E nuevo(List<Integer> lista, Tipos tipo, boolean asignable) {return new New(lista, tipo, asignable);}
+	
 	public Ins insIfConElse(E cond, P insIf, P insElse) {return new InsCond(cond, insIf, insElse);}
 	public Ins insIfSinElse(E cond, P insIf) {return new InsCond(cond, insIf);}
 	public Ins insWhile(E cond, P ins) {return new InsWhile(cond, ins);}
@@ -47,7 +49,6 @@ public class AS {
 	public Ins insStruct(E nombreTipo, List<Ins> declaraciones) {return new InsStruct(nombreTipo, declaraciones);}
 	public Ins insEnum(E nombre, List<E> listaConstantes) {return new InsEnum(nombre, listaConstantes);}
 	public Ins insTypeDef(Tipos tipo, E nombreNuevo) {return new InsTypeDef(tipo, nombreNuevo);}
-	public Ins insNew(Tipos tipo, E var, E valor) {return new InsNew(tipo, var, valor);}
   	
 	public P programa() {return new P();}
   	public Tipos tipoInt() {return new TipoInt();}

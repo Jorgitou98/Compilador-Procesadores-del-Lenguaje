@@ -1,10 +1,8 @@
 struct persona{
-	int nombre;
+	vector<int> numeros = creaVector(0, 4);
 	int edad;
 }
 
 persona pepe;
-pepe.edad = 44;
-
-vector<persona> lista = creaVector(pepe, 3);
-lista[2].nombre = 898;
+pepe.numeros[0] = 77;
+persona juan = pepe;

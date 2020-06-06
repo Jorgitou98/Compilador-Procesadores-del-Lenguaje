@@ -48,13 +48,14 @@ terminal    Tipos INT, BOOL, CHAR, FLOAT, VECTOR;
 
 non terminal  P P;
 non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, 
-				InsDecConValorIni, InsNew;
-non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, TiposSwitch; 
+				InsDecConValorIni;
+non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, TiposSwitch, New; 
 non terminal  List<E> ListaArg, ListaArg1, LEnum, LEnumElige;
 non terminal  List<Case> ListaCase;
 non terminal  List<Param> Parametros, ParamElige;
 non terminal  List<Ins> LDec;
 non terminal  Tipos Tipo;
+non terminal  List<Integer> ListaNew, ListaNewElige;
 
 	
 P ::= Inst:ins P:prog 
@@ -98,15 +99,8 @@ Inst ::= InsEnum:valorInsEnum
 Inst ::= InsTypeDef:valorInsTypeDef
 {: RESULT = valorInsTypeDef; :};
 
-Inst ::= InsNew:valorInsNew
-{: RESULT = valorInsNew; :};
-
 Inst ::= error PUNTOYCOMA
-{: numErrores += 1; RESULT = null; :};
-
-
-InsNew ::= Exp0:var IGUAL NEW Tipo:tipo PAP Exp:valor PCIERRE PUNTOYCOMA
-{: RESULT = as.insNew(tipo, var, valor); :};
+{: numErrores += 1; RESULT = null; :}; 
 
 
 InsCond ::= IF Exp0:cond LLAVESAP P:insIf LLAVESCIERRE
@@ -306,6 +300,8 @@ Exp ::= Exp0: valorExp
 	{: RESULT= valorExp; :};
 Exp ::= CreaVector: valorExp
 	{: RESULT = valorExp; :};
+Exp ::= New:valorExp
+	{: RESULT = valorExp; :};
 	
 	
 Exp0 ::= Exp1:valorExp1 OR Exp0:valorExp2
@@ -411,3 +407,20 @@ CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE
 	{: RESULT = as.vector(valorExp1, valorExp2, false); :};
 CreaVector ::= CREAVECTOR PAP Exp0:valorExp1 COMA Exp0:valorExp2 PCIERRE
 	{: RESULT = as.vector(valorExp1, valorExp2, false); :};
+	
+New ::= NEW Tipo:tipo PAP ListaNew:lista PCIERRE
+{: RESULT = as.nuevo(lista, tipo, false); :};
+
+ListaNew ::=
+{: RESULT = new ArrayList<Integer>(); :};
+
+ListaNew ::= ENT:lexDeEnt ListaNewElige:lista
+{: lista.add(0, Integer.parseInt(lexDeEnt));
+	RESULT = lista; :}; 
+
+ListaNewElige ::=
+{: RESULT = new ArrayList<Integer>(); :};
+
+ListaNewElige ::= COMA ENT:lexDeEnt ListaNewElige:lista
+{: lista.add(0, Integer.parseInt(lexDeEnt));
+	RESULT = lista; :}; 

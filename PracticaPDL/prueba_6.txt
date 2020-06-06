@@ -1,0 +1,4 @@
+<int> * x= new int();
+<<int>*>* y = new <int>*();
+*y = x;
+*(*y) = 3;

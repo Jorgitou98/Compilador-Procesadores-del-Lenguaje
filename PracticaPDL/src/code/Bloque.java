@@ -1,11 +1,13 @@
 package code;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Bloque {
 	private Map<String, Integer> identificadores = new HashMap<>();
 	private Map<String, Integer> tamanosTipos = new HashMap<>();
+	private Map<String, List<Integer>> dimensionesVect = new HashMap<>();
 	private int tamBloque = 0;
 	private int ssp = 0;
 	private boolean funProc = false;
@@ -100,6 +102,17 @@ public class Bloque {
 	
 	public void insertaCampoStruct(String id, int dirRel) {
 		identificadores.put(id, dirRel);
+	}
+	public void insertaDimensiones(String id, List<Integer> dims) {
+		dimensionesVect.put(id, dims);
+	}
+	public List<Integer> dimensionVect(String id){
+		if(dimensionesVect.containsKey(id)) {
+			return dimensionesVect.get(id);
+		}
+		else if(padre!= null)
+			return padre.dimensionVect(id);
+		return null;
 	}
 
 }

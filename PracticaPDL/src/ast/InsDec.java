@@ -94,4 +94,14 @@ public class InsDec extends Ins{
 		return s;
 	}
 
+
+
+	public void setConValorInicial(boolean conValorInicial) {
+		this.conValorInicial = conValorInicial;
+	}
+
+	
+	
+	
+
 }
