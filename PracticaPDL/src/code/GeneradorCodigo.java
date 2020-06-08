@@ -737,10 +737,10 @@ public class GeneradorCodigo {
 	}
 
 	private void cierraAmbito() {
-		nextDir -= bloqueAct.getTamBloque();
 		if (!bloqueAct.isFunProc()) {
 			bloqueAct.getPadre().setSsp(Math.max(bloqueAct.getPadre().getSsp(), nextDir));
 		}
+		nextDir -= bloqueAct.getTamBloque();
 		bloqueAct = bloqueAct.getPadre();
 
 	}
