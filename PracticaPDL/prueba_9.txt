@@ -1,0 +1,15 @@
+enum meses = {ENERO|FEBRERO|MARZO};
+
+meses mes1 = meses.ENERO;
+
+int x = 0;
+switch(mes1){
+case meses.ENERO:
+	x = 3;
+	break;
+case meses.FEBRERO:
+	x = 4;
+	break;
+default:
+	x = 22;
+}

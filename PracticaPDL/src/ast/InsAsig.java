@@ -32,6 +32,16 @@ public class InsAsig extends Ins{
 	public E getValor() {
 		return valor;
 	}
+	
+	
+
+
+
+
+
+	public void setValor(E valor) {
+		this.valor = valor;
+	}
 
 
 

@@ -5,7 +5,7 @@ import java.util.List;
 public class InsSwitch extends Ins{
 	private E varSwitch;
 	private List<Case> listaCase;
-	private NodoArbol ref;
+	private Tipos tipoSwitch;
 	public InsSwitch(E varSwitch, List<Case> listaCase, int fila, int columna) {
 		super();
 		this.listaCase = listaCase;
@@ -15,14 +15,38 @@ public class InsSwitch extends Ins{
 	}
 	
 	
-	public void setRef(NodoArbol ref) {
-		this.ref = ref;
+	
+
+
+	public Tipos getTipoSwitch() {
+		return tipoSwitch;
 	}
+
+
+
+
+
+	public void setTipoSwitch(Tipos tipoSwitch) {
+		this.tipoSwitch = tipoSwitch;
+	}
+
+
+
 
 
 	public E getVarSwitch() {
 		return varSwitch;
 	}
+	
+	
+	public void setVarSwitch(E varSwitch) {
+		this.varSwitch = varSwitch;
+	}
+
+
+
+
+
 	public List<Case> getListaCase() {
 		return listaCase;
 	}
@@ -45,13 +69,13 @@ public class InsSwitch extends Ins{
 		}
 		s += varSwitch.imprime(nextVar, false);
 		
-		s = s + next + "   \\__Ref\n";
+		s = s + next + "   \\__TipoSwitch\n";
 		String nextRef = next + "   |";
-		for (int i = 0; i < "__Ref".length(); ++i) {
+		for (int i = 0; i < "__TipoSwitch".length(); ++i) {
 			nextRef += " ";
 		}
-		if (ref != null)
-			s += ref.imprime(nextRef, false);
+		if (tipoSwitch != null)
+			s += tipoSwitch.imprime(nextRef, false);
 		else
 			s += nextRef + "\\__ERROR\n";
 		

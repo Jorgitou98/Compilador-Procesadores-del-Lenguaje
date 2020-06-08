@@ -12,6 +12,16 @@ public class InsDec extends Ins{
 	public Tipos getTipo() {
 		return tipo;
 	}
+	
+	
+
+
+
+	public void setTipo(Tipos tipo) {
+		this.tipo = tipo;
+	}
+
+
 
 
 
@@ -30,6 +40,16 @@ public class InsDec extends Ins{
 	public E getValorInicial() {
 		return valorInicial;
 	}
+	
+	
+
+
+
+	public void setValorInicial(E valorInicial) {
+		this.valorInicial = valorInicial;
+	}
+
+
 
 
 

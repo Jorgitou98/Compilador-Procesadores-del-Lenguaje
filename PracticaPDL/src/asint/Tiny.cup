@@ -50,7 +50,7 @@ terminal    Tipos INT, BOOL, CHAR, FLOAT;
 non terminal  P P;
 non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, 
 				InsDecConValorIni;
-non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, TiposSwitch, New; 
+non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, New; 
 non terminal  List<E> ListaArg, ListaArg1, LEnum, LEnumElige;
 non terminal  List<Case> ListaCase;
 non terminal  List<Param> Parametros, ParamElige;
@@ -188,7 +188,7 @@ ListaArg1 ::= Exp0:elem
 InsSwitch ::= SWITCH: swi PAP Exp0:var PCIERRE LLAVESAP ListaCase:lista LLAVESCIERRE
 	{: RESULT = as.insSwitch(var, lista, swi.getFila(), swi.getColumna()); :};
 
-ListaCase ::= CASE: cas TiposSwitch:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
+ListaCase ::= CASE: cas Exp0:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
 	 {:lista.add(0, as.createCase(var, instr, cas.getFila(), cas.getColumna()));
        RESULT = lista; :};
 	 
@@ -197,24 +197,8 @@ ListaCase ::= DEFAULT: def DOSPUNTOS P:instr
 	 	lista.add(0, as.createCase(as.iden("default", true, def.getFila(), def.getColumna()), instr, def.getFila(), def.getColumna()));
 	 	RESULT = lista;
 	 :};
-	    
-TiposSwitch ::= ENT:lexDeEnt
-	{: RESULT = as.ent(lexDeEnt.getLexema(), false, lexDeEnt.getFila(), lexDeEnt.getColumna()); :}; 
-TiposSwitch ::= REAL:lexDeReal
-	{: RESULT = as.real(lexDeReal.getLexema(), false, lexDeReal.getFila(), lexDeReal.getColumna()); :};  
-TiposSwitch ::= TRUE: tr
-	{: RESULT = as.verdadero(false, tr.getFila(), tr.getColumna()); :};     
-TiposSwitch ::= FALSE: fs
-	{: RESULT = as.falso(false, fs.getFila(), fs.getColumna()); :};    
-TiposSwitch ::= CARACTER:lexDeCaracter
-	{: RESULT = as.caracter(lexDeCaracter.getLexema(), false, lexDeCaracter.getFila(), lexDeCaracter.getColumna()); :};
-TiposSwitch ::= IDEN:lexDeIden
-	{: RESULT = as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()); :};
-
-
-
-
-
+	 
+	 
  
 InsFun ::= FUN: fun Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr RETURN Exp:valorReturn PUNTOYCOMA LLAVESCIERRE
 	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, valorReturn, fun.getFila(), fun.getColumna()); :};

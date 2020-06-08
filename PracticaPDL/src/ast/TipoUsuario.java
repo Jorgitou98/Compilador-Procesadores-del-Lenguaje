@@ -47,8 +47,7 @@ public class TipoUsuario extends Tipos{
 		return s;
 	}
 	public TipoT tipo() {
-		if(tipoOrig == null) return TipoT.USUARIO;
-		else return tipoOrig.tipo();
+		return TipoT.USUARIO;
 	}
 
 	public NodoArbol getRef() {
@@ -58,6 +57,11 @@ public class TipoUsuario extends Tipos{
 	public void setTipoOrig(Tipos tipoOrig) {
 		this.tipoOrig = tipoOrig;
 	}
+
+	public Tipos getTipoOrig() {
+		return tipoOrig;
+	}
+	
 	
 	
 	

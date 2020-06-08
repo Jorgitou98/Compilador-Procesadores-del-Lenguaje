@@ -13,6 +13,12 @@ public class TipoVector extends Tipos{
 	public Tipos getTipoVector() {
 		return tipoVector;
 	}
+	
+	
+
+	public void setTipoVector(Tipos tipoVector) {
+		this.tipoVector = tipoVector;
+	}
 
 	@Override
 	public String imprime(String prev, boolean barra) {

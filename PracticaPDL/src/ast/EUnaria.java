@@ -13,8 +13,13 @@ public abstract class EUnaria extends E {
 		public TipoN tipoNodo() {
 			return TipoN.EUNARIA;
 		}
+		
+		
 	   
-	   @Override
+	   public void setOpnd1(E opnd1) {
+			this.opnd1 = opnd1;
+		}
+	@Override
 	   public String imprime(String prev, boolean barra) {
 		   String s = prev + "\\__" + name + "\n";
 		   String next = prev;

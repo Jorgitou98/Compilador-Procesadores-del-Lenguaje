@@ -30,6 +30,7 @@ public class AnalizadorSemantico {
 				InsAsig insasig = (InsAsig) nodo;
 				vincula(insasig.getVar());
 				vincula(insasig.getValor());
+				insasig.setValor(cambiaEnums(insasig.getValor()));
 				break;
 			case INSCALL:
 				InsCall inscall = (InsCall) nodo;
@@ -37,14 +38,19 @@ public class AnalizadorSemantico {
 				if (ref == null)
 					GestionErroresTiny
 							.errorSemantico(nodo.getFila(), nodo.getColumna(), "Procedimiento " + ((Iden) inscall.getNombre()).id() + " no declarado");
-				inscall.setRef(ref);
-				for (E arg : inscall.getArgumentos()) {
-					vincula(arg);
+				else if(((Ins) ref).tipo() == TipoIns.INSPROC) {
+					inscall.setRef(ref);
+					for (E arg : inscall.getArgumentos()) {
+						vincula(arg);
+					}
 				}
+				else GestionErroresTiny
+				.errorSemantico(nodo.getFila(), nodo.getColumna(), "El identificador " + ((Iden) inscall.getNombre()).id() + " no se corresponde con un procedimiento");
 				break;
 			case INSCOND:
 				InsCond inscond = (InsCond) nodo;
 				vincula(inscond.getCondicion());
+				inscond.setCondicion(cambiaEnums(inscond.getCondicion()));
 				tabla.abreBloque();
 				vincula(inscond.getInsIf());
 				tabla.cierraBloque();
@@ -58,12 +64,18 @@ public class AnalizadorSemantico {
 				InsDec insdec = (InsDec) nodo;
 				vincula(insdec.getTipo());
 				tabla.insertaId(((Iden) insdec.getVar()).id(), insdec);
-				if (insdec.isConValorInicial())
+				insdec.setTipo(tipoBasico(insdec.getTipo()));
+				if (insdec.isConValorInicial()) {
 					vincula(insdec.getValorInicial());
+					insdec.setValorInicial(cambiaEnums(insdec.getValorInicial()));
+				}
 				break;
 			case INSENUM:
 				InsEnum insenum = (InsEnum) nodo;
 				tabla.insertaId(((Iden) insenum.getNombre()).id(), insenum);
+				for(E id: insenum.getListaConstantes()) {
+					tabla.insertaId(((Iden) id).id(), insenum);
+				}
 				break;
 			case INSFOR:
 				InsFor insfor = (InsFor) nodo;
@@ -83,6 +95,7 @@ public class AnalizadorSemantico {
 								"Variable " + (((Iden) ((InsDec) insfor.getDecIni()).getVar()).id()) + " no declarada");
 				}
 				vincula(insfor.getCond());
+				insfor.setCond(cambiaEnums(insfor.getCond()));
 				vincula(insfor.getPaso());
 				vincula(insfor.getInst());
 				tabla.cierraBloque();
@@ -91,6 +104,7 @@ public class AnalizadorSemantico {
 			case INSFUN:
 				InsFun insfun = (InsFun) nodo;
 				vincula(insfun.getTipoReturn());
+				insfun.setTipoReturn(tipoBasico(insfun.getTipoReturn()));
 				tabla.insertaId(((Iden) insfun.getNombre()).id(), insfun);
 				tabla.abreBloque();
 				for (Param parametro : insfun.getParametros()) {
@@ -98,6 +112,7 @@ public class AnalizadorSemantico {
 				}
 				vincula(insfun.getInstr());
 				vincula(insfun.getValorReturn());
+				insfun.setValorReturn(cambiaEnums(insfun.getValorReturn()));
 				tabla.cierraBloque();
 				break;
 			case INSPROC:
@@ -121,13 +136,16 @@ public class AnalizadorSemantico {
 				break;
 			case INSSWITCH:
 				InsSwitch insswitch = (InsSwitch) nodo;
-				NodoArbol refSwitch = tabla.declaracionDe(((Iden) insswitch.getVarSwitch()).id());
-				insswitch.setRef(refSwitch);
-				if (refSwitch == null)
+				//NodoArbol refSwitch = tabla.declaracionDe(((Iden) insswitch.getVarSwitch()).id());
+				//insswitch.setRef(refSwitch);
+				/*if (refSwitch == null)
 					GestionErroresTiny
 							.errorSemantico(nodo.getFila(), nodo.getColumna(), "Variable " + ((Iden) insswitch.getVarSwitch()).id() + " no declarada");
+							*/
+				vincula(insswitch.getVarSwitch());
+				insswitch.setVarSwitch(cambiaEnums(insswitch.getVarSwitch()));
 				for (Case caso : insswitch.getListaCase()) {
-					caso.setRef(refSwitch);
+					caso.setRef(insswitch);
 					vincula(caso);
 				}
 				break;
@@ -139,6 +157,7 @@ public class AnalizadorSemantico {
 			case INSWHILE:
 				InsWhile inswhile = (InsWhile) nodo;
 				vincula(inswhile.getCondicion());
+				inswhile.setCondicion(cambiaEnums(inswhile.getCondicion()));
 				tabla.abreBloque();
 				vincula(inswhile.getInsWhile());
 				tabla.cierraBloque();
@@ -151,7 +170,12 @@ public class AnalizadorSemantico {
 		case CASE:
 			// NO hace falta vincula el valor del case, es un literal (entero, caracter
 			// etc..)
+			
 			Case caso = (Case) nodo;
+			if(!(caso.getNombreCase().tipo() == TipoE.IDEN && ((Iden) caso.getNombreCase()).id().equals("default"))) {
+				vincula(caso.getNombreCase());
+			}
+			caso.setNombreCase(cambiaEnums(caso.getNombreCase()));
 			tabla.abreBloque();
 			vincula(caso.getInstr());
 			tabla.cierraBloque();
@@ -159,16 +183,21 @@ public class AnalizadorSemantico {
 
 		case EBIN:
 			EBin expbin = (EBin) nodo;
-			if (expbin.tipo() == TipoE.PUNTO)
+			if (expbin.tipo() == TipoE.PUNTO) {
 				vincula(expbin.opnd1());
+				expbin.setOpnd1(cambiaEnums(expbin.opnd1()));
+			}
 			else {
 				vincula(expbin.opnd1());
+				expbin.setOpnd1(cambiaEnums(expbin.opnd1()));
 				vincula(expbin.opnd2());
+				expbin.setOpnd2(cambiaEnums(expbin.opnd2()));
 			}
 			break;
 		case EUNARIA:
 			EUnaria expunaria = (EUnaria) nodo;
 			vincula(expunaria.opnd1());
+			expunaria.setOpnd1(cambiaEnums(expunaria.opnd1()));
 			break;
 		case EXP:
 			E exp = (E) nodo;
@@ -181,8 +210,10 @@ public class AnalizadorSemantico {
 					identif.setRef(refIden);
 					if (refIden.tipoNodo() == TipoN.PARAM)
 						identif.setTipo(((Param) refIden).getTipo());
-					else
+					else if (((Ins) refIden).tipo() == TipoIns.INSDEC) {
 						identif.setTipo(((InsDec) refIden).getTipo());
+					}
+					else if(((Ins)refIden).tipo()!= TipoIns.INSENUM) GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "El identificador " + identif.id() + " no se corresponde con una variable");
 				}
 
 			} else if (exp.tipo() == TipoE.VECTOR) {
@@ -192,18 +223,25 @@ public class AnalizadorSemantico {
 			} else if (exp.tipo() == TipoE.LLAMADAFUN) {
 				LlamadaFun llamada = (LlamadaFun) exp;
 				NodoArbol refLlamada = tabla.declaracionDe(((Iden) llamada.getIden()).id());
-				llamada.setRef(refLlamada);
-				llamada.setTipo(((InsFun) refLlamada).getTipoReturn());
 				if (refLlamada == null)
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Funcion " + ((Iden) llamada.getIden()).id() + " no declarada");
-				for (E arg : llamada.getArgumentos()) {
-					vincula(arg);
+				else if(((Ins) refLlamada).tipo() == TipoIns.INSFUN){
+					llamada.setRef(refLlamada);
+					llamada.setTipo(((InsFun) refLlamada).getTipoReturn());
+					
+					for (E arg : llamada.getArgumentos()) {
+						vincula(arg);
+					}
+				}
+				else {
+					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "El identificador de la llamada " + ((Iden) llamada.getIden()).id() + " no se corresponde con una función");
 				}
 			}
 			break;
 		case PARAM:
 			Param param = (Param) nodo;
 			vincula(param.getTipo());
+			param.setTipo(tipoBasico(param.getTipo()));
 			tabla.insertaId(((Iden) param.getIden()).id(), param);
 			break;
 		case PROG:
@@ -217,13 +255,15 @@ public class AnalizadorSemantico {
 			if (tipo.tipo() == TipoT.USUARIO) {
 				TipoUsuario tipousuario = (TipoUsuario) tipo;
 				NodoArbol refUsuario = tabla.declaracionDe(tipousuario.getNombreTipo());
-				if (refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
-					// nodo = ((InsTypeDef) refUsuario).getTipo();
-					tipousuario.setTipoOrig(((InsTypeDef) refUsuario).getTipo());
-				} else
-					tipousuario.setRef(refUsuario);
 				if (refUsuario == null)
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Tipo" + tipousuario.getNombreTipo() + " no declarado");
+				else if (refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
+					// nodo = ((InsTypeDef) refUsuario).getTipo();
+					tipousuario.setTipoOrig(((InsTypeDef) refUsuario).getTipo());
+					tipousuario.setRef(refUsuario);
+				} else
+					tipousuario.setRef(refUsuario);
+				
 			} else if (tipo.tipo() == TipoT.VECTOR) {
 				vincula(((TipoVector) tipo).getTipoVector());
 			} else if (tipo.tipo() == TipoT.PUNTERO) {
@@ -249,12 +289,8 @@ public class AnalizadorSemantico {
 				}
 				break;
 			case CORCHETES:
-				Tipos tipo1qef = comprobacionTiposExp(ebin.opnd1());
-				Tipos tipo2 = comprobacionTiposExp(ebin.opnd2());
 				if (comprobacionTiposExp(ebin.opnd1()).tipo() == TipoT.VECTOR
 						&& comprobacionTiposExp(ebin.opnd2()).tipo() == TipoT.INT) {
-					Tipos tipo3 = comprobacionTiposExp(
-							((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector());
 					// return ((TipoVector)
 					// comprobacionTiposExp((TipoVector)comprobacionTiposExp(ebin.opnd1()))).getTipoVector();
 					return ((TipoVector) comprobacionTiposExp(ebin.opnd1())).getTipoVector();
@@ -499,18 +535,22 @@ public class AnalizadorSemantico {
 				return new TipoInt();
 			case LLAMADAFUN:
 				LlamadaFun llamada = (LlamadaFun) exp;
-				List<Param> parametros = ((InsFun) llamada.getRef()).getParametros();
-				if (parametros.size() == llamada.getArgumentos().size()) {
-					boolean coincide = true;
-					for (int i = 0; i < parametros.size(); ++i) {
-						coincide = coincide && (parametros.get(i).getTipo())
-								.tipo() == comprobacionTiposExp(llamada.getArgumentos().get(i)).tipo();
+				if(((Ins) llamada.getRef()).tipo() == TipoIns.INSFUN) {
+					List<Param> parametros = ((InsFun) llamada.getRef()).getParametros();
+					if (parametros.size() == llamada.getArgumentos().size()) {
+						boolean coincide = true;
+						for (int i = 0; i < parametros.size(); ++i) {
+							coincide = coincide && (parametros.get(i).getTipo())
+									.tipo() == comprobacionTiposExp(llamada.getArgumentos().get(i)).tipo();
+						}
+						if (coincide)
+							return llamada.getTipo();
 					}
-					if (coincide)
-						return llamada.getTipo();
+					GestionErroresTiny
+							.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error llamada funcion: los arumentos no coinciden con el tipo de parámetros");
 				}
-				GestionErroresTiny
-						.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error llamada funcion: los arumentos no coinciden con el tipo de parámetros");
+				else GestionErroresTiny
+				.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error llamada funcion: el identificador no se corresponde con una función");
 				break;
 			case NULL:
 				return new TipoPuntero(null, exp.getFila(), exp.getColumna());
@@ -554,7 +594,10 @@ public class AnalizadorSemantico {
 		switch (nodo.tipoNodo()) {
 		case CASE:
 			Case caso = (Case) nodo;
-			if (((InsDec) caso.getRef()).getTipo().tipo() == comprobacionTiposExp(caso.getNombreCase()).tipo())
+			if(caso.getNombreCase().tipo() == TipoE.IDEN && ((Iden) caso.getNombreCase()).id().equals("default")) {
+				return comprobacionTipos(caso.getInstr());
+			}
+			else if (((InsSwitch) caso.getRef()).getTipoSwitch().tipo() == comprobacionTiposExp(caso.getNombreCase()).tipo())
 				return comprobacionTipos(caso.getInstr());
 			else
 				GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error tipos Case: El tipo del case no es igual al del switch");
@@ -654,7 +697,14 @@ public class AnalizadorSemantico {
 
 				break;
 			case INSFUN:
-				return comprobacionTipos(((InsFun) ins).getInstr());
+				InsFun insFun = (InsFun) ins;
+				if(comprobacionTiposExp(insFun.getValorReturn()).tipo() == insFun.getTipoReturn().tipo()){
+					return comprobacionTipos(((InsFun) ins).getInstr());
+				}
+				else 
+					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
+							"Error tipos InsFun: El tipo del return no se corresponde con el de la función");
+				break;
 			case INSPROC:
 				return comprobacionTipos(((InsProc) ins).getInstr());
 			case INSSTRUCT:
@@ -665,14 +715,18 @@ public class AnalizadorSemantico {
 				return correctoStruct;
 			case INSSWITCH:
 				InsSwitch insSwitch = (InsSwitch) ins;
-				if (insSwitch.getVarSwitch().isAsignable()) {
+				Tipos tipoSwitch = comprobacionTiposExp(insSwitch.getVarSwitch());
+				insSwitch.setTipoSwitch(tipoSwitch);
+				if (tipoSwitch.tipo() == TipoT.INT || tipoSwitch.tipo()==TipoT.FLOAT || tipoSwitch.tipo() == TipoT.BOOL || tipoSwitch.tipo()==TipoT.CHAR) {
 					boolean correctoSwitch = true;
 					for (Case casoSwitch : insSwitch.getListaCase())
 						correctoSwitch = correctoSwitch && comprobacionTipos(casoSwitch);
 					return correctoSwitch;
 				}
-				GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error tipos InsSwitch: La expresion del switch no es válida");
-
+				GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
+						"Error tipos switch: la expresión sobre la que hacemos el switch no se corresponde con un tipo básico");
+					
+				
 				break;
 			case INSTYPEDEF:
 				return true;
@@ -731,5 +785,42 @@ public class AnalizadorSemantico {
 			return compruebaVectorNew(((TipoVector) tipo).getTipoVector(), tam - 1);
 		} else
 			return tam == 0;
+	}
+	private Tipos tipoBasico(Tipos tipo) {
+		if(tipo.tipo() == TipoT.PUNTERO) {
+			((TipoPuntero)tipo).setTipoPuntero(tipoBasico(((TipoPuntero)tipo).getTipoPuntero()));
+		}
+		else if(tipo.tipo() == TipoT.USUARIO && ((TipoUsuario)tipo).getTipoOrig() != null) {
+				return tipoBasico(tipoOriginal(((TipoUsuario)tipo).getTipoOrig()));
+			}
+		else if(tipo.tipo() == TipoT.VECTOR) {
+			((TipoVector) tipo).setTipoVector(tipoBasico(((TipoVector)tipo).getTipoVector()));
+		}
+		else if(tipo.tipo()==TipoT.USUARIO && ((Ins)((TipoUsuario)tipo).getRef()).tipo() == TipoIns.INSENUM) {
+			return new TipoInt();
+		}
+		return tipo;
+	}
+	private Tipos tipoOriginal(Tipos tipo) {
+		if(tipo.tipo() == TipoT.USUARIO && ((TipoUsuario) tipo).getTipoOrig()!=null) {
+			return tipoBasico(((TipoUsuario) tipo).getTipoOrig());
+		}
+		else return tipo;
+	}
+	
+	private E cambiaEnums(E exp) {
+		if(exp.tipo() == TipoE.PUNTO && exp.opnd1().tipo() == TipoE.IDEN && tabla.declaracionDe(((Iden)exp.opnd1()).id()).tipoNodo() == TipoN.INS && ((Ins)tabla.declaracionDe(((Iden)exp.opnd1()).id())).tipo() == TipoIns.INSENUM){
+			if(exp.opnd2().tipo() == TipoE.IDEN) {
+				InsEnum insEnum = (InsEnum) tabla.declaracionDe(((Iden)exp.opnd1()).id());
+				for(int i = 0; i<insEnum.getListaConstantes().size(); ++i) {
+					if(((Iden) insEnum.getListaConstantes().get(i)).id().equals(((Iden)exp.opnd2()).id())){
+						return new Ent("" + i, false, exp.getFila(), exp.getColumna());
+					}
+				}
+				GestionErroresTiny.errorSemantico(exp.getFila(), exp.getColumna(),"Error semántico: El valor " + ((Iden)exp.opnd2()).id() + " no se corresponde con ninguno del enumerado " + ((Iden)exp.opnd2()).id());
+			}
+			else GestionErroresTiny.errorSemantico(exp.getFila(), exp.getColumna(),"Error semántico: No se puede acceder a un valor de un enumerado con algo que no sea un identificador");
+		}
+		return exp;
 	}
 }

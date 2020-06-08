@@ -26,6 +26,18 @@ public class InsWhile extends Ins{
 	public E getCondicion() {
 		return condicion;
 	}
+	
+	
+
+
+
+
+
+
+
+	public void setCondicion(E condicion) {
+		this.condicion = condicion;
+	}
 
 
 

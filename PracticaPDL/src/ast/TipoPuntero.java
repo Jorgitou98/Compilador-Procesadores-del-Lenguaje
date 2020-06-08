@@ -13,6 +13,12 @@ public class TipoPuntero extends Tipos{
 	public Tipos getTipoPuntero() {
 		return tipoPuntero;
 	}
+	
+	
+
+	public void setTipoPuntero(Tipos tipoPuntero) {
+		this.tipoPuntero = tipoPuntero;
+	}
 
 	@Override
 	public String imprime(String prev, boolean barra) {

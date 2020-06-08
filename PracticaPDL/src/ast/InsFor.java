@@ -57,6 +57,24 @@ public class InsFor extends Ins{
 	public E getPaso() {
 		return paso;
 	}
+	
+	
+
+
+
+
+
+	public void setCond(E cond) {
+		this.cond = cond;
+	}
+
+
+
+
+
+	public void setPaso(E paso) {
+		this.paso = paso;
+	}
 
 
 

@@ -1,0 +1,31 @@
+int x;
+int y;
+struct persona{
+	int nombre;
+	int apellido;
+}
+int x =7*2%3;
+switch(x){
+	case 1:
+	y = 3;
+	break;
+	case 2:
+	y=5;
+	break;
+	case 3:
+	y = 99;
+	break;
+	default:
+	y=88;
+	}
+
+persona pepe;
+pepe.nombre = y;
+switch(pepe.nombre){
+	case 88:
+	y = 22;
+	pepe.apellido = 22;
+	break;
+	default:
+	pepe.apellido = 33;
+}

@@ -53,6 +53,8 @@ public class InsCond extends Ins{
 	public E getCondicion() {
 		return condicion;
 	}
+	
+	
 
 
 
@@ -74,6 +76,36 @@ public class InsCond extends Ins{
 	public boolean isTieneElse() {
 		return tieneElse;
 	}
+	
+	
+
+
+	public void setCondicion(E condicion) {
+		this.condicion = condicion;
+	}
+
+
+
+
+	public void setInsIf(P insIf) {
+		this.insIf = insIf;
+	}
+
+
+
+
+	public void setInsElse(P insElse) {
+		this.insElse = insElse;
+	}
+
+
+
+
+	public void setTieneElse(boolean tieneElse) {
+		this.tieneElse = tieneElse;
+	}
+
+
 
 
 	@Override

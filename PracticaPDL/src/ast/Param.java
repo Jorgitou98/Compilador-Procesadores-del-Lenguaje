@@ -15,6 +15,10 @@ public class Param extends NodoArbol{
 	public Tipos getTipo() {
 		return tipo;
 	}
+	
+	public void setTipo(Tipos tipo) {
+		this.tipo = tipo;
+	}
 	public E getIden() {
 		return iden;
 	}

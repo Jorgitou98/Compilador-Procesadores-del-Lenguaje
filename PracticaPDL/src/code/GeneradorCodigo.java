@@ -180,8 +180,7 @@ public class GeneradorCodigo {
 				break;
 			case INSSWITCH:
 				InsSwitch insSwitch = (InsSwitch) ins;
-				for (Case casoSwitch : insSwitch.getListaCase())
-					declaraciones(casoSwitch);
+				declaraciones(switchACond(insSwitch.getVarSwitch(), insSwitch.getListaCase(), 0).getInstr().get(0));
 				break;
 			case INSWHILE:
 				InsWhile insWhile = (InsWhile) ins;
@@ -643,7 +642,8 @@ public class GeneradorCodigo {
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSSWITCH:
-
+			InsSwitch insSwitch = (InsSwitch) ins;
+			generaCodigoProg(switchACond(insSwitch.getVarSwitch(), insSwitch.getListaCase(), 0));
 			break;
 		case INSTYPEDEF:
 			break;
@@ -840,5 +840,17 @@ public class GeneradorCodigo {
 			return stringPuntos(exp.opnd1()) + "." + ((Iden) exp.opnd2()).id();
 		} else
 			return ((Iden) exp).id();
+	}
+	
+	private P switchACond(E var, List<Case> lista, int i) {
+		if(i == lista.size()-1) {
+			return lista.get(i).getInstr();
+		}
+		else {
+			InsCond cond = new InsCond(new IgualIgual(var, lista.get(i).getNombreCase(), false, 0, 0), lista.get(i).getInstr(), switchACond(var, lista, i+1), 0, 0);
+			P prog = new P();
+			prog.anadeIns(cond);
+			return prog;
+		}
 	}
 }

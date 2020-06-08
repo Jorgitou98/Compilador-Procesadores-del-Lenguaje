@@ -14,6 +14,11 @@ public class Case extends NodoArbol{
 	public E getNombreCase() {
 		return nombreCase;
 	}
+	
+	
+	public void setNombreCase(E nombreCase) {
+		this.nombreCase = nombreCase;
+	}
 	public P getInstr() {
 		return instr;
 	}

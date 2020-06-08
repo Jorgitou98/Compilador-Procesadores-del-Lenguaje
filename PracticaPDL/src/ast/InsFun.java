@@ -32,6 +32,15 @@ public class InsFun extends Ins{
 	public Tipos getTipoReturn() {
 		return tipoReturn;
 	}
+	
+	
+
+
+
+
+	public void setTipoReturn(Tipos tipoReturn) {
+		this.tipoReturn = tipoReturn;
+	}
 
 
 
@@ -59,6 +68,15 @@ public class InsFun extends Ins{
 
 	public E getValorReturn() {
 		return valorReturn;
+	}
+	
+	
+
+
+
+
+	public void setValorReturn(E valorReturn) {
+		this.valorReturn = valorReturn;
 	}
 
 

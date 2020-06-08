@@ -1,0 +1,21 @@
+typedef int numeros2;
+numeros2 x = 3;
+int y = x;
+
+typedef vector<vector<int>> matriz;
+matriz A = creaVector(creaVector(0,3),4);
+A[0][0] = 3+2%7*4;
+
+struct persona{
+	int x;
+	matriz a = creaVector(creaVector(0,3),4);
+}
+
+typedef persona persona2;
+
+persona2 juan;
+juan.a[0][1] = 77;
+
+typedef <int>* puntero;
+puntero p = new int();
+*p=100;
