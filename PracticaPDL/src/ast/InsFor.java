@@ -3,12 +3,12 @@ package ast;
 public class InsFor extends Ins{
 	private Ins decIni;
 	private E cond;
-	private E paso;
+	private Ins paso;
 	private P inst;
 	private NodoArbol varBucle;
 	
 
-	public InsFor(Ins decIni, E cond, E paso, P inst, int fila, int columna) {
+	public InsFor(Ins decIni, E cond, Ins paso, P inst, int fila, int columna) {
 		super();
 		this.decIni = decIni;
 		this.cond = cond;
@@ -54,7 +54,7 @@ public class InsFor extends Ins{
 
 
 
-	public E getPaso() {
+	public Ins getPaso() {
 		return paso;
 	}
 	
@@ -72,7 +72,7 @@ public class InsFor extends Ins{
 
 
 
-	public void setPaso(E paso) {
+	public void setPaso(Ins paso) {
 		this.paso = paso;
 	}
 

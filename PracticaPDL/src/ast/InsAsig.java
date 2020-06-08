@@ -1,6 +1,5 @@
 package ast;
 
-import java.util.List;
 
 public class InsAsig extends Ins{
 	private E var;

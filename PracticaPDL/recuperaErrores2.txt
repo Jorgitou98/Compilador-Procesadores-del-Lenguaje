@@ -1,0 +1,25 @@
+
+int j = j+1;
+int j = j+1;
+
+# Error tipo devuelto por una función
+fun 3+4 funcion(int num, bool cond){
+return 25;
+}
+
+# Error en los parametros de un procedimiento
+# (Funcionará igual si es función)
+proc ejecuta(int 3, error, bool marca){
+
+}
+
+# Error en el cuerpo de una función
+fun int funcion(int num, bool cond){
+j+++;
+return 25;
+}
+
+
+int j = j+1;
+int j = j+1;
+int j = j+1;

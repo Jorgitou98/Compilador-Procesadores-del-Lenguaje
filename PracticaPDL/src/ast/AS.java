@@ -107,7 +107,7 @@ public class AS {
 	public Ins insWhile(E cond, P ins, int fila, int columna) 
 	{return new InsWhile(cond, ins, fila, columna);}
 	
-	public Ins insFor(Ins decIni, E cond, E paso, P ins, int fila, int columna) 
+	public Ins insFor(Ins decIni, E cond, Ins paso, P ins, int fila, int columna) 
 	{return new InsFor(decIni, cond, paso, ins, fila, columna);}
 	
 	public Ins insDec(Tipos tipo, E var, boolean conValorIni, E valorIni, int fila, int columna)

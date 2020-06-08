@@ -49,7 +49,7 @@ terminal    Tipos INT, BOOL, CHAR, FLOAT;
 
 non terminal  P P;
 non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, 
-				InsDecConValorIni;
+				InsDecConValorIni, InsBucleWhile, InsBucleFor;
 non terminal  E Exp, Exp0, Exp1, Exp2, Exp3, Exp4, Exp5, Exp6, Exp7, Exp8, CreaVector, New; 
 non terminal  List<E> ListaArg, ListaArg1, LEnum, LEnumElige;
 non terminal  List<Case> ListaCase;
@@ -68,73 +68,124 @@ P ::=
 
 
 Inst ::= InsCond:valorInsCond 
-{: RESULT = valorInsCond; :};
+	{: RESULT = valorInsCond; :};
 
 Inst ::= InsBucle:valorInsBucle
-{: RESULT = valorInsBucle; :};
+	{: RESULT = valorInsBucle; :};
 
 Inst ::= InsDec:valorInsDec
-{: RESULT = valorInsDec; :};
+	{: RESULT = valorInsDec; :};
 
 Inst ::= InsAsig:valorInsAsig
-{: RESULT = valorInsAsig; :};
+	{: RESULT = valorInsAsig; :};
 
 Inst ::=  InsCall:valorInsCall
-{: RESULT = valorInsCall; :};
+	{: RESULT = valorInsCall; :};
 
 Inst ::= InsSwitch:valorInsSwitch
-{: RESULT = valorInsSwitch; :};
+	{: RESULT = valorInsSwitch; :};
 
 Inst ::= InsFun:valorInsFun
-{: RESULT = valorInsFun; :};
+	{: RESULT = valorInsFun; :};
 
 Inst ::= InsProc:valorInsProc
-{: RESULT = valorInsProc; :};
+	{: RESULT = valorInsProc; :};
 
 Inst ::= InsStruct:valorInsStruct
-{: RESULT = valorInsStruct; :};
+	{: RESULT = valorInsStruct; :};
 
 Inst ::= InsEnum:valorInsEnum
-{: RESULT = valorInsEnum; :};
+	{: RESULT = valorInsEnum; :};
 
 Inst ::= InsTypeDef:valorInsTypeDef
-{: RESULT = valorInsTypeDef; :};
+	{: RESULT = valorInsTypeDef; :};
 
-Inst ::= error PUNTOYCOMA
-{: numErrores += 1; RESULT = null; :}; 
 
 
 InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE
-	 {: RESULT = as.insIfSinElse(cond, insIf, ifR.getFila(), ifR.getColumna()); :};
+	{: RESULT = as.insIfSinElse(cond, insIf, ifR.getFila(), ifR.getColumna()); :};
 
 InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insElse LLAVESCIERRE
 	{: RESULT = as.insIfConElse(cond, insIf, insElse, ifR.getFila(), ifR.getColumna()); :};
+	
+InsCond ::= IF error LLAVESCIERRE
+	{: System.err.println("Error en la condición del if\n"); RESULT = null; :};
+
+InsCond ::= IF Exp0 error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del if/else\n"); RESULT = null; :};
+
+
+
+InsBucle ::= InsBucleWhile: ins
+	{: RESULT = ins; :};
+
+InsBucle ::= InsBucleFor: ins
+	{: RESULT = ins; :};
+
+InsBucleWhile ::= WHILE: whileR Exp0:cond LLAVESAP P:ins LLAVESCIERRE 
+	{: RESULT = as.insWhile(cond, ins, whileR.getFila(), whileR.getColumna()); :};
+
+InsBucleWhile ::= WHILE error LLAVESCIERRE
+	{: System.err.println("Error en la condición del while\n"); RESULT = null; :};
+
+InsBucleWhile ::= WHILE Exp0 error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del while\n"); RESULT = null; :};
 
 
 
 
 
-InsBucle ::= WHILE: whileR Exp0:cond LLAVESAP P:ins LLAVESCIERRE 
-{: RESULT = as.insWhile(cond, ins, whileR.getFila(), whileR.getColumna()); :};
 
-InsBucle ::= FOR: forR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-{: RESULT = as.insFor(insDec, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
 
-InsBucle ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-{: RESULT = as.insFor(insAsig, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+InsBucleFor ::= FOR: forR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA InsAsig:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+	{: RESULT = as.insFor(insDec, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+
+InsBucleFor ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA InsAsig:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+	{: RESULT = as.insFor(insAsig, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+
+InsBucleFor ::= FOR PAP error LLAVESCIERRE
+	{: System.err.println("Error en declaración/asignación del for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsAsig error LLAVESCIERRE
+	{: System.err.println("Error en la condición del for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsDecConValorIni error LLAVESCIERRE
+	{: System.err.println("Error en la condición del for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsAsig Exp0 PUNTOYCOMA error LLAVESCIERRE
+	{: System.err.println("Error en el paso del bucle for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsDecConValorIni Exp0 PUNTOYCOMA error LLAVESCIERRE
+	{: System.err.println("Error en el paso del bucle for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsAsig Exp0 PUNTOYCOMA InsAsig error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del for\n"); RESULT = null; :};
+
+InsBucleFor ::= FOR PAP InsDecConValorIni Exp0 PUNTOYCOMA InsAsig error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del for\n"); RESULT = null; :};
 
 
 
 
 
 InsDec ::= InsDecConValorIni: ins
-{:RESULT = ins; :};
+	{:RESULT = ins; :};
 
 InsDec ::= Tipo: tipo IDEN: lexDeIden PUNTOYCOMA
-{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), false, null, lexDeIden.getFila(), lexDeIden.getColumna()); :};
+	{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), false, null, lexDeIden.getFila(), lexDeIden.getColumna()); :};
+
+InsDec ::= Tipo error PUNTOYCOMA
+	{: System.err.println("Error en la declaración. Identificador no reconocido \n"); RESULT = null; :};
+
 
 InsDecConValorIni ::= Tipo: tipo IDEN: lexDeIden IGUAL Exp:valorExp PUNTOYCOMA
-{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), true, valorExp, lexDeIden.getFila(), lexDeIden.getColumna()); :};
+	{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), true, valorExp, lexDeIden.getFila(), lexDeIden.getColumna()); :};
+
+InsDecConValorIni ::= Tipo IDEN error PUNTOYCOMA
+	{: System.err.println("Error en el valor inicial de la declaración o ausencia de = \n"); RESULT = null; :};
+
+
+
 
 Tipo ::= INT
 	{:RESULT = as.tipoInt(); :}; 	
@@ -150,6 +201,8 @@ Tipo ::= IDEN:lexIden
 	{:RESULT = as.tipoUsuario(lexIden.getLexema(),lexIden.getFila(), lexIden.getColumna() ); :};
 Tipo ::= MENOR: men Tipo: tipo MAYOR MUL
 	{:RESULT = as.tipoPuntero(tipo, men.getFila(), men.getColumna()); :};
+Tipo ::= VECTOR error MAYOR
+	{: System.err.println("Error en el tipo proporcionado para el vector \n"); RESULT = null; :};
 
 
 
@@ -157,17 +210,27 @@ Tipo ::= MENOR: men Tipo: tipo MAYOR MUL
 
 
 InsAsig ::= Exp0:var IGUAL: asig Exp0:valorExp PUNTOYCOMA
-{: RESULT = as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()); :};
-
+	{: RESULT = as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()); :};
+	
 
 
 
 
 
 InsCall ::= CALL: call IDEN:lexDeIden PAP ListaArg:lista PCIERRE PUNTOYCOMA
- {: RESULT = as.insCall(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, call.getFila(), call.getColumna()); :};
+	{: RESULT = as.insCall(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, call.getFila(), call.getColumna()); :};
  
- ListaArg ::= ListaArg1:valorExp 
+InsCall ::= CALL error PUNTOYCOMA
+	{: System.err.println("Se esperaba un identificador para la llamada \n"); RESULT = null; :};
+
+InsCall ::= CALL IDEN PUNTOYCOMA
+	{: System.err.println("Error en los parámetros de llamada al procedimiento \n"); RESULT = null; :};
+	
+
+
+
+ 
+ListaArg ::= ListaArg1:valorExp 
 	{: RESULT = valorExp; :};
 
 ListaArg ::= 
@@ -188,21 +251,51 @@ ListaArg1 ::= Exp0:elem
 InsSwitch ::= SWITCH: swi PAP Exp0:var PCIERRE LLAVESAP ListaCase:lista LLAVESCIERRE
 	{: RESULT = as.insSwitch(var, lista, swi.getFila(), swi.getColumna()); :};
 
+InsSwitch ::= SWITCH error LLAVESCIERRE
+	{: System.err.println("Error en expresión del switch\n"); RESULT = null; :};
+
+InsSwitch ::= SWITCH PAP Exp0 PCIERRE error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del switch\n"); RESULT = null; :};
+
+
 ListaCase ::= CASE: cas Exp0:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
 	 {:lista.add(0, as.createCase(var, instr, cas.getFila(), cas.getColumna()));
        RESULT = lista; :};
+ 
+ListaCase ::= CASE error PUNTOYCOMA
+	{: System.err.println("Error en el valor del case\n"); RESULT = null; :};
+
+ListaCase ::= CASE Exp0 DOSPUNTOS error PUNTOYCOMA
+	{: System.err.println("Error en el cuerpo del case o falta de break\n"); RESULT = null; :};
+	
 	 
 ListaCase ::= DEFAULT: def DOSPUNTOS P:instr
 	 {: List<Case> lista = new ArrayList<Case>();
 	 	lista.add(0, as.createCase(as.iden("default", true, def.getFila(), def.getColumna()), instr, def.getFila(), def.getColumna()));
-	 	RESULT = lista;
-	 :};
-	 
-	 
+	 	RESULT = lista; :};
+
+ListaCase ::= DEFAULT error PUNTOYCOMA
+	{: System.err.println("Error en el cuerpo del default\n"); RESULT = null; :};
+
+
  
 InsFun ::= FUN: fun Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr RETURN Exp:valorReturn PUNTOYCOMA LLAVESCIERRE
 	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, valorReturn, fun.getFila(), fun.getColumna()); :};
- 
+	
+InsFun ::= FUN error LLAVESCIERRE
+	{: System.err.println("Error en el tipo de declaración de la función \n"); RESULT = null; :};
+	
+InsFun ::= FUN Tipo error LLAVESCIERRE
+	{: System.err.println("Error en el nombre de la funcion \n"); RESULT = null; :};
+	
+InsFun ::= FUN Tipo IDEN error LLAVESCIERRE
+	{: System.err.println("Error en los parámetros de la función \n"); RESULT = null; :};
+
+InsFun ::= FUN Tipo IDEN PAP Parametros PCIERRE error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo de la función \n"); RESULT = null; :};
+
+
+
 Parametros ::= Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
 	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
@@ -234,12 +327,28 @@ InsProc ::= PROC: proc IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:i
     {: RESULT = as.insProc(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, proc.getFila(), proc.getColumna()); :};
 
 
+	
+InsProc ::= PROC error LLAVESCIERRE
+	{: System.err.println("Error en el nombre del procedimiento \n"); RESULT = null; :};
+	
+InsProc ::= PROC IDEN error LLAVESCIERRE
+	{: System.err.println("Error en los parámetros del procedimiento \n"); RESULT = null; :};
+
+InsProc ::= PROC IDEN PAP Parametros PCIERRE error LLAVESCIERRE
+	{: System.err.println("Error en el cuerpo del procedimiento \n"); RESULT = null; :};
+
 
 
 
 
 InsStruct ::= STRUCT: str IDEN:lexDeIden LLAVESAP LDec:listaDec LLAVESCIERRE
 	{: RESULT = as.insStruct(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaDec, str.getFila(), str.getColumna()); :};
+
+InsStruct ::= STRUCT error LLAVESCIERRE
+	{: System.err.println("Error de nombre para el struct \n"); RESULT = null; :};
+
+InsStruct ::= STRUCT IDEN error LLAVESCIERRE
+	{: System.err.println("Error en algún campo del struct \n"); RESULT = null; :};
 	
 LDec ::= InsDec: ins LDec :listaDec
 	{: listaDec.add(0,ins);
@@ -255,7 +364,13 @@ LDec::=
 InsEnum ::= ENUM: en IDEN: lexDeIden IGUAL LLAVESAP LEnum: listaCtes LLAVESCIERRE PUNTOYCOMA
 	{: RESULT = as.insEnum(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaCtes, en.getFila(), en.getColumna()); :};
 
-	
+InsEnum ::= ENUM error PUNTOYCOMA
+	{: System.err.println("Error de nombre para el enumerado \n"); RESULT = null; :};
+
+InsEnum ::= ENUM IDEN error PUNTOYCOMA
+	{: System.err.println("Error en los valores del enumerado \n"); RESULT = null; :};
+
+
 LEnum ::= IDEN: lexDeIden LEnumElige: listaCtes
 	{: listaCtes.add(0, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()));
 	   RESULT = listaCtes; :};
@@ -272,12 +387,16 @@ LEnumElige::=
 
 
 
+
 	
 InsTypeDef ::= TYPEDEF:tdef Tipo:tipo IDEN:lexDeIden PUNTOYCOMA
 	{: RESULT = as.insTypeDef(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), tdef.getFila(), tdef.getColumna()); :};
 
+InsTypeDef ::= TYPEDEF error PUNTOYCOMA
+	{: System.err.println("Error en el tipo a sustituir del typedef \n"); RESULT = null; :};
 
-
+InsTypeDef ::= TYPEDEF Tipo error PUNTOYCOMA
+	{: System.err.println("Error en el nuevo tipo alias del typedef \n"); RESULT = null; :};
 
 
 
@@ -286,6 +405,10 @@ Exp ::= Exp0: valorExp
 	{: RESULT= valorExp; :};
 Exp ::= CreaVector: valorExp
 	{: RESULT = valorExp; :};
+
+Exp ::= CreaVector error
+	{: System.err.println("Error en el creaVector \n"); RESULT = null; :};
+	
 Exp ::= New:valorExp
 	{: RESULT = valorExp; :};
 	
@@ -379,14 +502,10 @@ Exp8 ::= CARACTER: lexDeCaracter
 	{: RESULT = as.caracter(lexDeCaracter.getLexema(), false, lexDeCaracter.getFila(), lexDeCaracter.getColumna()); :};  
 Exp8 ::= IDEN:lexDeIden PAP ListaArg:lista PCIERRE
 	{: RESULT = as.llamadaFun(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, false, lexDeIden.getFila(), lexDeIden.getColumna()); :};
-Exp8 ::= IDEN PAP error PCIERRE
-	{: numErrores += 1; RESULT = null; :};
 Exp8 ::= IDEN:lexDeIden
 	{: RESULT = as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 Exp8 ::= PAP Exp0: valorExp PCIERRE
 	{: RESULT = valorExp; :};
-Exp8 ::= PAP error PCIERRE
-{: numErrores += 1; RESULT = null; :};
 
 
 CreaVector ::= CREAVECTOR: cv PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE

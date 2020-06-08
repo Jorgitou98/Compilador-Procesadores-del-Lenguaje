@@ -18,16 +18,22 @@ public class Main {
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);
-	 //asint.parse();
-	 //System.out.println(asint.parse().value);
-	 P prog = (P) asint.parse().value;
+	 P prog = null;
+	 try {
+	 prog = (P) asint.parse().value;
+	 }
+	 catch(Exception e) {
+		 System.err.println("Encontrado final de fichero. Imposible recuperarse del último error");
+	 }
 
 	 AnalizadorSemantico asem = new AnalizadorSemantico(prog);
 	 asem.analizaSemantica();
-	 //System.out.println(CUP$AnalizadorSintacticoTiny$actions.numErrores);
-	 System.out.println(prog.imprime("", false));
-	 GeneradorCodigo gc= new GeneradorCodigo();
-	 gc.generaCodigo(prog);
+	 if(prog != null) {
+		 System.out.println(prog.imprime("", false));
+		 GeneradorCodigo gc= new GeneradorCodigo();
+		 gc.generaCodigo(prog);
+	 }
+
  }
 }   
    

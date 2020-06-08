@@ -591,7 +591,7 @@ public class GeneradorCodigo {
 				var = (Iden) ((InsDec) insFor.getDecIni()).getVar();
 			} else
 				var = (Iden) ((InsAsig) insFor.getDecIni()).getVar();
-			generaCodigoIns(new InsAsig(var, insFor.getPaso(), 0, 0));
+			generaCodigoIns(insFor.getPaso());
 			insertIns("ujp " + posCond, 0);
 			codigo.get(posFjpFor).setName(codigo.get(posFjpFor).getName() + codigo.size());
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
@@ -773,7 +773,7 @@ public class GeneradorCodigo {
 		int cuenta = 0;
 		for (int i = ini; i < codigo.size(); i++) {
 			if (cuenta == 0) {
-				if (codigo.get(i).getName().substring(0, 3).equals("ssp")) {
+				if (codigo.get(i).getName().length() > 2 && codigo.get(i).getName().substring(0, 3).equals("ssp")) {
 					cuenta++;
 				} else {
 					tam += codigo.get(i).getTipo();

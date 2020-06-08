@@ -1,0 +1,4 @@
+# Recuperación del error en la condicion del if
+if 3+++5 {
+int x = 5 + 8 + 7;
+}

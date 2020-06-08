@@ -1,0 +1,73 @@
+# Recuperacion del error en la condicion del if
+if 3+++5{
+int x = 5 + 8 + 7;
+}
+
+# Error en el cuerpo de un while
+while(true){
+fallo
+}
+
+# Error en declaracion de variable de un for
+for (error; i < 10; i = i+1){
+int y = x + 54 + 65;
+}
+
+
+# Error en la condicion de un for
+for (int i = 0; if; i = i+1){
+int y = x + 24;
+}
+
+# Error en la condición de un while
+while(for){
+int j = i + 2;
+}
+
+# Error en la expresión de un switch
+switch(error+++){
+case 1:
+	break;
+default:
+}
+
+# Error en el valor del case de un switch
+switch(variable){
+case error+++:
+	break;
+default:
+	int i = i +1;
+}
+
+
+# Error por falta de break en un case
+switch(variable){
+case 1:
+	
+default:
+	int i = i + 1;
+}
+
+# Error de un if dentro del case de un switch
+switch(variable){
+case 1:
+	if(error+++){
+	}
+	break;
+default:
+	int i = i + 1;
+}
+
+# Error la condicion de un if con otro error dentro. Solo sacará el primer error
+# Si nos recuperasemos con '{' para el if en lugar de con '}'
+# Entendería el '}' que aparecería para cerrar el if como un error y podría ser peor
+# Nos caza menos errores haciendolo así. 
+# Mejor recuperarnos con la llave de cierre '} del if
+
+if(error+++){
+	while(for){
+	
+	}
+}
+
+int j = 2 + 3 + 4;
