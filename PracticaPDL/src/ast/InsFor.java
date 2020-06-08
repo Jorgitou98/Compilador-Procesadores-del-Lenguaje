@@ -8,12 +8,14 @@ public class InsFor extends Ins{
 	private NodoArbol varBucle;
 	
 
-	public InsFor(Ins decIni, E cond, E paso, P inst) {
+	public InsFor(Ins decIni, E cond, E paso, P inst, int fila, int columna) {
 		super();
 		this.decIni = decIni;
 		this.cond = cond;
 		this.paso = paso;
 		this.inst = inst;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	

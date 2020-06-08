@@ -4,11 +4,13 @@ public class Param extends NodoArbol{
 	private Tipos tipo;
 	private TipoParam tipoDeParam;
 	private E iden;
-	public Param(Tipos tipo,  TipoParam tipoDeParam, E iden) {
+	public Param(Tipos tipo,  TipoParam tipoDeParam, E iden, int fila, int columna) {
 		super();
 		this.tipo = tipo;
 		this.iden = iden;
 		this.tipoDeParam = tipoDeParam;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	public Tipos getTipo() {
 		return tipo;

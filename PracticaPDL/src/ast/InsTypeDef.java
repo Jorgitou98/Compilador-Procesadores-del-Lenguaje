@@ -5,9 +5,11 @@ public class InsTypeDef extends Ins{
 	private E nombreNuevo;
 	
 	
-	public InsTypeDef(Tipos tipo, E nombreNuevo) {
+	public InsTypeDef(Tipos tipo, E nombreNuevo, int fila, int columna) {
 		this.tipo = tipo;
 		this.nombreNuevo = nombreNuevo;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 

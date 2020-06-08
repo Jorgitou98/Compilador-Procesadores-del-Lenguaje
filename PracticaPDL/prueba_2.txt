@@ -1,5 +1,5 @@
 int x = 2;
-int y = x+2;
+y = x+2;
 struct tpersona{
 int dni;
 }

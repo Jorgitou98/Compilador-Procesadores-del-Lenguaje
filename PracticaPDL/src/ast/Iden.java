@@ -13,8 +13,10 @@ public class Iden extends E {
 
 	
 
-	public Iden(String v, boolean asignable) {
+	public Iden(String v, boolean asignable, int fila, int columna) {
 		super(asignable);
+	     this.fila = fila;
+	     this.columna = columna;
 		this.v = v;
 	}
 

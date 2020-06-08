@@ -4,10 +4,12 @@ public class Case extends NodoArbol{
 	private E nombreCase;
 	private P instr;
 	private NodoArbol ref;
-	public Case(E nombreCase, P instr) {
+	public Case(E nombreCase, P instr, int fila, int columna) {
 		super();
 		this.nombreCase = nombreCase;
 		this.instr = instr;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	public E getNombreCase() {
 		return nombreCase;

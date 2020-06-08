@@ -6,9 +6,11 @@ public class TipoUsuario extends Tipos{
 	private Tipos tipoOrig; // Solo para typedef
 
 	
-	public TipoUsuario(String nombreTipo) {
+	public TipoUsuario(String nombreTipo, int fila, int columna) {
 		super();
 		this.nombreTipo = nombreTipo;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	public String getNombreTipo() {

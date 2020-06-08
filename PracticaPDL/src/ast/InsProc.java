@@ -12,11 +12,13 @@ public class InsProc extends Ins{
 	
 	
 
-	public InsProc(E nombre, List<Param> parametros, P instr) {
+	public InsProc(E nombre, List<Param> parametros, P instr, int fila, int columna) {
 		super();
 		this.nombre = nombre;
 		this.parametros = parametros;
 		this.instr = instr;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	

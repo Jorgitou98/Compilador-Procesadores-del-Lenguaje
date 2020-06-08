@@ -7,9 +7,11 @@ public class InsStruct extends Ins{
 	private List<Ins> declaraciones;
 	
 	
-	public InsStruct(E nombreTipo, List<Ins> declaraciones) {
+	public InsStruct(E nombreTipo, List<Ins> declaraciones, int fila, int columna) {
 		this.nombreTipo = nombreTipo;
 		this.declaraciones = declaraciones;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 
 

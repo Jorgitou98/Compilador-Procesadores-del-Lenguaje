@@ -8,10 +8,12 @@ public class InsAsig extends Ins{
 	
 	
 	
-	public InsAsig(E var, E valor) {
+	public InsAsig(E var, E valor, int fila, int columna) {
 		super();
 		this.var = var;
 		this.valor = valor;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	

@@ -1,8 +1,10 @@
 package ast;
 
 public class Null extends E{
-	public Null(boolean asignable) {
+	public Null(boolean asignable, int fila, int columna) {
 		super(asignable);
+	     this.fila = fila;
+	     this.columna = columna;
 		// TODO Auto-generated constructor stub
 	}
 	public TipoE tipo() {

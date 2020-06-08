@@ -11,8 +11,8 @@ public class GestionErroresTiny {
      System.err.println("***ERROR sintactico. Fila: "+ unidadLexica.fila() + ", Columna: " + unidadLexica.columna() + ": Elemento inesperado "+ unidadLexica.value);
      //System.exit(1);
    }
-   public static void errorSemantico(String mensaje) {
-	   System.err.println("***ERROR semantico. " + mensaje);
+   public static void errorSemantico(int fila, int columna, String mensaje) {
+	   System.err.println("***ERROR semantico. Fila: " + fila + " Columna: " + columna + ". " + mensaje);
    }
 }
 

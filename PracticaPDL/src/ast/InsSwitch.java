@@ -6,10 +6,12 @@ public class InsSwitch extends Ins{
 	private E varSwitch;
 	private List<Case> listaCase;
 	private NodoArbol ref;
-	public InsSwitch(E varSwitch, List<Case> listaCase) {
+	public InsSwitch(E varSwitch, List<Case> listaCase, int fila, int columna) {
 		super();
 		this.listaCase = listaCase;
 		this.varSwitch = varSwitch;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	

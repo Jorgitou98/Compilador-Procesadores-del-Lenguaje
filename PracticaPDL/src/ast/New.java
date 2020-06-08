@@ -7,10 +7,12 @@ public class New extends E {
 	private Tipos tipo;
 	private int tam;
 
-	public New(List<Integer> tamanos, Tipos tipo, boolean asignable) {
+	public New(List<Integer> tamanos, Tipos tipo, boolean asignable, int fila, int columna) {
 		super(asignable);
 		this.tamanos = tamanos;
 		this.tipo = tipo;
+	     this.fila = fila;
+	     this.columna = columna;
 		// TODO Auto-generated constructor stub
 	}
 	

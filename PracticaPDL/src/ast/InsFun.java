@@ -15,13 +15,15 @@ public class InsFun extends Ins{
 	
 	
 
-	public InsFun(Tipos tipoReturn, E nombre, List<Param> parametros, P instr, E valorReturn) {
+	public InsFun(Tipos tipoReturn, E nombre, List<Param> parametros, P instr, E valorReturn, int fila, int columna) {
 		super();
 		this.tipoReturn = tipoReturn;
 		this.nombre = nombre;
 		this.parametros = parametros;
 		this.instr = instr;
 		this.valorReturn = valorReturn;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 

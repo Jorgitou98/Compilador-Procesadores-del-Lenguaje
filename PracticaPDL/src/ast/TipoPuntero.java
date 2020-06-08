@@ -3,9 +3,11 @@ package ast;
 public class TipoPuntero extends Tipos{
 	private Tipos tipoPuntero;
 
-	public TipoPuntero(Tipos tipoPuntero) {
+	public TipoPuntero(Tipos tipoPuntero, int fila, int columna) {
 		super();
 		this.tipoPuntero = tipoPuntero;
+		this.fila = fila;
+		this.columna = columna;
 	}
 
 	public Tipos getTipoPuntero() {

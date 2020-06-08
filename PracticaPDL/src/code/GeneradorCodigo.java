@@ -222,8 +222,8 @@ public class GeneradorCodigo {
 				int dir = dirBase + bloqueAct
 						.dirVar(((TipoUsuario) dec.getTipo()).getNombreTipo() + "." + ((Iden) insDec1.getVar()).id());
 				insertaDirStruct(new InsDec(insDec1.getTipo(),
-						new Iden(((Iden) dec.getVar()).id() + "." + ((Iden) insDec1.getVar()).id(), true),
-						insDec1.isConValorInicial(), insDec1.getValorInicial()), dir);
+						new Iden(((Iden) dec.getVar()).id() + "." + ((Iden) insDec1.getVar()).id(), true, 0, 0),
+						insDec1.isConValorInicial(), insDec1.getValorInicial(), 0, 0), dir);
 			}
 			bloqueAct.insertaTipo(((Iden) dec.getVar()).id(), queTamano(((TipoUsuario) dec.getTipo()).getNombreTipo()));
 		} else if (dec.getTipo().tipo() == TipoT.VECTOR) {
@@ -285,7 +285,7 @@ public class GeneradorCodigo {
 			System.out.println(((Iden) exp).getTipo());
 			if (((Iden) exp).getTipo().tipo() == TipoT.USUARIO) {
 				for (Ins ins : ((InsStruct) ((TipoUsuario) ((Iden) exp).getTipo()).getRef()).getDeclaraciones()) {
-					Iden iden = new Iden(((Iden) exp).id() + "." + ((Iden) ((InsDec) ins).getVar()).id(), true);
+					Iden iden = new Iden(((Iden) exp).id() + "." + ((Iden) ((InsDec) ins).getVar()).id(), true, 0, 0);
 					iden.setTipo(((InsDec) ins).getTipo());
 					generaCodigoL1(iden);
 					insertIns("ind", 0);
@@ -336,7 +336,7 @@ public class GeneradorCodigo {
 		case MODULO:
 			// pw.println("\\\\ Esto es un modulo");
 			generaCodigoExp(new Resta(exp.opnd1(),
-					new Mul(exp.opnd2(), new DivEnt(exp.opnd1(), exp.opnd2(), false), false), false));
+					new Mul(exp.opnd2(), new DivEnt(exp.opnd1(), exp.opnd2(), false, 0, 0), false, 0, 0), false, 0, 0));
 			break;
 		case MUL:
 			generaCodigoExp(exp.opnd1());
@@ -463,7 +463,7 @@ public class GeneradorCodigo {
 			for (Ins insDec : ((InsStruct) ((TipoUsuario) tipo).getRef()).getDeclaraciones()) {
 				int despl = bloqueActGenera()
 						.dirVar(((TipoUsuario) tipo).getNombreTipo() + "." + ((Iden) ((InsDec) insDec).getVar()).id());
-				Iden id = new Iden(iden.id() + "." + ((Iden) ((InsDec) insDec).getVar()).id(), true);
+				Iden id = new Iden(iden.id() + "." + ((Iden) ((InsDec) insDec).getVar()).id(), true, 0, 0);
 				if (((InsDec) insDec).getTipo().tipo() == TipoT.VECTOR) {
 					bloqueActGenera().insertaDimensiones(id.id(),
 							dimensionesVector(((InsDec) insDec).getTipo(), ((InsDec) insDec).getValorInicial()));
@@ -570,8 +570,8 @@ public class GeneradorCodigo {
 				for (Ins decStruct : (((InsStruct) ((TipoUsuario) insDec.getTipo()).getRef()).getDeclaraciones())) {
 					InsDec decStr = (InsDec) decStruct;
 					generaCodigoIns(new InsDec(decStr.getTipo(),
-							new Iden(((Iden) insDec.getVar()).id() + "." + ((Iden) decStr.getVar()).id(), true),
-							decStr.isConValorInicial(), decStr.getValorInicial()));
+							new Iden(((Iden) insDec.getVar()).id() + "." + ((Iden) decStr.getVar()).id(), true, 0, 0),
+							decStr.isConValorInicial(), decStr.getValorInicial(), 0, 0));
 				}
 			}
 			break;
@@ -592,7 +592,7 @@ public class GeneradorCodigo {
 				var = (Iden) ((InsDec) insFor.getDecIni()).getVar();
 			} else
 				var = (Iden) ((InsAsig) insFor.getDecIni()).getVar();
-			generaCodigoIns(new InsAsig(var, insFor.getPaso()));
+			generaCodigoIns(new InsAsig(var, insFor.getPaso(), 0, 0));
 			insertIns("ujp " + posCond, 0);
 			codigo.get(posFjpFor).setName(codigo.get(posFjpFor).getName() + codigo.size());
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();

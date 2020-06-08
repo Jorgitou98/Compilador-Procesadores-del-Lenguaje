@@ -9,10 +9,12 @@ public class InsWhile extends Ins{
 	
 	
 
-	public InsWhile(E condicion, P insWhile) {
+	public InsWhile(E condicion, P insWhile, int fila, int columna) {
 		super();
 		this.condicion = condicion;
 		this.insWhile = insWhile;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 	

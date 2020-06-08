@@ -33,12 +33,14 @@ public class InsDec extends Ins{
 
 
 
-	public InsDec(Tipos tipo, E var, boolean conValorInicial, E valorInicial) {
+	public InsDec(Tipos tipo, E var, boolean conValorInicial, E valorInicial, int fila, int columna) {
 		super();
 		this.tipo = tipo;
 		this.var = var;
 		this.conValorInicial = conValorInicial;
 		this.valorInicial = valorInicial;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 
 

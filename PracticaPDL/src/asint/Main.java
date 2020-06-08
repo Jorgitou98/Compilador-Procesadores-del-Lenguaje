@@ -10,7 +10,11 @@ import code.GeneradorCodigo;
 
 public class Main {
    public static void main(String[] args) throws Exception {
-     Reader input = new InputStreamReader(new FileInputStream("prueba_6.txt"));
+	 if(args.length < 1) {
+		 System.err.println("Introduzca el fichero de entreada como parámetro");
+		 System.exit(1);
+	 }
+     Reader input = new InputStreamReader(new FileInputStream(args[0]));
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);

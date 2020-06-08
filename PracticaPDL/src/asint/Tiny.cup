@@ -14,6 +14,7 @@ import ast.Tipos;
 import ast.Case;
 import ast.TipoParam;
 import ast.Param;
+import alex.TokenValue;
 
 
 scan with {: return getScanner().next_token(); :};
@@ -35,16 +36,16 @@ init with {:
 :};
 
 
-terminal    TRUE, FALSE, CREAVECTOR, 
- 			SIZE, WHILE, FOR, SWITCH, CASE, BREAK, IF, CALL, ELSE, PROC, FUN, RETURN, 
+terminal TokenValue   TRUE, FALSE, CREAVECTOR, 
+ 			SIZE, SWITCH, CASE, BREAK, CALL, ELSE, PROC, FUN, RETURN, 
  			STRUCT, TYPEDEF, ENUM, SUMA, RESTA,
- 			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, MENOR, 
+ 			MUL, DIVREAL, DIVENT, MODULO, AND, OR, NOT, 
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
 			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
  			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT,
- 			AMPERSAND, NEW, NULL;
-terminal    String IDEN, ENT, REAL, CARACTER; 
-terminal    Tipos INT, BOOL, CHAR, FLOAT, VECTOR;
+ 			AMPERSAND, NEW, NULL, VECTOR;
+terminal    TokenValue IDEN, ENT, REAL, CARACTER, WHILE, FOR, IF, MENOR; 
+terminal    Tipos INT, BOOL, CHAR, FLOAT;
 
 non terminal  P P;
 non terminal  Ins InsCond, Inst, InsBucle, InsDec, InsAsig, InsCall, InsSwitch, InsFun, InsProc, InsStruct, InsEnum, InsTypeDef, 
@@ -103,24 +104,24 @@ Inst ::= error PUNTOYCOMA
 {: numErrores += 1; RESULT = null; :}; 
 
 
-InsCond ::= IF Exp0:cond LLAVESAP P:insIf LLAVESCIERRE
-	 {: RESULT = as.insIfSinElse(cond, insIf); :};
+InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE
+	 {: RESULT = as.insIfSinElse(cond, insIf, ifR.getFila(), ifR.getColumna()); :};
 
-InsCond ::= IF Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insElse LLAVESCIERRE
-	{: RESULT = as.insIfConElse(cond, insIf, insElse); :};
-
-
+InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insElse LLAVESCIERRE
+	{: RESULT = as.insIfConElse(cond, insIf, insElse, ifR.getFila(), ifR.getColumna()); :};
 
 
 
-InsBucle ::= WHILE Exp0:cond LLAVESAP P:ins LLAVESCIERRE 
-{: RESULT = as.insWhile(cond, ins); :};
 
-InsBucle ::= FOR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-{: RESULT = as.insFor(insDec, cond, paso, inst); :};
 
-InsBucle ::= FOR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-{: RESULT = as.insFor(insAsig, cond, paso, inst); :};
+InsBucle ::= WHILE: whileR Exp0:cond LLAVESAP P:ins LLAVESCIERRE 
+{: RESULT = as.insWhile(cond, ins, whileR.getFila(), whileR.getColumna()); :};
+
+InsBucle ::= FOR: forR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+{: RESULT = as.insFor(insDec, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+
+InsBucle ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
+{: RESULT = as.insFor(insAsig, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
 
 
 
@@ -130,10 +131,10 @@ InsDec ::= InsDecConValorIni: ins
 {:RESULT = ins; :};
 
 InsDec ::= Tipo: tipo IDEN: lexDeIden PUNTOYCOMA
-{:RESULT = as.insDec(tipo, as.iden(lexDeIden, true), false, null); :};
+{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), false, null, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 
 InsDecConValorIni ::= Tipo: tipo IDEN: lexDeIden IGUAL Exp:valorExp PUNTOYCOMA
-{:RESULT = as.insDec(tipo, as.iden(lexDeIden, true), true, valorExp); :};
+{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), true, valorExp, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 
 Tipo ::= INT
 	{:RESULT = as.tipoInt(); :}; 	
@@ -143,28 +144,28 @@ Tipo ::= CHAR
 	{:RESULT = as.tipoChar(); :};	
 Tipo ::= FLOAT 
 	{:RESULT = as.tipoFloat(); :};
-Tipo ::= VECTOR MENOR Tipo:tipo MAYOR
-	{:RESULT = as.tipoVector(tipo); :};
+Tipo ::= VECTOR: vect MENOR Tipo:tipo MAYOR
+	{:RESULT = as.tipoVector(tipo, vect.getFila(), vect.getColumna()); :};
 Tipo ::= IDEN:lexIden
-	{:RESULT = as.tipoUsuario(lexIden); :};
-Tipo ::= MENOR Tipo: tipo MAYOR MUL
-	{:RESULT = as.tipoPuntero(tipo); :};
+	{:RESULT = as.tipoUsuario(lexIden.getLexema(),lexIden.getFila(), lexIden.getColumna() ); :};
+Tipo ::= MENOR: men Tipo: tipo MAYOR MUL
+	{:RESULT = as.tipoPuntero(tipo, men.getFila(), men.getColumna()); :};
 
 
 
 
 
 
-InsAsig ::= Exp0:var IGUAL Exp0:valorExp PUNTOYCOMA
-{: RESULT = as.insAsig(var, valorExp); :};
+InsAsig ::= Exp0:var IGUAL: asig Exp0:valorExp PUNTOYCOMA
+{: RESULT = as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()); :};
 
 
 
 
 
 
-InsCall ::= CALL IDEN:lexDeIden PAP ListaArg:lista PCIERRE PUNTOYCOMA
- {: RESULT = as.insCall(as.iden(lexDeIden, true), lista); :};
+InsCall ::= CALL: call IDEN:lexDeIden PAP ListaArg:lista PCIERRE PUNTOYCOMA
+ {: RESULT = as.insCall(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, call.getFila(), call.getColumna()); :};
  
  ListaArg ::= ListaArg1:valorExp 
 	{: RESULT = valorExp; :};
@@ -184,57 +185,57 @@ ListaArg1 ::= Exp0:elem
  
  
  
-InsSwitch ::= SWITCH PAP Exp0:var PCIERRE LLAVESAP ListaCase:lista LLAVESCIERRE
-	{: RESULT = as.insSwitch(var, lista); :};
+InsSwitch ::= SWITCH: swi PAP Exp0:var PCIERRE LLAVESAP ListaCase:lista LLAVESCIERRE
+	{: RESULT = as.insSwitch(var, lista, swi.getFila(), swi.getColumna()); :};
 
-ListaCase ::= CASE TiposSwitch:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
-	 {:lista.add(0, as.createCase(var, instr));
+ListaCase ::= CASE: cas TiposSwitch:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
+	 {:lista.add(0, as.createCase(var, instr, cas.getFila(), cas.getColumna()));
        RESULT = lista; :};
 	 
-ListaCase ::= DEFAULT DOSPUNTOS P:instr
+ListaCase ::= DEFAULT: def DOSPUNTOS P:instr
 	 {: List<Case> lista = new ArrayList<Case>();
-	 	lista.add(0, as.createCase(as.iden("default", true), instr));
+	 	lista.add(0, as.createCase(as.iden("default", true, def.getFila(), def.getColumna()), instr, def.getFila(), def.getColumna()));
 	 	RESULT = lista;
 	 :};
 	    
 TiposSwitch ::= ENT:lexDeEnt
-	{: RESULT = as.ent(lexDeEnt, false); :}; 
+	{: RESULT = as.ent(lexDeEnt.getLexema(), false, lexDeEnt.getFila(), lexDeEnt.getColumna()); :}; 
 TiposSwitch ::= REAL:lexDeReal
-	{: RESULT = as.real(lexDeReal, false); :};  
-TiposSwitch ::= TRUE
-	{: RESULT = as.verdadero(false); :};     
-TiposSwitch ::= FALSE
-	{: RESULT = as.falso(false); :};    
+	{: RESULT = as.real(lexDeReal.getLexema(), false, lexDeReal.getFila(), lexDeReal.getColumna()); :};  
+TiposSwitch ::= TRUE: tr
+	{: RESULT = as.verdadero(false, tr.getFila(), tr.getColumna()); :};     
+TiposSwitch ::= FALSE: fs
+	{: RESULT = as.falso(false, fs.getFila(), fs.getColumna()); :};    
 TiposSwitch ::= CARACTER:lexDeCaracter
-	{: RESULT = as.caracter(lexDeCaracter, false); :};
+	{: RESULT = as.caracter(lexDeCaracter.getLexema(), false, lexDeCaracter.getFila(), lexDeCaracter.getColumna()); :};
 TiposSwitch ::= IDEN:lexDeIden
-	{: RESULT = as.iden(lexDeIden, true); :};
+	{: RESULT = as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 
 
 
 
 
  
-InsFun ::= FUN Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr RETURN Exp:valorReturn PUNTOYCOMA LLAVESCIERRE
-	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden, true), params, instr, valorReturn); :};
+InsFun ::= FUN: fun Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr RETURN Exp:valorReturn PUNTOYCOMA LLAVESCIERRE
+	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, valorReturn, fun.getFila(), fun.getColumna()); :};
  
 Parametros ::= Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
-	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden, true)));
+	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 	 
 Parametros ::= Tipo:tipoParam IDEN:lexDeIden ParamElige:lista
-	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden, true)));
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 
 Parametros ::= 
 	{: RESULT = new ArrayList<Param>(); :};
 	
 ParamElige ::= COMA Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
-	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden, true)));
+	{: lista.add(0, as.param(tipoParam, TipoParam.REFERENCIA, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 		 
 ParamElige ::= COMA Tipo:tipoParam IDEN:lexDeIden ParamElige:lista  
-	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden, true)));
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 		
 ParamElige ::= 
@@ -245,16 +246,17 @@ ParamElige ::=
 	
 	
 
-InsProc ::= PROC IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr LLAVESCIERRE
-    {: RESULT = as.insProc(as.iden(lexDeIden, true), params, instr); :};
+InsProc ::= PROC: proc IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:instr LLAVESCIERRE
+    {: RESULT = as.insProc(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, proc.getFila(), proc.getColumna()); :};
 
 
 
 
 
 
-InsStruct ::= STRUCT IDEN:lexDeIden LLAVESAP LDec:listaDec LLAVESCIERRE
-	{: RESULT = as.insStruct(as.iden(lexDeIden, true), listaDec); :};
+InsStruct ::= STRUCT: str IDEN:lexDeIden LLAVESAP LDec:listaDec LLAVESCIERRE
+	{: RESULT = as.insStruct(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaDec, str.getFila(), str.getColumna()); :};
+	
 LDec ::= InsDec: ins LDec :listaDec
 	{: listaDec.add(0,ins);
 	   RESULT = listaDec; :};
@@ -266,18 +268,18 @@ LDec::=
 
 
 
-InsEnum ::= ENUM IDEN: lexDeIden IGUAL LLAVESAP LEnum: listaCtes LLAVESCIERRE PUNTOYCOMA
-	{: RESULT = as.insEnum(as.iden(lexDeIden, true), listaCtes); :};
+InsEnum ::= ENUM: en IDEN: lexDeIden IGUAL LLAVESAP LEnum: listaCtes LLAVESCIERRE PUNTOYCOMA
+	{: RESULT = as.insEnum(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaCtes, en.getFila(), en.getColumna()); :};
 
 	
 LEnum ::= IDEN: lexDeIden LEnumElige: listaCtes
-	{: listaCtes.add(0, as.iden(lexDeIden, true));
+	{: listaCtes.add(0, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()));
 	   RESULT = listaCtes; :};
 LEnum::=  
 	{: RESULT = new ArrayList<E>(); :};
 	
 LEnumElige ::= BARRA IDEN: lexDeIden LEnumElige: listaCtes
-	{: listaCtes.add(0, as.iden(lexDeIden, true));
+	{: listaCtes.add(0, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()));
 	   RESULT = listaCtes; :};
 	   
 LEnumElige::= 
@@ -287,8 +289,8 @@ LEnumElige::=
 
 
 	
-InsTypeDef ::= TYPEDEF Tipo:tipo IDEN:lexDeIden PUNTOYCOMA
-	{: RESULT = as.insTypeDef(tipo, as.iden(lexDeIden, true)); :};
+InsTypeDef ::= TYPEDEF:tdef Tipo:tipo IDEN:lexDeIden PUNTOYCOMA
+	{: RESULT = as.insTypeDef(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), tdef.getFila(), tdef.getColumna()); :};
 
 
 
@@ -304,123 +306,123 @@ Exp ::= New:valorExp
 	{: RESULT = valorExp; :};
 	
 	
-Exp0 ::= Exp1:valorExp1 OR Exp0:valorExp2
-	{:RESULT = as.or(valorExp1, valorExp2, false); :};
+Exp0 ::= Exp1:valorExp1 OR: or Exp0:valorExp2
+	{:RESULT = as.or(valorExp1, valorExp2, false, or.getFila(), or.getColumna()); :};
 Exp0 ::= Exp1:valorExp
 	{: RESULT = valorExp; :};
 	
 	
-Exp1 ::= Exp2:valorExp1 AND Exp1:valorExp2
-	{:RESULT = as.and(valorExp1, valorExp2, false); :};
+Exp1 ::= Exp2:valorExp1 AND:and Exp1:valorExp2
+	{:RESULT = as.and(valorExp1, valorExp2, false, and.getFila(), and.getColumna()); :};
 Exp1 ::= Exp2:valorExp
 	{: RESULT = valorExp; :};
 	
 	
-Exp2 ::= Exp3:valorExp1 IGUALIGUAL Exp3:valorExp2 
-	{:RESULT = as.igualIgual(valorExp1, valorExp2, false); :};
-Exp2 ::= Exp3:valorExp1 MAYOR Exp3:valorExp2
-	{:RESULT = as.mayor(valorExp1, valorExp2, false); :}; 
-Exp2 ::= Exp3:valorExp1 MENOR Exp3:valorExp2 
-	{:RESULT = as.menor(valorExp1, valorExp2, false); :}; 
-Exp2::= Exp3:valorExp1 MAYORIGUAL Exp3:valorExp2
-	{:RESULT = as.mayorIgual(valorExp1, valorExp2, false); :}; 
-Exp2::= Exp3:valorExp1 MENORIGUAL Exp3:valorExp2
-	{:RESULT = as.menorIgual(valorExp1, valorExp2, false); :}; 
-Exp2 ::= Exp3:valorExp1 DISTINTO Exp3:valorExp2
-	{:RESULT = as.distinto(valorExp1, valorExp2, false); :}; 
+Exp2 ::= Exp3:valorExp1 IGUALIGUAL: ig Exp3:valorExp2 
+	{:RESULT = as.igualIgual(valorExp1, valorExp2, false, ig.getFila(), ig.getColumna()); :};
+Exp2 ::= Exp3:valorExp1 MAYOR: ma Exp3:valorExp2
+	{:RESULT = as.mayor(valorExp1, valorExp2, false, ma.getFila(), ma.getColumna()); :}; 
+Exp2 ::= Exp3:valorExp1 MENOR: me Exp3:valorExp2 
+	{:RESULT = as.menor(valorExp1, valorExp2, false, me.getFila(), me.getColumna()); :}; 
+Exp2::= Exp3:valorExp1 MAYORIGUAL: mi Exp3:valorExp2
+	{:RESULT = as.mayorIgual(valorExp1, valorExp2, false, mi.getFila(), mi.getColumna()); :}; 
+Exp2::= Exp3:valorExp1 MENORIGUAL: mi Exp3:valorExp2
+	{:RESULT = as.menorIgual(valorExp1, valorExp2, false, mi.getFila(), mi.getColumna()); :}; 
+Exp2 ::= Exp3:valorExp1 DISTINTO: dist Exp3:valorExp2
+	{:RESULT = as.distinto(valorExp1, valorExp2, false, dist.getFila(), dist.getColumna()); :}; 
 Exp2 ::= Exp3: valorExp
 	{: RESULT = valorExp; :};
 		
 		
-Exp3 ::= Exp3:valorExp1 SUMA Exp4:valorExp2
-	{:RESULT = as.suma(valorExp1, valorExp2, false); :}; 
-Exp3 ::= Exp3:valorExp1 RESTA Exp4:valorExp2
-	{:RESULT = as.resta(valorExp1, valorExp2, false); :};  
+Exp3 ::= Exp3:valorExp1 SUMA: sum Exp4:valorExp2
+	{:RESULT = as.suma(valorExp1, valorExp2, false, sum.getFila(), sum.getColumna()); :}; 
+Exp3 ::= Exp3:valorExp1 RESTA: rest Exp4:valorExp2
+	{:RESULT = as.resta(valorExp1, valorExp2, false, rest.getFila(), rest.getColumna()); :};  
 Exp3 ::= Exp4: valorExp
 	{: RESULT = valorExp; :};
 	
 	
-Exp4 ::= Exp4:valorExp1 MUL Exp5:valorExp2
-	{:RESULT = as.mul(valorExp1, valorExp2, false); :};
-Exp4 ::= Exp4:valorExp1 DIVENT Exp5:valorExp2 
-	{:RESULT = as.divEnt(valorExp1, valorExp2, false); :};
-Exp4 ::= Exp4:valorExp1 DIVREAL Exp5:valorExp2
-	{:RESULT = as.divReal(valorExp1, valorExp2, false); :}; 
-Exp4 ::= Exp4:valorExp1 MODULO Exp5:valorExp2
-	{:RESULT = as.modulo(valorExp1, valorExp2, false); :}; 
+Exp4 ::= Exp4:valorExp1 MUL:mul Exp5:valorExp2
+	{:RESULT = as.mul(valorExp1, valorExp2, false, mul.getFila(), mul.getColumna()); :};
+Exp4 ::= Exp4:valorExp1 DIVENT: div Exp5:valorExp2 
+	{:RESULT = as.divEnt(valorExp1, valorExp2, false, div.getFila(), div.getColumna()); :};
+Exp4 ::= Exp4:valorExp1 DIVREAL: div Exp5:valorExp2
+	{:RESULT = as.divReal(valorExp1, valorExp2, false, div.getFila(), div.getColumna()); :}; 
+Exp4 ::= Exp4:valorExp1 MODULO: mod Exp5:valorExp2
+	{:RESULT = as.modulo(valorExp1, valorExp2, false, mod.getFila(), mod.getColumna()); :}; 
 Exp4 ::= Exp5: valorExp
 	{: RESULT = valorExp; :};
 
 
-Exp5 ::= NOT Exp5:valorExp
-	{: RESULT = as.not(valorExp, false); :}; 
+Exp5 ::= NOT: not Exp5:valorExp
+	{: RESULT = as.not(valorExp, false, not.getFila(), not.getColumna()); :}; 
 Exp5 ::= Exp6: valorExp
 	{: RESULT = valorExp; :};
 	
 
-Exp6 ::= Exp6:valorExp1 CORCHETEAP Exp0:valorExp2 CORCHETECIERRE
-	{:RESULT = as.corchetes(valorExp1, valorExp2, true); :};
-Exp6 ::= Exp6:valorExp PUNTO IDEN:lexDeIden
-	{:RESULT = as.punto(valorExp, as.iden(lexDeIden, true), true); :};
-Exp6 ::= Exp6:valorExp PUNTO SIZE
-	{: RESULT = as.size(valorExp, false); :}; 
+Exp6 ::= Exp6:valorExp1 CORCHETEAP: ch Exp0:valorExp2 CORCHETECIERRE
+	{:RESULT = as.corchetes(valorExp1, valorExp2, true, ch.getFila(), ch.getColumna()); :};
+Exp6 ::= Exp6:valorExp PUNTO: punt IDEN:lexDeIden
+	{:RESULT = as.punto(valorExp, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), true, punt.getFila(), punt.getColumna()); :};
+Exp6 ::= Exp6:valorExp PUNTO: punt SIZE
+	{: RESULT = as.size(valorExp, false, punt.getFila(), punt.getColumna()); :}; 
 Exp6 ::= Exp7: valorExp
 	{: RESULT = valorExp; :};
 	
 
-Exp7 ::= RESTA Exp8:valorExp
-	{: RESULT = as.restaUnaria(valorExp, false); :}; 
-Exp7 ::= SUMA Exp8:valorExp
-	{: RESULT = as.sumaUnaria(valorExp, false); :}; 
-Exp7 ::= MUL Exp8:valorExp
-	{: RESULT = as.accesoPuntero(valorExp, true); :};  
+Exp7 ::= RESTA: rest Exp8:valorExp
+	{: RESULT = as.restaUnaria(valorExp, false, rest.getFila(), rest.getColumna()); :}; 
+Exp7 ::= SUMA: sum Exp8:valorExp
+	{: RESULT = as.sumaUnaria(valorExp, false, sum.getFila(), sum.getColumna()); :}; 
+Exp7 ::= MUL: mul Exp8:valorExp
+	{: RESULT = as.accesoPuntero(valorExp, true, mul.getFila(), mul.getColumna()); :};  
 Exp7 ::= Exp8: valorExp
 	{: RESULT = valorExp; :};
 	
 
 	
 Exp8 ::= ENT: lexDeEnt
-	{: RESULT = as.ent(lexDeEnt, false); :}; 
+	{: RESULT = as.ent(lexDeEnt.getLexema(), false, lexDeEnt.getFila(), lexDeEnt.getColumna()); :}; 
 Exp8 ::= REAL: lexDeReal
-	{: RESULT = as.real(lexDeReal, false); :};  
-Exp8 ::= TRUE
-	{: RESULT = as.verdadero(false); :};  
-Exp8 ::= FALSE
-	{: RESULT = as.falso(false); :};
-Exp8 ::= NULL
-	{: RESULT = as.nulo(false); :}; 
+	{: RESULT = as.real(lexDeReal.getLexema(), false, lexDeReal.getFila(), lexDeReal.getColumna()); :};  
+Exp8 ::= TRUE: tr
+	{: RESULT = as.verdadero(false, tr.getFila(), tr.getColumna()); :};  
+Exp8 ::= FALSE: fs
+	{: RESULT = as.falso(false, fs.getFila(), fs.getColumna()); :};
+Exp8 ::= NULL: nl
+	{: RESULT = as.nulo(false, nl.getFila(), nl.getColumna()); :}; 
 Exp8 ::= CARACTER: lexDeCaracter
-	{: RESULT = as.caracter(lexDeCaracter, false); :};  
+	{: RESULT = as.caracter(lexDeCaracter.getLexema(), false, lexDeCaracter.getFila(), lexDeCaracter.getColumna()); :};  
 Exp8 ::= IDEN:lexDeIden PAP ListaArg:lista PCIERRE
-	{: RESULT = as.llamadaFun(as.iden(lexDeIden, true), lista, false); :};
+	{: RESULT = as.llamadaFun(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, false, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 Exp8 ::= IDEN PAP error PCIERRE
 	{: numErrores += 1; RESULT = null; :};
 Exp8 ::= IDEN:lexDeIden
-	{: RESULT = as.iden(lexDeIden, true); :};
+	{: RESULT = as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 Exp8 ::= PAP Exp0: valorExp PCIERRE
 	{: RESULT = valorExp; :};
 Exp8 ::= PAP error PCIERRE
 {: numErrores += 1; RESULT = null; :};
 
 
-CreaVector ::= CREAVECTOR PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE
-	{: RESULT = as.vector(valorExp1, valorExp2, false); :};
-CreaVector ::= CREAVECTOR PAP Exp0:valorExp1 COMA Exp0:valorExp2 PCIERRE
-	{: RESULT = as.vector(valorExp1, valorExp2, false); :};
+CreaVector ::= CREAVECTOR: cv PAP CreaVector:valorExp1 COMA Exp0:valorExp2 PCIERRE
+	{: RESULT = as.vector(valorExp1, valorExp2, false, cv.getFila(), cv.getColumna()); :};
+CreaVector ::= CREAVECTOR: cv PAP Exp0:valorExp1 COMA Exp0:valorExp2 PCIERRE
+	{: RESULT = as.vector(valorExp1, valorExp2, false, cv.getFila(), cv.getColumna()); :};
 	
-New ::= NEW Tipo:tipo PAP ListaNew:lista PCIERRE
-{: RESULT = as.nuevo(lista, tipo, false); :};
+New ::= NEW: nuevo Tipo:tipo PAP ListaNew:lista PCIERRE
+{: RESULT = as.nuevo(lista, tipo, false, nuevo.getFila(), nuevo.getColumna()); :};
 
 ListaNew ::=
 {: RESULT = new ArrayList<Integer>(); :};
 
 ListaNew ::= ENT:lexDeEnt ListaNewElige:lista
-{: lista.add(0, Integer.parseInt(lexDeEnt));
+{: lista.add(0, Integer.parseInt(lexDeEnt.getLexema()));
 	RESULT = lista; :}; 
 
 ListaNewElige ::=
 {: RESULT = new ArrayList<Integer>(); :};
 
 ListaNewElige ::= COMA ENT:lexDeEnt ListaNewElige:lista
-{: lista.add(0, Integer.parseInt(lexDeEnt));
+{: lista.add(0, Integer.parseInt(lexDeEnt.getLexema()));
 	RESULT = lista; :}; 

@@ -3,9 +3,11 @@ package ast;
 public class TipoVector extends Tipos{
 	private Tipos tipoVector;
 
-	public TipoVector(Tipos tipoVector) {
+	public TipoVector(Tipos tipoVector, int fila, int columna) {
 		super();
 		this.tipoVector = tipoVector;
+		this.fila = fila;
+		this.columna = columna;
 	}
 
 	public Tipos getTipoVector() {

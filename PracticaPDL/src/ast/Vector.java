@@ -3,10 +3,12 @@ package ast;
 public class Vector extends E {
 	  private E tam;
 	  private E valorIni;
-	  public Vector(E valorIni, E tam, boolean asignable) {
+	  public Vector(E valorIni, E tam, boolean asignable, int fila, int columna) {
 		  super(asignable);
 	   this.tam = tam;
 	   this.valorIni = valorIni;
+	     this.fila = fila;
+	     this.columna = columna;
 	   
 	  }
 	  public E getTam() {return tam;} 

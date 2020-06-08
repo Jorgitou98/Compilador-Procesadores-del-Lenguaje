@@ -8,22 +8,26 @@ public class InsCond extends Ins{
 	
 	
 
-	public InsCond(E condicion, P insIf, P insElse) {
+	public InsCond(E condicion, P insIf, P insElse, int fila, int columna) {
 		super();
 		this.condicion = condicion;
 		this.insIf = insIf;
 		this.insElse = insElse;
 		this.tieneElse = true;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	
 
 
 
-	public InsCond(E condicion, P insIf) {
+	public InsCond(E condicion, P insIf, int fila, int columna) {
 		super();
 		this.condicion = condicion;
 		this.insIf = insIf;
 		this.tieneElse = false;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 
 

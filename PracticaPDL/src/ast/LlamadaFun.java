@@ -8,8 +8,10 @@ public class LlamadaFun extends E {
 	private NodoArbol ref;
 	private Tipos tipo;
 
-	public LlamadaFun(E iden, List<E> argumentos, boolean asignable) {
+	public LlamadaFun(E iden, List<E> argumentos, boolean asignable, int fila, int columna) {
 		super(asignable);
+	     this.fila = fila;
+	     this.columna = columna;
 		this.argumentos = argumentos;
 		this.iden = iden;
 	}

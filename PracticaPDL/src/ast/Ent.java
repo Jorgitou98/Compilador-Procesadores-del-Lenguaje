@@ -2,9 +2,10 @@ package ast;
 
 public class Ent extends Num{
 
-	public Ent(String v, boolean asignable) {
+	public Ent(String v, boolean asignable, int fila, int columna) {
 		super(v, asignable);
-		// TODO Auto-generated constructor stub
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 	public TipoE tipo() {return TipoE.INT;}
 	

@@ -24,7 +24,7 @@ public class TablaDeSimbolos {
 			tabla.get(tabla.size()-1).put(iden, instruccion);
 		}
 		else {
-			GestionErroresTiny.errorSemantico("Warning: la variable "+ iden + " ya estaba declarada, me quedo con su primer valor");
+			GestionErroresTiny.errorSemantico(instruccion.getFila(), instruccion.getColumna(), "Warning: la variable "+ iden + " ya estaba declarada, me quedo con su primer valor");
 		}
 		return insertable;
 	}

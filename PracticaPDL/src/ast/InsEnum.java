@@ -7,9 +7,11 @@ public class InsEnum extends Ins{
 	private List<E> listaConstantes;
 	
 	
-	public InsEnum(E nombre, List<E> listaConstantes) {
+	public InsEnum(E nombre, List<E> listaConstantes, int fila, int columna) {
 		this.nombre = nombre;
 		this.listaConstantes = listaConstantes;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 
 	@Override

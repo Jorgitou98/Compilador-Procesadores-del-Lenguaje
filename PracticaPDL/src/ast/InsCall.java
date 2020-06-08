@@ -8,10 +8,12 @@ public class InsCall extends Ins {
 
 	private NodoArbol ref;
 
-	public InsCall(E nombre, List<E> argumentos) {
+	public InsCall(E nombre, List<E> argumentos, int fila, int columna) {
 		super();
 		this.nombre = nombre;
 		this.argumentos = argumentos;
+	     this.fila = fila;
+	     this.columna = columna;
 	}
 
 	public void setRef(NodoArbol ref) {
