@@ -58,7 +58,6 @@ else = else
 proc = proc
 fun = fun
 new = new
-null = null
 return = return
 struct = struct
 typedef = typedef
@@ -106,7 +105,6 @@ saltoDeLinea = \n
 {true}                    {return ops.unidadTrue();}
 {false}                   {return ops.unidadFalse();}
 {new}					  {return ops.unidadNew();}
-{null}					  {return ops.unidadNull();}
 {float}                   {return ops.unidadFloat();}
 {vector}                  {return ops.unidadVector();}
 {creaVector}              {return ops.unidadCreaVector();}

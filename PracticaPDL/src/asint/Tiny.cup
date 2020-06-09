@@ -43,7 +43,7 @@ terminal TokenValue   TRUE, FALSE, CREAVECTOR,
  			MAYOR, MENORIGUAL, MAYORIGUAL, IGUALIGUAL, DISTINTO, PUNTO, 
 			LLAVESAP, LLAVESCIERRE, BARRA, PAP, PCIERRE, IGUAL, COMA, 
  			PUNTOYCOMA, CORCHETEAP, CORCHETECIERRE, DOSPUNTOS, DEFAULT,
- 			AMPERSAND, NEW, NULL, VECTOR;
+ 			AMPERSAND, NEW, VECTOR;
 terminal    TokenValue IDEN, ENT, REAL, CARACTER, WHILE, FOR, IF, MENOR; 
 terminal    Tipos INT, BOOL, CHAR, FLOAT;
 
@@ -496,8 +496,6 @@ Exp8 ::= TRUE: tr
 	{: RESULT = as.verdadero(false, tr.getFila(), tr.getColumna()); :};  
 Exp8 ::= FALSE: fs
 	{: RESULT = as.falso(false, fs.getFila(), fs.getColumna()); :};
-Exp8 ::= NULL: nl
-	{: RESULT = as.nulo(false, nl.getFila(), nl.getColumna()); :}; 
 Exp8 ::= CARACTER: lexDeCaracter
 	{: RESULT = as.caracter(lexDeCaracter.getLexema(), false, lexDeCaracter.getFila(), lexDeCaracter.getColumna()); :};  
 Exp8 ::= IDEN:lexDeIden PAP ListaArg:lista PCIERRE

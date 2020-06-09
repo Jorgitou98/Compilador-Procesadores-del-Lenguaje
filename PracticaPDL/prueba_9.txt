@@ -13,3 +13,7 @@ case meses.FEBRERO:
 default:
 	x = 22;
 }
+
+typedef meses meses2;
+meses2 mio = meses.FEBRERO;
+

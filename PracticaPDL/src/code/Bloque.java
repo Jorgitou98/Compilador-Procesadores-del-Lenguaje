@@ -8,6 +8,7 @@ public class Bloque {
 	private Map<String, Integer> identificadores = new HashMap<>();
 	private Map<String, Integer> tamanosTipos = new HashMap<>();
 	private Map<String, List<Integer>> dimensionesVect = new HashMap<>();
+	private Map<String, Boolean> tablaEsEstatico = new HashMap<>();
 	private int tamBloque = 0;
 	private int ssp = 0;
 	private boolean funProc = false;
@@ -113,6 +114,19 @@ public class Bloque {
 		else if(padre!= null)
 			return padre.dimensionVect(id);
 		return null;
+	}
+	
+	public boolean esEstatico(String id) {
+		if(tablaEsEstatico.containsKey(id)) {
+			return tablaEsEstatico.get(id);
+		}
+		else if(padre!= null)
+			return padre.esEstatico(id);
+		return true;
+	}
+	
+	public void insertaEstatico(String id, boolean estatico) {
+		tablaEsEstatico.put(id, estatico);
 	}
 
 }

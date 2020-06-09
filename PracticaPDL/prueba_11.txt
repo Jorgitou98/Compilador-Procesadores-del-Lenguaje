@@ -1,0 +1,23 @@
+fun int suma(int x, int y){
+	int res;
+	if(x>0){
+		fun int resta(int z, int a){
+			return z-a;
+		}
+		res = resta(x,y);
+	}
+	else {
+		fun int mult(int b, int c){
+			int a;
+				proc multiplica(){
+					a = b*c;
+				}
+			call multiplica();
+			return a;
+		}
+		res = mult(x,y);
+	}
+	return res;
+}
+
+int l = suma(2, 3*4);	

@@ -18,7 +18,7 @@ public class Main {
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);
-	 try {
+	 //try {
 	 P prog = (P) asint.parse().value;
 	 if (AnalizadorSintacticoTiny.numErrores > 0) {
 		 System.out.println("Arregle lo errores sintácticos encontrados\n");
@@ -31,10 +31,10 @@ public class Main {
 		 GeneradorCodigo gc= new GeneradorCodigo();
 		 gc.generaCodigo(prog);
 	 }
-	 }
-	 catch(Exception e) {
+	 //}
+	 /*catch(Exception e) {
 		 System.err.println("Encontrado final de fichero. Imposible recuperarse del último error");
-	 }
+	 }*/
 
 	 
 

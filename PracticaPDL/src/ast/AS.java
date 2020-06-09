@@ -89,9 +89,6 @@ public class AS {
 	public E verdadero(boolean asignable, int fila, int columna) 
 	{return new True(asignable, fila, columna);}
 	
-	public E nulo(boolean asignable, int fila, int columna) 
-	{return new Null(asignable, fila, columna);}
-	
 	public E vector(E valorIni, E tam, boolean asignable, int fila, int columna) 
 	{return new Vector(valorIni, tam, asignable, fila, columna);}
 	
