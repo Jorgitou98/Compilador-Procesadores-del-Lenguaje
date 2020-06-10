@@ -1,0 +1,19 @@
+struct persona{
+	vector<int> numeritos = creaVector(3,4);
+	int nombre;
+	int dni;
+}
+
+
+fun int sumaCampos(persona p){
+	return p.nombre + p.dni + p.numeritos[0];
+}
+
+persona pepe;
+pepe.nombre = 3;
+pepe.dni = 7;
+pepe.numeritos[0] = pepe.numeritos[1] + 1;
+int x = sumaCampos(pepe);
+
+
+

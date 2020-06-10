@@ -1,0 +1,4 @@
+int x = 3;
+vector<int> v = creaVector(0, 4);
+int y = v.size;
+
