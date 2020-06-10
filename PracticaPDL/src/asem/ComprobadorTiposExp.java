@@ -22,6 +22,7 @@ import ast.TipoError;
 import ast.TipoFloat;
 import ast.TipoIns;
 import ast.TipoInt;
+import ast.TipoParam;
 import ast.TipoPuntero;
 import ast.TipoT;
 import ast.TipoUsuario;
@@ -306,6 +307,9 @@ public class ComprobadorTiposExp {
 					if (parametros.size() == llamada.getArgumentos().size()) {
 						boolean coincide = true;
 						for (int i = 0; i < parametros.size(); ++i) {
+							if(parametros.get(i).getTipoDeParam() == TipoParam.REFERENCIA ) {
+								coincide = llamada.getArgumentos().get(i).isAsignable();
+							}
 							coincide = coincide && (parametros.get(i).getTipo())
 									.tipo() == comprobacionTiposExp(llamada.getArgumentos().get(i)).tipo();
 						}
@@ -313,7 +317,7 @@ public class ComprobadorTiposExp {
 							return llamada.getTipo();
 					}
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
-							"Error llamada funcion: los arumentos no coinciden con el tipo de parámetros");
+							"Error llamada funcion: los argumentos no coinciden con el tipo de parámetros o hay algún parametro pasado por referencia al que estamos pasando una expresión no asignable");
 				} else
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
 							"Error llamada funcion: el identificador no se corresponde con una función");

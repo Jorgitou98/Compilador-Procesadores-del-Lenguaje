@@ -6,7 +6,7 @@
 *pepe[2] = 5;
 
 <vector<vector<int>>>* juana = new vector<vector<int>> (2,2);
-*juana[0][0] = 77;
+*juana[1][0] = 77;
 
 
 struct persona{

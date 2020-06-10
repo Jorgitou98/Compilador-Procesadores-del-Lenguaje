@@ -64,7 +64,10 @@ public class Bloque {
 	public int dirVar(String id) {
 		if (identificadores.containsKey(id))
 			return identificadores.get(id);
-		return padre.dirVar(id);
+		if(padre != null) {
+			return padre.dirVar(id);
+		}
+		return -1;
 	}
 
 	public int queTamano(String tipo) {

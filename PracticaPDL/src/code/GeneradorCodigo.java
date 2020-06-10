@@ -146,6 +146,7 @@ public class GeneradorCodigo {
 			insertIns("neg", 0);
 			break;
 		case SIZE:
+			generaCodigoL(exp);
 			break;
 		case SUMA:
 			generaCodigoExp(exp.opnd1());
@@ -164,7 +165,7 @@ public class GeneradorCodigo {
 	}
 
 	private Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Integer>> generaCodigoL(E exp) {
-		Pair<Pair<List<Integer>, Integer>,Pair<Boolean, Integer>> par = null;
+		Pair<Pair<List<Integer>, Integer>,Pair<Boolean, Integer>> par = new Pair<>(new Pair<>(null, null), new Pair<>(null, null));
 		if (exp.tipo() == TipoE.IDEN) {
 			Iden id;
 			if (((Iden) exp).getRef().tipoNodo() == TipoN.INS) {
@@ -172,11 +173,18 @@ public class GeneradorCodigo {
 				//Si  no es vector me devuelve un null y no pasa nada (está bien así)
 				List<Integer> lista = bloqueActGenera().dimensionVect(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id());
 				par = new Pair<>(new Pair<>(lista, 0), new Pair<>(bloqueActGenera().esEstatico(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id()), bloqueActGenera().dirVar(((Iden) exp).id())));
+				insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
 			} else {
 				id = ((Iden) ((Param) ((Iden) exp).getRef()).getIden());
+				if(((Param) ((Iden) exp).getRef()).getTipoDeParam() == TipoParam.REFERENCIA) {
+					insertIns("lod 0 " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+				}
+				else {
+					insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+				}
 			}
-			insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
-			if(!bloqueActGenera().esEstatico(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id())) {
+			//insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+			if(!bloqueActGenera().esEstatico(((Iden) exp).id())) {
 				insertIns("ind", 0);
 				List<Integer> l = new ArrayList<>();
 				//Añado el numero de dimensiones del vector
@@ -245,6 +253,17 @@ public class GeneradorCodigo {
 		} else if (exp.tipo() == TipoE.ACCESOPUNTERO) {
 			par = generaCodigoL(exp.opnd1());
 			insertIns("ind", 0);
+		} else if (exp.tipo() == TipoE.SIZE) {
+			par = generaCodigoL(exp.opnd1());
+			// Si es estático (esta mal!!!!)
+			if(par.getValue().getKey()) {
+				insertIns("ldc " + par.getKey().getKey().get(par.getKey().getValue()), 1);
+			}
+			else {
+				insertIns("ldc "+ (2 + par.getKey().getValue()), 1 );
+				insertIns("add", -1);
+				insertIns("ind", 0);
+			}
 		}
 		return par;
 
@@ -452,7 +471,7 @@ public class GeneradorCodigo {
 			nivelAmbito = maxAmbitos;
 			insFun.setDirIni(codigo.size());
 			for (Param p : insFun.getParametros()) {
-				if (p.getTipo().tipo() == TipoT.USUARIO) {
+				if (p.getTipo().tipo() == TipoT.USUARIO && p.getTipoDeParam() == TipoParam.VALOR) {
 					insFun.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
 				} else {
 					insFun.incTamParams(1);
@@ -476,7 +495,7 @@ public class GeneradorCodigo {
 			nivelAmbito = maxAmbitos;
 			insProc.setDirIni(codigo.size());
 			for (Param p : insProc.getParametros()) {
-				if (p.getTipo().tipo() == TipoT.USUARIO) {
+				if (p.getTipo().tipo() == TipoT.USUARIO  && p.getTipoDeParam() == TipoParam.VALOR) {
 					insProc.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
 				} else {
 					insProc.incTamParams(1);
@@ -520,11 +539,11 @@ public class GeneradorCodigo {
 		for (int i = 0; i < params.size(); ++i) {
 			if (params.get(i).getTipoDeParam() == TipoParam.VALOR) {
 				Tipos tipo = params.get(i).getTipo();
-				if (tipo.tipo() == TipoT.USUARIO) {
+				if (tipo.tipo() == TipoT.USUARIO || tipo.tipo() == TipoT.VECTOR) {
 					generaCodigoL(args.get(i));
-					insertIns("movs " + bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()),
-							bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()) - 1);
-				} else {
+					insertIns("movs " + bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()), bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()) - 1);
+				} 		
+				else {
 					generaCodigoExp(args.get(i));
 				}
 			} else {

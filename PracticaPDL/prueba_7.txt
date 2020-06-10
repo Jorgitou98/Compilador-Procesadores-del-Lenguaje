@@ -4,7 +4,7 @@ struct persona{
 	int nombre;
 	int apellido;
 }
-int x =7*2%3;
+x =7*2%3;
 switch(x){
 	case 1:
 	y = 3;
@@ -12,7 +12,7 @@ switch(x){
 	case 2:
 	y=5;
 	break;
-	case 3:
+	case 3-x:
 	y = 99;
 	break;
 	default:

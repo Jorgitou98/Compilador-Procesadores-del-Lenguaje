@@ -39,6 +39,7 @@ public class Main {
 	 }
 	 catch(Exception e) {
 		 System.err.println("Encontrado final de fichero. Imposible recuperarse del último error");
+		 System.exit(1);
 	 }
 	 AnalizadorSemantico asem = new AnalizadorSemantico(prog);
 	 asem.analizaSemantica();

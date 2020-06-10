@@ -16,4 +16,6 @@ default:
 
 typedef meses meses2;
 meses2 mio = meses.FEBRERO;
+meses2 enero = meses.ENERO;
+meses marzo = enero +2;
 
