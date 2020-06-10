@@ -315,9 +315,12 @@ public class ComprobadorTiposExp {
 						}
 						if (coincide)
 							return llamada.getTipo();
+						else GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
+								"Error llamada funcion: los tipos de los argumentos de llamda no coinciden o algún parametro por referencia no es asignable");
 					}
-					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
-							"Error llamada funcion: los argumentos no coinciden con el tipo de parámetros o hay algún parametro pasado por referencia al que estamos pasando una expresión no asignable");
+					else GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
+							"Error llamada funcion: el número de argumentos en la llamada es incorrecto");
+					
 				} else
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(),
 							"Error llamada funcion: el identificador no se corresponde con una función");

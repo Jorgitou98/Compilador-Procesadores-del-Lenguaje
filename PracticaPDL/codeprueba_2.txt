@@ -7,6 +7,9 @@
 {6}ldc 25;
 {7}sto;
 {8}retf;
+
+//Esto es una declaracion
+
 {9}lda 0 5;
 {10}mst 0;
 {11}ldc 2;

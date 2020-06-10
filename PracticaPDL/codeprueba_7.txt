@@ -1,5 +1,14 @@
 {0}ssp 9;
 {1}sep 5;
+
+//Esto es una declaracion
+
+
+//Esto es una declaracion
+
+
+//Esto es una asignación
+
 {2}lda 0 5;
 {3}ldc 7;
 {4}ldc 2;
@@ -13,24 +22,39 @@
 {12}mul;
 {13}sub;
 {14}sto;
+
+//Esto es un switch
+
+
+//Esto es un if ó if con else\n
 {15}lda 0 5;
 {16}ind;
 {17}ldc 1;
 {18}equ;
-{19}fjp 24;
+{19}fjp 30;
+
+//Esto es una asignación
+
 {20}lda 0 6;
 {21}ldc 3;
 {22}sto;
-{23}ujp 48;
+{23}ujp 59;
+
+//Esto es un if ó if con else\n
 {24}lda 0 5;
 {25}ind;
 {26}ldc 2;
 {27}equ;
-{28}fjp 33;
+{28}fjp 41;
+
+//Esto es una asignación
+
 {29}lda 0 6;
 {30}ldc 5;
 {31}sto;
-{32}ujp 48;
+{32}ujp 59;
+
+//Esto es un if ó if con else\n
 {33}lda 0 5;
 {34}ind;
 {35}ldc 3;
@@ -38,33 +62,65 @@
 {37}ind;
 {38}sub;
 {39}equ;
-{40}fjp 45;
+{40}fjp 55;
+
+//Esto es una asignación
+
 {41}lda 0 6;
 {42}ldc 99;
 {43}sto;
-{44}ujp 48;
+{44}ujp 59;
+
+//Esto es una asignación
+
 {45}lda 0 6;
 {46}ldc 88;
 {47}sto;
+
+//Esto es una declaracion
+
+
+//Esto es una declaracion
+
+
+//Esto es una declaracion
+
+
+//Esto es una asignación
+
 {48}lda 0 7;
 {49}inc 0;
 {50}lda 0 6;
 {51}ind;
 {52}sto;
+
+//Esto es un switch
+
+
+//Esto es un if ó if con else\n
 {53}lda 0 7;
 {54}inc 0;
 {55}ind;
 {56}ldc 88;
 {57}equ;
-{58}fjp 67;
+{58}fjp 86;
+
+//Esto es una asignación
+
 {59}lda 0 6;
 {60}ldc 22;
 {61}sto;
+
+//Esto es una asignación
+
 {62}lda 0 7;
 {63}inc 1;
 {64}ldc 22;
 {65}sto;
-{66}ujp 71;
+{66}ujp 91;
+
+//Esto es una asignación
+
 {67}lda 0 7;
 {68}inc 1;
 {69}ldc 33;

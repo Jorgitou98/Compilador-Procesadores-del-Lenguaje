@@ -18,7 +18,7 @@ public class AnalizadorSemantico {
 		vincula(raizArbol);
 		tabla.cierraBloque();
 		//try {
-		if (GestionErroresTiny.numErroresSemanticos == 0 && (new ComprobadorTiposIns()).comprobacionTipos(raizArbol))
+		if ((new ComprobadorTiposIns()).comprobacionTipos(raizArbol))
 			System.out.println("Vinculación y comprobación de tipos correcta");
 		//}
 		//catch(Exception e) {

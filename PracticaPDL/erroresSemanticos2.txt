@@ -1,0 +1,51 @@
+# Tipamos mal una variable
+int x = true;
+
+
+# No tengo un tipo para darle a x realmente (¿bool o int?)
+# Se queda con el tipo de definicón. Entiende que x es de tipo int
+# La primera asignación estará mal tipada y la segunda bien
+bool y = x;
+int z = x;
+
+struct tPersona{
+	int dinero;
+	bool feliz = true;
+}
+
+tPersona juan;
+
+# Error por un tipo de un campo de un struct
+if (juan.dinero && true){
+
+}
+
+# Error paso de parametros a función por tipo del usuario no declarado
+
+fun bool funcion(tNuevo tipo){
+	return true;
+}
+
+# Warning por redefinición de variable. Avisa de que se queda con la primera declaración
+int z;
+
+# Error en un swicth. Tipo de los cases distinto del tipo de la variable del switch
+
+switch(z){
+case 1:
+	break;
+case true:
+	break;
+default:
+}
+
+# Error de tipo en la condición de un bucle for
+
+for (int i = 0; i+1; i = i+1){
+}
+
+# Variable de un bucle for sin declarar, error en el paso también y en el cuerpo del bucle
+# Que la variable w no está declarada sale 2 veces, una por w = 0 y otra por w = p
+for(w = 0; w < 13; w = p){
+	int x = False && True;
+}

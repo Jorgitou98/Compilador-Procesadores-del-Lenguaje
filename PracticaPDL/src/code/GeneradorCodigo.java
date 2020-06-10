@@ -17,8 +17,6 @@ public class GeneradorCodigo {
 	private List<InsMaquina> codigo = new ArrayList<>();
 	private int maxAmbitos = 0;
 	private UtilsGeneracion utils;
-	
-	
 
 	private void generaCodigoExp(E exp) {
 		switch (exp.tipo()) {
@@ -165,38 +163,45 @@ public class GeneradorCodigo {
 	}
 
 	private Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Integer>> generaCodigoL(E exp) {
-		Pair<Pair<List<Integer>, Integer>,Pair<Boolean, Integer>> par = new Pair<>(new Pair<>(null, null), new Pair<>(null, null));
+		Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Integer>> par = new Pair<>(new Pair<>(null, null),
+				new Pair<>(null, null));
 		if (exp.tipo() == TipoE.IDEN) {
 			Iden id;
 			if (((Iden) exp).getRef().tipoNodo() == TipoN.INS) {
 				id = ((Iden) ((InsDec) ((Iden) exp).getRef()).getVar());
-				//Si  no es vector me devuelve un null y no pasa nada (está bien así)
-				List<Integer> lista = bloqueActGenera().dimensionVect(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id());
-				par = new Pair<>(new Pair<>(lista, 0), new Pair<>(bloqueActGenera().esEstatico(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id()), bloqueActGenera().dirVar(((Iden) exp).id())));
-				insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+				// Si no es vector me devuelve un null y no pasa nada (está bien así)
+				List<Integer> lista = bloqueActGenera()
+						.dimensionVect(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id());
+				par = new Pair<>(new Pair<>(lista, 0),
+						new Pair<>(
+								bloqueActGenera().esEstatico(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id()),
+								bloqueActGenera().dirVar(((Iden) exp).id())));
+				insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " "
+						+ bloqueActGenera().dirVar(((Iden) exp).id()), 1);
 			} else {
 				id = ((Iden) ((Param) ((Iden) exp).getRef()).getIden());
-				if(((Param) ((Iden) exp).getRef()).getTipoDeParam() == TipoParam.REFERENCIA) {
+				if (((Param) ((Iden) exp).getRef()).getTipoDeParam() == TipoParam.REFERENCIA) {
 					insertIns("lod 0 " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
-				}
-				else {
-					insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+				} else {
+					insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " "
+							+ bloqueActGenera().dirVar(((Iden) exp).id()), 1);
 				}
 			}
-			//insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " + bloqueActGenera().dirVar(((Iden) exp).id()), 1);
-			if(!bloqueActGenera().esEstatico(((Iden) exp).id())) {
+			// insertIns("lda " + (bloqueActGenera().getPa() + 1 - id.getPa()) + " " +
+			// bloqueActGenera().dirVar(((Iden) exp).id()), 1);
+			if (!bloqueActGenera().esEstatico(((Iden) exp).id())) {
 				insertIns("ind", 0);
 				List<Integer> l = new ArrayList<>();
-				//Añado el numero de dimensiones del vector
+				// Añado el numero de dimensiones del vector
 				l.add(0, bloqueActGenera().queTamano(id.id()));
-				//Añado el tamaño de los elementos del vector
+				// Añado el tamaño de los elementos del vector
 				l.add(1, utils.tipoFinalSize(utils.tipoFinal(((InsDec) ((Iden) exp).getRef()).getTipo())));
 				par.getKey().setKey(l);
 			}
 		} else if (exp.tipo() == TipoE.CORCHETES) {
 			par = generaCodigoL(exp.opnd1());
 			// Si es estatico
-			if(par.getValue().getKey()) {
+			if (par.getValue().getKey()) {
 				generaCodigoExp(exp.opnd2());
 				int prod = 1;
 				for (int i = par.getKey().getValue() + 1; i < par.getKey().getKey().size(); ++i) {
@@ -206,24 +211,23 @@ public class GeneradorCodigo {
 				insertIns("ixa " + prod, -1);
 				par.getKey().setValue(par.getKey().getValue() + 1);
 			}
-			//Si es dinámico
+			// Si es dinámico
 			else {
-				if(par.getKey().getValue() == 0) {
+				if (par.getKey().getValue() == 0) {
 					generaCodigoExp(exp.opnd2());
-				}
-				else {
+				} else {
 					insertIns("ldo " + (par.getValue().getValue() + 2 + par.getKey().getValue()), 1);
 					insertIns("mul", -1);
 					generaCodigoExp(exp.opnd2());
 					insertIns("add", -1);
 				}
-				//Si somos la ultima dimension
-				if(par.getKey().getValue() + 3 == par.getKey().getKey().get(0)) {
+				// Si somos la ultima dimension
+				if (par.getKey().getValue() + 3 == par.getKey().getKey().get(0)) {
 					insertIns("ldc " + par.getKey().getKey().get(1), 1);
 					insertIns("mul", -1);
 					insertIns("add", -1);
 				}
-				par.getKey().setValue(par.getKey().getValue()+1);
+				par.getKey().setValue(par.getKey().getValue() + 1);
 			}
 
 		} else if (exp.tipo() == TipoE.PUNTO) {
@@ -232,13 +236,12 @@ public class GeneradorCodigo {
 				InsDec insDec = (InsDec) dec;
 				if (((Iden) insDec.getVar()).id().equals(((Iden) exp.opnd2()).id())
 						&& insDec.getTipo().tipo() == TipoT.VECTOR) {
-					if (utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())){
+					if (utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())) {
 						List<Integer> lista = utils.dimensionesVector(insDec.getTipo(), insDec.getValorInicial());
 						par.getKey().setKey(lista);
-					}
-					else {
+					} else {
 						List<Integer> l = new ArrayList<>();
-						l.add(0, bloqueActGenera().queTamano(((Iden)insDec.getVar()).id()));
+						l.add(0, bloqueActGenera().queTamano(((Iden) insDec.getVar()).id()));
 						l.add(1, utils.tipoFinalSize(utils.tipoFinal(insDec.getTipo())));
 						par.getKey().setKey(l);
 					}
@@ -247,7 +250,8 @@ public class GeneradorCodigo {
 					par.getValue().setValue(bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()));
 				}
 			}
-			int despl = bloqueActGenera().dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) exp.opnd2()).id());
+			int despl = bloqueActGenera()
+					.dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) exp.opnd2()).id());
 			insertIns("inc " + despl, 0);
 
 		} else if (exp.tipo() == TipoE.ACCESOPUNTERO) {
@@ -256,11 +260,10 @@ public class GeneradorCodigo {
 		} else if (exp.tipo() == TipoE.SIZE) {
 			par = generaCodigoL(exp.opnd1());
 			// Si es estático (esta mal!!!!)
-			if(par.getValue().getKey()) {
+			if (par.getValue().getKey()) {
 				insertIns("ldc " + par.getKey().getKey().get(par.getKey().getValue()), 1);
-			}
-			else {
-				insertIns("ldc "+ (2 + par.getKey().getValue()), 1 );
+			} else {
+				insertIns("ldc " + (2 + par.getKey().getValue()), 1);
 				insertIns("add", -1);
 				insertIns("ind", 0);
 			}
@@ -283,10 +286,11 @@ public class GeneradorCodigo {
 			}
 			for (int i = 0; i < dimension; ++i) {
 				if (valorIni != null) {
-					asignacionMultiple(iden, utils.tipoFinal(tipo), dir1 + i * utils.tipoFinalSize(utils.tipoFinal(tipo)), dir2, valorIni,
-							pa);
+					asignacionMultiple(iden, utils.tipoFinal(tipo),
+							dir1 + i * utils.tipoFinalSize(utils.tipoFinal(tipo)), dir2, valorIni, pa);
 				} else
-					asignacionMultiple(iden, utils.tipoFinal(tipo), dir1 + i * utils.tipoFinalSize(utils.tipoFinal(tipo)),
+					asignacionMultiple(iden, utils.tipoFinal(tipo),
+							dir1 + i * utils.tipoFinalSize(utils.tipoFinal(tipo)),
 							dir2 + i * utils.tipoFinalSize(utils.tipoFinal(tipo)), null, pa);
 			}
 		} else if (tipo.tipo() == TipoT.USUARIO) {
@@ -314,13 +318,14 @@ public class GeneradorCodigo {
 	private void generaCodigoIns(Ins ins) {
 		switch (ins.tipo()) {
 		case INSASIG:
-			// pw.println("\\\\ Esto es una asignación");
+			insertComentario("\n//Esto es una asignación\n");
 			InsAsig insAsig = (InsAsig) ins;
 			generaCodigoL(insAsig.getVar());
 			generaCodigoExp(insAsig.getValor());
 			insertIns("sto", -2);
 			break;
 		case INSCALL:
+			insertComentario("\n//Esto es una llamada a procedimiento\n");
 			InsCall insCall = (InsCall) ins;
 			int l = ((InsProc) insCall.getRef()).getDirIni();
 			int s = ((InsProc) insCall.getRef()).getTamParams();
@@ -332,6 +337,7 @@ public class GeneradorCodigo {
 
 			break;
 		case INSCOND:
+			insertComentario("\n//Esto es un if ó if con else\\n");
 			InsCond insCond = (InsCond) ins;
 			generaCodigoExp(insCond.getCondicion());
 			maxAmbitos++;
@@ -353,11 +359,13 @@ public class GeneradorCodigo {
 				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + codigo.size());
 			break;
 		case INSDEC:
+			insertComentario("\n//Esto es una declaracion\n");
 			InsDec insDec = (InsDec) ins;
 			if (insDec.isConValorInicial()) {
 				if (insDec.getTipo().tipo() == TipoT.VECTOR) {
-					if(utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())) {
-						//bloqueActGenera().insertaDimensiones(((Iden) insDec.getVar()).id(), dimensionesVector(insDec.getTipo(), insDec.getValorInicial()));
+					if (utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())) {
+						// bloqueActGenera().insertaDimensiones(((Iden) insDec.getVar()).id(),
+						// dimensionesVector(insDec.getTipo(), insDec.getValorInicial()));
 						if (utils.tipoFinal(insDec.getTipo()).tipo() != TipoT.USUARIO) {
 							asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
 									bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()), -1,
@@ -365,59 +373,59 @@ public class GeneradorCodigo {
 						} else {
 							asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
 									bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()),
-									bloqueActGenera().dirVar(utils.stringPuntos(calculaValorIni(insDec.getValorInicial()))),
+									bloqueActGenera()
+											.dirVar(utils.stringPuntos(calculaValorIni(insDec.getValorInicial()))),
 									calculaValorIni(insDec.getValorInicial()), 0);
 						}
-					}
-					else {
-						//generaCodigoL1(insDec.getVar());
+					} else {
+						// generaCodigoL1(insDec.getVar());
 						E v = insDec.getValorInicial();
 						insertIns("lda 0 " + (bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()) + 1), 1);
-						generaCodigoExp(((Vector)v).getTam());
+						generaCodigoExp(((Vector) v).getTam());
 						v = ((Vector) v).getValorIni();
-						while(v.tipo() == TipoE.VECTOR) {
-							generaCodigoExp(((Vector)v).getTam());
-							insertIns("mul", -1);	
+						while (v.tipo() == TipoE.VECTOR) {
+							generaCodigoExp(((Vector) v).getTam());
+							insertIns("mul", -1);
 							v = ((Vector) v).getValorIni();
 						}
 						insertIns("ldc " + utils.tipoFinalSize(utils.tipoFinal(insDec.getTipo())), 1);
 						insertIns("mul", -1);
 						insertIns("sto", -2);
-						//Aquí tengo guardada en la segunda posicion el tamaño dinamico
-						
-						//Cargo la direccion estatica (aqui guardare la direccion dinamica)
+						// Aquí tengo guardada en la segunda posicion el tamaño dinamico
+
+						// Cargo la direccion estatica (aqui guardare la direccion dinamica)
 						generaCodigoL1(insDec.getVar());
-						
-						//Cargo el tamaño que justo me acabo de guaradar
+
+						// Cargo el tamaño que justo me acabo de guaradar
 						insertIns("lda 0 " + (bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()) + 1), 1);
 						insertIns("ind", 0);
-						
+
 						insertIns("new", -2);
-						//Aqui ya tengo reservada la memoria dinámica y guradada la dirección donde empieza.
-						
-						
-						//Ahora voy a irme guardando  las dimensiones
+						// Aqui ya tengo reservada la memoria dinámica y guradada la dirección donde
+						// empieza.
+
+						// Ahora voy a irme guardando las dimensiones
 						int dirTam = bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()) + 2;
 						v = insDec.getValorInicial();
-						while(v.tipo() == TipoE.VECTOR) {
+						while (v.tipo() == TipoE.VECTOR) {
 							insertIns("lda 0 " + dirTam, 1);
-							generaCodigoExp(((Vector)v).getTam());
-							insertIns("sto", -2);	
+							generaCodigoExp(((Vector) v).getTam());
+							insertIns("sto", -2);
 							v = ((Vector) v).getValorIni();
 							dirTam++;
 						}
-						
-						//Doy valor inicial
-						/*if (tipoFinal(insDec.getTipo()).tipo() != TipoT.USUARIO) {
-							asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
-									bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()), -1,
-									calculaValorIni(insDec.getValorInicial()), 0);
-						} else {
-							asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
-									bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()),
-									bloqueActGenera().dirVar(stringPuntos(calculaValorIni(insDec.getValorInicial()))),
-									calculaValorIni(insDec.getValorInicial()), 0);
-						}*/
+
+						// Doy valor inicial
+						/*
+						 * if (tipoFinal(insDec.getTipo()).tipo() != TipoT.USUARIO) {
+						 * asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
+						 * bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()), -1,
+						 * calculaValorIni(insDec.getValorInicial()), 0); } else {
+						 * asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
+						 * bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()),
+						 * bloqueActGenera().dirVar(stringPuntos(calculaValorIni(insDec.getValorInicial(
+						 * )))), calculaValorIni(insDec.getValorInicial()), 0); }
+						 */
 					}
 
 				} else if (insDec.getTipo().tipo() == TipoT.USUARIO) {
@@ -446,6 +454,7 @@ public class GeneradorCodigo {
 		case INSENUM:
 			break;
 		case INSFOR:
+			insertComentario("\n//Esto es un bucle for\n");
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
 			InsFor insFor = (InsFor) ins;
@@ -490,12 +499,13 @@ public class GeneradorCodigo {
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSPROC:
+			insertComentario("\n//Esto es una declaracion de procedimiento\n");
 			InsProc insProc = (InsProc) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
 			insProc.setDirIni(codigo.size());
 			for (Param p : insProc.getParametros()) {
-				if (p.getTipo().tipo() == TipoT.USUARIO  && p.getTipoDeParam() == TipoParam.VALOR) {
+				if (p.getTipo().tipo() == TipoT.USUARIO && p.getTipoDeParam() == TipoParam.VALOR) {
 					insProc.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
 				} else {
 					insProc.incTamParams(1);
@@ -511,12 +521,14 @@ public class GeneradorCodigo {
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSSWITCH:
+			insertComentario("\n//Esto es un switch\n");
 			InsSwitch insSwitch = (InsSwitch) ins;
 			generaCodigoProg(utils.switchACond(insSwitch.getVarSwitch(), insSwitch.getListaCase(), 0));
 			break;
 		case INSTYPEDEF:
 			break;
 		case INSWHILE:
+			insertComentario("\n//Esto es un bucle while\n");
 			InsWhile insWhile = (InsWhile) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
@@ -541,9 +553,9 @@ public class GeneradorCodigo {
 				Tipos tipo = params.get(i).getTipo();
 				if (tipo.tipo() == TipoT.USUARIO || tipo.tipo() == TipoT.VECTOR) {
 					generaCodigoL(args.get(i));
-					insertIns("movs " + bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()), bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()) - 1);
-				} 		
-				else {
+					insertIns("movs " + bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()),
+							bloqueActGenera().queTamano(((TipoUsuario) tipo).getNombreTipo()) - 1);
+				} else {
 					generaCodigoExp(args.get(i));
 				}
 			} else {
@@ -566,10 +578,9 @@ public class GeneradorCodigo {
 
 	public void generaCodigo(NodoArbol raiz) {
 		try {
-			try{
+			try {
 				archivo.createNewFile();
-			}
-			catch(Exception e) {
+			} catch (Exception e) {
 				System.out.println("Problema al crear el fichero de código máquina");
 			}
 			pw = new PrintWriter(archivo);
@@ -590,16 +601,25 @@ public class GeneradorCodigo {
 
 	}
 
-	
-
 	private void write() {
-		for (int i = 0; i < codigo.size(); ++i) {
-			pw.println("{" + i + "}" + codigo.get(i).getName() + ";");
+		int linea = 0;
+		for (InsMaquina ins : codigo) {
+			if (!ins.isComentario()) {
+				pw.println("{" + linea + "}" + ins.getName() + ";");
+				linea++;
+			} else
+				pw.println(ins.getName());
 		}
 	}
 
 	private void insertIns(String ins, int tipo) {
 		codigo.add(new InsMaquina(ins, tipo));
+	}
+	
+	private void insertComentario(String ins) {
+		InsMaquina insMaquina = new InsMaquina(ins, 0);
+		insMaquina.setComentario(true);
+		codigo.add(insMaquina);
 	}
 
 	protected static Bloque bloqueActGenera() {
@@ -628,8 +648,6 @@ public class GeneradorCodigo {
 		return max;
 	}
 
-	
-
 	private E calculaValorIni(E v) {
 		if (v.tipo() == TipoE.VECTOR) {
 			return calculaValorIni(((Vector) v).getValorIni());
@@ -637,8 +655,4 @@ public class GeneradorCodigo {
 			return v;
 	}
 
-	
-	
-
-	
 }

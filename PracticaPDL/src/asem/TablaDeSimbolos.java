@@ -22,7 +22,7 @@ public class TablaDeSimbolos {
 			tabla.get(tabla.size()-1).put(iden, instruccion);
 		}
 		else {
-			System.err.println("Warning: " + "Fila " + instruccion.getFila() + " Columna: " + instruccion.getColumna() + ". La variable "+ iden + " ya estaba declarada, se ha tomado su primera declaración");
+			System.err.println("Warning: " + "Fila " + instruccion.getFila() + " Columna: " + instruccion.getColumna() + ".\nLa variable "+ iden + " ya estaba declarada, se ha tomado su primera declaración\n");
 		}
 		return insertable;
 	}

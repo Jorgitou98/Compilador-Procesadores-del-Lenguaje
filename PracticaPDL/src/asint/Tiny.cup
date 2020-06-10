@@ -133,11 +133,11 @@ InsBucleWhile ::= WHILE Exp0 error LLAVESCIERRE
 
 
 
-InsBucleFor ::= FOR: forR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA InsAsig:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-	{: RESULT = as.insFor(insDec, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+InsBucleFor ::= FOR: forR PAP InsDecConValorIni:insDec Exp0:cond PUNTOYCOMA Exp0:var IGUAL: asig Exp0:valorExp PCIERRE LLAVESAP P:inst LLAVESCIERRE
+	{: RESULT = as.insFor(insDec, cond, as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()), inst, forR.getFila(), forR.getColumna()); :};
 
-InsBucleFor ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA InsAsig:paso PCIERRE LLAVESAP P:inst LLAVESCIERRE
-	{: RESULT = as.insFor(insAsig, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
+InsBucleFor ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA Exp0:var IGUAL: asig Exp0:valorExp PCIERRE LLAVESAP P:inst LLAVESCIERRE
+	{: RESULT = as.insFor(insAsig, cond, as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()), inst, forR.getFila(), forR.getColumna()); :};
 
 InsBucleFor ::= FOR PAP error LLAVESCIERRE
 	{: System.err.println("Error en declaración/asignación del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};

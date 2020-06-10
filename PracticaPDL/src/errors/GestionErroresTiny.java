@@ -15,20 +15,17 @@ public class GestionErroresTiny {
 
 	public static void errorSintactico(UnidadLexica unidadLexica) {
 		System.err.println("***ERROR sintactico. Fila: " + unidadLexica.fila() + ", Columna: " + unidadLexica.columna()
-				+ ": Elemento inesperado " + unidadLexica.lexema());
+				+ " Elemento inesperado " + unidadLexica.lexema());
 		// System.exit(1);
 	}
 
 	public static void errorSemantico(int fila, int columna, String mensaje) {
 		numErroresSemanticos++;
-		if(numErroresSemanticos >= 10) {
-			System.out.println("Exceso de errores semánticos. Comprobación abortada");
+		if(numErroresSemanticos >= 15) {
+			System.out.println("Exceso de errores semánticos. 15 errores encontrados. Comprobación abortada");
 			System.exit(1);
 		}
-		System.err.println("***ERROR semantico. Fila: " + fila + " Columna: " + columna + ". " + mensaje);
+		System.err.println("***ERROR semantico. Fila: " + fila + " Columna: " + columna + ". \n" + mensaje + '\n');
 	}
 	
-	public static void warningInicializacin(Iden iden) {
-		System.err.println("***Warning. Fila: " + iden.getFila()+ " Columna: " + iden.getColumna() + ". Variable posblemente no inicializada");
-	}
 }

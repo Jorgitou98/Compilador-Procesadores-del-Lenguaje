@@ -1,0 +1,53 @@
+# Error de vinculación mbas variablesno declaras
+
+x = y;
+
+# Error de tipado
+
+int x = true;
+
+# Error de vinculación de nuevo
+
+call pepe(8);
+
+
+
+# Funcion declarada con un tipo distinto del que devuelve
+
+fun int multiplica(int x, int y){
+	return true;
+}
+
+# Error de tipos mezclado con vinculacion.
+# Variable m sin inicializar. Sólo se muestra este error.
+# Mejor no decirle también que está mal tipada para no confudir al usuario
+
+int z = m;
+
+
+# Uso de una función de tipo innadecuado
+
+fun bool esPositivo(int x){
+	return x > 0;
+}
+
+int suma = esPositivo(3) + 4;
+
+# Llamada a función con exceso, defecto de parametros y parametros de tipo innadecuado
+
+bool c1 = esPositivo(3, 4);
+
+bool c2 = esPositivo();
+
+bool c3 = esPositivo(true);
+
+# Hacemos una llamada correcta sin error
+
+bool c4 = esPositivo(4);
+
+
+# Cuando nos pasemos de 15 errores nos diran de que son demasiados y que se para la compilación
+# Es mejor que el usuario revise su código. Y resuelva primero estos 15 errores antes de seguir
+
+# Este error ya no lo marcará. Es el error nº 15
+int y = true;

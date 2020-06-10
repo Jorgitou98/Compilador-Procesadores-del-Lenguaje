@@ -3,6 +3,7 @@ package code;
 public class InsMaquina {
 	private String name;
 	private int tipo;
+	private boolean comentario = false;
 	public InsMaquina(String name, int tipo) {
 		super();
 		this.name = name;
@@ -19,6 +20,12 @@ public class InsMaquina {
 	}
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
+	}
+	public boolean isComentario() {
+		return comentario;
+	}
+	public void setComentario(boolean comentario) {
+		this.comentario = comentario;
 	}
 	
 	

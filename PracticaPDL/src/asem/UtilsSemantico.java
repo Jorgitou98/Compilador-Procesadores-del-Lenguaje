@@ -32,7 +32,7 @@ public class UtilsSemantico {
 		else if(tipo.tipo() == TipoT.VECTOR) {
 			((TipoVector) tipo).setTipoVector(tipoBasico(((TipoVector)tipo).getTipoVector()));
 		}
-		else if(tipo.tipo()==TipoT.USUARIO && ((Ins)((TipoUsuario)tipo).getRef()).tipo() == TipoIns.INSENUM) {
+		else if(tipo.tipo()==TipoT.USUARIO && ((TipoUsuario)tipo).getRef() != null && ((Ins)((TipoUsuario)tipo).getRef()).tipo() == TipoIns.INSENUM) {
 			return new TipoInt();
 		}
 		return tipo;

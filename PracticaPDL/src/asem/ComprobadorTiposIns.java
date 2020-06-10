@@ -115,26 +115,15 @@ public class ComprobadorTiposIns {
 				return true;
 			case INSFOR:
 				InsFor insFor = (InsFor) ins;
-				boolean correcto = comprobacionTipos(insFor.getDecIni())
-						&& compruebaExp.comprobacionTiposExp(insFor.getCond()).tipo() == TipoT.BOOL;
-				if (correcto) {
-					Ins decIni = insFor.getDecIni();
-					if (decIni.tipo() == TipoIns.INSASIG) {
-						if (compruebaExp.comprobacionTiposExp(((InsAsig) decIni).getVar())
-								.tipo() == compruebaExp.comprobacionTiposExp(insFor.getPaso()).tipo())
-							return comprobacionTipos(insFor.getInst());
-
-					} else if (decIni.tipo() == TipoIns.INSDEC) {
-						if (((InsDec) decIni).getTipo().tipo() == compruebaExp.comprobacionTiposExp(insFor.getPaso()).tipo())
-							return comprobacionTipos(insFor.getInst());
-					}
+				boolean correcto = comprobacionTipos(insFor.getDecIni());
+				
+				if(compruebaExp.comprobacionTiposExp(insFor.getCond()).tipo() != TipoT.BOOL) {
+					correcto = false;
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
-							"Error tipos InsFor: El tipo del paso no coincide con el de la variable de la declaración");
-				} else
-					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
-							"Error tipos InsFor: La declaracion inicial o la condicion no son correctas");
-
-				break;
+							"Error tipos InsFor: La condición del for no es de tipo booleano");
+				}
+				correcto = comprobacionTipos(insFor.getPaso()) && correcto;
+				return comprobacionTipos(insFor.getInst()) && correcto;
 			case INSFUN:
 				InsFun insFun = (InsFun) ins;
 				if(compruebaExp.comprobacionTiposExp(insFun.getValorReturn()).tipo() == insFun.getTipoReturn().tipo()){
@@ -184,8 +173,16 @@ public class ComprobadorTiposIns {
 			break;
 		case PROG:
 			boolean correcto = true;
-			for (Ins insProg : ((P) nodo).getInstr())
-				correcto = correcto && comprobacionTipos(insProg);
+			for (Ins insProg : ((P) nodo).getInstr()) {
+				try{
+					correcto = comprobacionTipos(insProg) && correcto;
+				}
+				catch(Exception e) {
+					// Si hubo una excepción Java nos recuperamos y seguimos.
+					// Seguramente alguna referencia esta a null o algo por el estilo
+					// El error ya se mostró en la vinculación
+				}
+			}
 			return correcto;
 		default:
 			break;
