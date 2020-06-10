@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ast.Ins;
 import ast.NodoArbol;
-import errors.GestionErroresTiny;
+
 
 public class TablaDeSimbolos {
 	private List<Map<String, NodoArbol>> tabla = new ArrayList<>();
@@ -24,7 +22,7 @@ public class TablaDeSimbolos {
 			tabla.get(tabla.size()-1).put(iden, instruccion);
 		}
 		else {
-			GestionErroresTiny.errorSemantico(instruccion.getFila(), instruccion.getColumna(), "Warning: la variable "+ iden + " ya estaba declarada, me quedo con su primer valor");
+			System.err.println("Warning: " + "Fila " + instruccion.getFila() + " Columna: " + instruccion.getColumna() + ". La variable "+ iden + " ya estaba declarada, se ha tomado su primera declaración");
 		}
 		return insertable;
 	}

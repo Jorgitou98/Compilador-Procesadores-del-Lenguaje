@@ -11,14 +11,16 @@ import code.GeneradorCodigo;
 import errors.GestionErroresTiny;
 
 public class Main {
+	public static String nombreFichero;
    public static void main(String[] args) throws Exception {
 	 if(args.length < 1) {
 		 System.err.println("Introduzca el fichero de entreada como parámetro");
 		 System.exit(1);
 	 }
+	 nombreFichero = args[0];
 	 Reader input = null;
 	 try {
-     input = new InputStreamReader(new FileInputStream(args[0]));
+     input = new InputStreamReader(new FileInputStream(nombreFichero));
 	 }
 	 catch(FileNotFoundException f) {
 		 System.err.println("No se pudo abrir el archivo");

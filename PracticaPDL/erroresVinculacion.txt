@@ -3,3 +3,6 @@ x = 4 + 5 + y;
 
 # Tipo no declarado
 tpersona pepe;
+
+# Procedimiento llamado sin ser declarado
+call procedimiento();

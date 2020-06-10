@@ -1,0 +1,18 @@
+# Tipamos mal una variable
+int x = true;
+
+#Comprobamos que esa variable lleva un tipo error y no será tenida en cuenta en proximos error
+# No tengo un tipo para darle realmente (¿bool o int?)
+bool y = x;
+
+struct tPersona{
+	int dinero;
+	bool feliz = true;
+}
+
+tPersona juan;
+
+# Error por un tipo de un campo de un struct
+if (juan.dinero && true){
+
+}
