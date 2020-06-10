@@ -17,8 +17,13 @@ public class AnalizadorSemantico {
 		tabla.abreBloque();
 		vincula(raizArbol);
 		tabla.cierraBloque();
+		try {
 		if (comprobacionTipos(raizArbol))
 			System.out.println("Comprobación de tipos correcta");
+		}
+		catch(Exception e) {
+			
+		}
 	}
 
 	private void vincula(NodoArbol nodo) {
@@ -64,7 +69,10 @@ public class AnalizadorSemantico {
 				InsDec insdec = (InsDec) nodo;
 				vincula(insdec.getTipo());
 				tabla.insertaId(((Iden) insdec.getVar()).id(), insdec);
-				insdec.setTipo(tipoBasico(insdec.getTipo()));
+				try{
+					insdec.setTipo(tipoBasico(insdec.getTipo()));
+				}
+				catch(Exception e) {}
 				if (insdec.isConValorInicial()) {
 					vincula(insdec.getValorInicial());
 					insdec.setValorInicial(cambiaEnums(insdec.getValorInicial()));
@@ -256,7 +264,7 @@ public class AnalizadorSemantico {
 				TipoUsuario tipousuario = (TipoUsuario) tipo;
 				NodoArbol refUsuario = tabla.declaracionDe(tipousuario.getNombreTipo());
 				if (refUsuario == null)
-					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Tipo" + tipousuario.getNombreTipo() + " no declarado");
+					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), "Tipo " + tipousuario.getNombreTipo() + " no declarado");
 				else if (refUsuario.tipoNodo() == TipoN.INS && ((Ins) refUsuario).tipo() == TipoIns.INSTYPEDEF) {
 					// nodo = ((InsTypeDef) refUsuario).getTipo();
 					tipousuario.setTipoOrig(((InsTypeDef) refUsuario).getTipo());
@@ -552,8 +560,6 @@ public class AnalizadorSemantico {
 				else GestionErroresTiny
 				.errorSemantico(nodo.getFila(), nodo.getColumna(), "Error llamada funcion: el identificador no se corresponde con una función");
 				break;
-			case NULL:
-				return new TipoPuntero(null, exp.getFila(), exp.getColumna());
 			case TRUE:
 				return new TipoBool();
 			case VECTOR:

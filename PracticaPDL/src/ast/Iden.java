@@ -10,7 +10,7 @@ public class Iden extends E {
 	private int dir;
 	private int pa;
 	private List<Integer> dimensiones = new ArrayList<>();
-
+	private boolean inicializado = false;
 	
 
 	public Iden(String v, boolean asignable, int fila, int columna) {
@@ -86,6 +86,14 @@ public class Iden extends E {
 
 	public void setDimensiones(List<Integer> dimensiones) {
 		this.dimensiones = dimensiones;
+	}
+
+	public boolean isInicializado() {
+		return inicializado;
+	}
+
+	public void setInicializado(boolean inicializado) {
+		this.inicializado = inicializado;
 	}
 	
 	

@@ -23,16 +23,12 @@ action code {:
 :};
 
 parser code {:
-   public static int numErrores = 0;
-   private GestionErroresTiny errores;
    public void syntax_error(Symbol unidadLexica) {
-     errores.errorSintactico((UnidadLexica)unidadLexica);
+     GestionErroresTiny.errorSintactico((UnidadLexica)unidadLexica);
    }
 :};
 init with {: 
-   errores = new GestionErroresTiny();
    AnalizadorLexicoTiny alex = (AnalizadorLexicoTiny)getScanner();
-   alex.fijaGestionErrores(errores);
 :};
 
 
@@ -109,10 +105,10 @@ InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insE
 	{: RESULT = as.insIfConElse(cond, insIf, insElse, ifR.getFila(), ifR.getColumna()); :};
 	
 InsCond ::= IF error LLAVESCIERRE
-	{: System.err.println("Error en la condición del if\n"); AnalizadorSintacticoTiny.numErrores++;  AnalizadorSintacticoTiny.numErrores++; RESULT = null; :};
+	{: System.err.println("Error en la condición del if\n"); GestionErroresTiny.numErroresSintacticos++;  GestionErroresTiny.numErroresSintacticos++; RESULT = null; :};
 
 InsCond ::= IF Exp0 error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del if/else\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del if/else\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -126,10 +122,10 @@ InsBucleWhile ::= WHILE: whileR Exp0:cond LLAVESAP P:ins LLAVESCIERRE
 	{: RESULT = as.insWhile(cond, ins, whileR.getFila(), whileR.getColumna()); :};
 
 InsBucleWhile ::= WHILE error LLAVESCIERRE
-	{: System.err.println("Error en la condición del while\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en la condición del while\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleWhile ::= WHILE Exp0 error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del while\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del while\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -144,25 +140,25 @@ InsBucleFor ::= FOR: forR PAP InsAsig:insAsig Exp0:cond PUNTOYCOMA InsAsig:paso 
 	{: RESULT = as.insFor(insAsig, cond, paso, inst, forR.getFila(), forR.getColumna()); :};
 
 InsBucleFor ::= FOR PAP error LLAVESCIERRE
-	{: System.err.println("Error en declaración/asignación del for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en declaración/asignación del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsAsig error LLAVESCIERRE
-	{: System.err.println("Error en la condición del for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en la condición del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsDecConValorIni error LLAVESCIERRE
-	{: System.err.println("Error en la condición del for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en la condición del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsAsig Exp0 PUNTOYCOMA error LLAVESCIERRE
-	{: System.err.println("Error en el paso del bucle for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el paso del bucle for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsDecConValorIni Exp0 PUNTOYCOMA error LLAVESCIERRE
-	{: System.err.println("Error en el paso del bucle for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el paso del bucle for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsAsig Exp0 PUNTOYCOMA InsAsig error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsBucleFor ::= FOR PAP InsDecConValorIni Exp0 PUNTOYCOMA InsAsig error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del for\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del for\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -175,14 +171,14 @@ InsDec ::= Tipo: tipo IDEN: lexDeIden PUNTOYCOMA
 	{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), false, null, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 
 InsDec ::= Tipo error PUNTOYCOMA
-	{: System.err.println("Error en la declaración. Identificador no reconocido \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en la declaración. Identificador no reconocido \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 InsDecConValorIni ::= Tipo: tipo IDEN: lexDeIden IGUAL Exp:valorExp PUNTOYCOMA
 	{:RESULT = as.insDec(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), true, valorExp, lexDeIden.getFila(), lexDeIden.getColumna()); :};
 
 InsDecConValorIni ::= Tipo IDEN error PUNTOYCOMA
-	{: System.err.println("Error en el valor inicial de la declaración o ausencia de = \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el valor inicial de la declaración o ausencia de = \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -202,7 +198,7 @@ Tipo ::= IDEN:lexIden
 Tipo ::= MENOR: men Tipo: tipo MAYOR MUL
 	{:RESULT = as.tipoPuntero(tipo, men.getFila(), men.getColumna()); :};
 Tipo ::= VECTOR error MAYOR
-	{: System.err.println("Error en el tipo proporcionado para el vector \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el tipo proporcionado para el vector \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -221,10 +217,10 @@ InsCall ::= CALL: call IDEN:lexDeIden PAP ListaArg:lista PCIERRE PUNTOYCOMA
 	{: RESULT = as.insCall(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lista, call.getFila(), call.getColumna()); :};
  
 InsCall ::= CALL error PUNTOYCOMA
-	{: System.err.println("Se esperaba un identificador para la llamada \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Se esperaba un identificador para la llamada \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsCall ::= CALL IDEN PUNTOYCOMA
-	{: System.err.println("Error en los parámetros de llamada al procedimiento \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en los parámetros de llamada al procedimiento \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 
 
@@ -252,10 +248,10 @@ InsSwitch ::= SWITCH: swi PAP Exp0:var PCIERRE LLAVESAP ListaCase:lista LLAVESCI
 	{: RESULT = as.insSwitch(var, lista, swi.getFila(), swi.getColumna()); :};
 
 InsSwitch ::= SWITCH error LLAVESCIERRE
-	{: System.err.println("Error en expresión del switch\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en expresión del switch\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsSwitch ::= SWITCH PAP Exp0 PCIERRE error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del switch\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del switch\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 ListaCase ::= CASE: cas Exp0:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:lista
@@ -263,10 +259,10 @@ ListaCase ::= CASE: cas Exp0:var DOSPUNTOS P:instr BREAK PUNTOYCOMA ListaCase:li
        RESULT = lista; :};
  
 ListaCase ::= CASE error PUNTOYCOMA
-	{: System.err.println("Error en el valor del case\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el valor del case\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 ListaCase ::= CASE Exp0 DOSPUNTOS error PUNTOYCOMA
-	{: System.err.println("Error en el cuerpo del case o falta de break\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del case o falta de break\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 	 
 ListaCase ::= DEFAULT: def DOSPUNTOS P:instr
@@ -275,7 +271,7 @@ ListaCase ::= DEFAULT: def DOSPUNTOS P:instr
 	 	RESULT = lista; :};
 
 ListaCase ::= DEFAULT error PUNTOYCOMA
-	{: System.err.println("Error en el cuerpo del default\n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del default\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
  
@@ -283,16 +279,16 @@ InsFun ::= FUN: fun Tipo:tipoReturn IDEN:lexDeIden PAP Parametros:params PCIERRE
 	{: RESULT = as.insFun(tipoReturn, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), params, instr, valorReturn, fun.getFila(), fun.getColumna()); :};
 	
 InsFun ::= FUN error LLAVESCIERRE
-	{: System.err.println("Error en el tipo de declaración de la función \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el tipo de declaración de la función \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 InsFun ::= FUN Tipo error LLAVESCIERRE
-	{: System.err.println("Error en el nombre de la funcion \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el nombre de la funcion \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 InsFun ::= FUN Tipo IDEN error LLAVESCIERRE
-	{: System.err.println("Error en los parámetros de la función \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en los parámetros de la función \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsFun ::= FUN Tipo IDEN PAP Parametros PCIERRE error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo de la función \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo de la función \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -329,13 +325,13 @@ InsProc ::= PROC: proc IDEN:lexDeIden PAP Parametros:params PCIERRE LLAVESAP P:i
 
 	
 InsProc ::= PROC error LLAVESCIERRE
-	{: System.err.println("Error en el nombre del procedimiento \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el nombre del procedimiento \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 InsProc ::= PROC IDEN error LLAVESCIERRE
-	{: System.err.println("Error en los parámetros del procedimiento \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en los parámetros del procedimiento \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsProc ::= PROC IDEN PAP Parametros PCIERRE error LLAVESCIERRE
-	{: System.err.println("Error en el cuerpo del procedimiento \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el cuerpo del procedimiento \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -345,10 +341,10 @@ InsStruct ::= STRUCT: str IDEN:lexDeIden LLAVESAP LDec:listaDec LLAVESCIERRE
 	{: RESULT = as.insStruct(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaDec, str.getFila(), str.getColumna()); :};
 
 InsStruct ::= STRUCT error LLAVESCIERRE
-	{: System.err.println("Error de nombre para el struct \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error de nombre para el struct \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsStruct ::= STRUCT IDEN error LLAVESCIERRE
-	{: System.err.println("Error en algún campo del struct \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en algún campo del struct \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 LDec ::= InsDec: ins LDec :listaDec
 	{: listaDec.add(0,ins);
@@ -365,10 +361,10 @@ InsEnum ::= ENUM: en IDEN: lexDeIden IGUAL LLAVESAP LEnum: listaCtes LLAVESCIERR
 	{: RESULT = as.insEnum(as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), listaCtes, en.getFila(), en.getColumna()); :};
 
 InsEnum ::= ENUM error PUNTOYCOMA
-	{: System.err.println("Error de nombre para el enumerado \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error de nombre para el enumerado \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsEnum ::= ENUM IDEN error PUNTOYCOMA
-	{: System.err.println("Error en los valores del enumerado \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en los valores del enumerado \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 LEnum ::= IDEN: lexDeIden LEnumElige: listaCtes
@@ -393,10 +389,10 @@ InsTypeDef ::= TYPEDEF:tdef Tipo:tipo IDEN:lexDeIden PUNTOYCOMA
 	{: RESULT = as.insTypeDef(tipo, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), tdef.getFila(), tdef.getColumna()); :};
 
 InsTypeDef ::= TYPEDEF error PUNTOYCOMA
-	{: System.err.println("Error en el tipo a sustituir del typedef \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el tipo a sustituir del typedef \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 InsTypeDef ::= TYPEDEF Tipo error PUNTOYCOMA
-	{: System.err.println("Error en el nuevo tipo alias del typedef \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el nuevo tipo alias del typedef \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
@@ -407,7 +403,7 @@ Exp ::= CreaVector: valorExp
 	{: RESULT = valorExp; :};
 
 Exp ::= CreaVector error
-	{: System.err.println("Error en el creaVector \n"); AnalizadorSintacticoTiny.numErrores++;  RESULT = null; :};
+	{: System.err.println("Error en el creaVector \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 	
 Exp ::= New:valorExp
 	{: RESULT = valorExp; :};

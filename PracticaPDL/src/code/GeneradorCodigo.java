@@ -370,8 +370,6 @@ public class GeneradorCodigo {
 			generaCodigoExp(exp.opnd1());
 			insertIns("not", 0);
 			break;
-		case NULL:
-			break;
 		case OR:
 			generaCodigoExp(exp.opnd1());
 			generaCodigoExp(exp.opnd2());

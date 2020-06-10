@@ -7,6 +7,7 @@ import alex.AnalizadorLexicoTiny;
 import asem.AnalizadorSemantico;
 import ast.P;
 import code.GeneradorCodigo;
+import errors.GestionErroresTiny;
 
 public class Main {
    public static void main(String[] args) throws Exception {
@@ -18,26 +19,31 @@ public class Main {
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);
-	 //try {
-	 P prog = (P) asint.parse().value;
-	 if (AnalizadorSintacticoTiny.numErrores > 0) {
-		 System.out.println("Arregle lo errores sintácticos encontrados\n");
+	 P prog = null;
+	 try {
+	 prog = (P) asint.parse().value;
+	 if (GestionErroresTiny.numErroresSintacticos > 0) {
+		 System.out.println(GestionErroresTiny.numErroresSintacticos + " errores sintácticos encontrados.\nArregle los errores.\n");
 		 System.exit(1);
+	 }
+	 }
+	 catch(Exception e) {
+		 System.err.println("Encontrado final de fichero. Imposible recuperarse del último error");
 	 }
 	 AnalizadorSemantico asem = new AnalizadorSemantico(prog);
 	 asem.analizaSemantica();
+	 if (GestionErroresTiny.numErroresSemanticos > 0) {
+		 System.out.println(GestionErroresTiny.numErroresSemanticos + " errores semánticos encontrados.\nArregle los errores.\n");
+		 System.exit(1);
+	 }
+	 	 
 	 if(prog != null) {
 		 System.out.println(prog.imprime("", false));
 		 GeneradorCodigo gc= new GeneradorCodigo();
 		 gc.generaCodigo(prog);
 	 }
-	 //}
-	 /*catch(Exception e) {
-		 System.err.println("Encontrado final de fichero. Imposible recuperarse del último error");
-	 }*/
-
+	 }
 	 
 
  }
-}   
-   
+
