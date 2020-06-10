@@ -1,3 +1,5 @@
+# Error en una asignación
+iden = +++;
 
 int j = j+1;
 int j = j+1;

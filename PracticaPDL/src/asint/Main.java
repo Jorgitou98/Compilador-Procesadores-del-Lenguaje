@@ -1,6 +1,7 @@
 package asint;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import alex.AnalizadorLexicoTiny;
@@ -15,7 +16,14 @@ public class Main {
 		 System.err.println("Introduzca el fichero de entreada como parámetro");
 		 System.exit(1);
 	 }
-     Reader input = new InputStreamReader(new FileInputStream(args[0]));
+	 Reader input = null;
+	 try {
+     input = new InputStreamReader(new FileInputStream(args[0]));
+	 }
+	 catch(FileNotFoundException f) {
+		 System.err.println("No se pudo abrir el archivo");
+		 System.exit(1);
+	 }
 	 AnalizadorLexicoTiny alex = new AnalizadorLexicoTiny(input);
 	 AnalizadorSintacticoTiny asint = new AnalizadorSintacticoTiny(alex);
 	 asint.setScanner(alex);

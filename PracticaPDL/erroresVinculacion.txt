@@ -1,6 +1,5 @@
-# Variables usadas pero no declarada
+# Variables usadas pero no declaradas
 x = 4 + 5 + y;
 
 # Tipo no declarado
 tpersona pepe;
-

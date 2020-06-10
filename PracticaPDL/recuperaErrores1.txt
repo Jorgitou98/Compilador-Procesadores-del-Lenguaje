@@ -5,7 +5,7 @@ int x = 5 + 8 + 7;
 
 # Error en el cuerpo de un while
 while(true){
-fallo
+int x ++;
 }
 
 # Error en declaracion de variable de un for

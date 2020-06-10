@@ -208,7 +208,8 @@ Tipo ::= VECTOR error MAYOR
 InsAsig ::= Exp0:var IGUAL: asig Exp0:valorExp PUNTOYCOMA
 	{: RESULT = as.insAsig(var, valorExp, asig.getFila(), asig.getColumna()); :};
 	
-
+InsAsig ::= error PUNTOYCOMA
+	{: System.err.println("Error en una asignación \n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};
 
 
 
