@@ -1,19 +1,19 @@
 {0}ssp 7;
 {1}sep 2;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {2}lda 0 5;
 {3}ldc 1;
 {4}new;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {5}lda 0 6;
 {6}ldc 1;
 {7}new;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {8}lda 0 6;
 {9}ind;
@@ -21,7 +21,7 @@
 {11}ind;
 {12}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {13}lda 0 6;
 {14}ind;

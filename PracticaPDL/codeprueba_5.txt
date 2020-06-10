@@ -1,13 +1,13 @@
 {0}ssp 13;
 {1}sep 2;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {2}lda 0 5;
 {3}ldc 4;
 {4}new;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {5}lda 0 5;
 {6}ind;
@@ -17,7 +17,7 @@
 {10}ldc 3;
 {11}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {12}lda 0 5;
 {13}ind;
@@ -27,14 +27,14 @@
 {17}ldc 4;
 {18}sto;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {19}lda 0 6;
 {20}lda 0 5;
 {21}ind;
 {22}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {23}lda 0 6;
 {24}ind;
@@ -44,13 +44,13 @@
 {28}ldc 5;
 {29}sto;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {30}lda 0 7;
 {31}ldc 4;
 {32}new;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {33}lda 0 7;
 {34}ind;
@@ -63,13 +63,13 @@
 {41}ldc 77;
 {42}sto;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {43}lda 0 8;
 {44}ldc 6;
 {45}new;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {46}lda 0 8;
 {47}ind;
@@ -80,7 +80,7 @@
 {52}ldc 66;
 {53}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {54}lda 0 8;
 {55}ind;
@@ -91,19 +91,13 @@
 {60}ldc 333;
 {61}sto;
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {62}lda 0 9;
 {63}ldc 1;
 {64}new;
 
-//Esto es una declaracion
-
-
-//Esto es una asignación
+\\Esto es una asignación
 
 {65}lda 0 9;
 {66}inc 0;
@@ -111,19 +105,13 @@
 {68}ldc 20;
 {69}sto;
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {70}lda 0 11;
 {71}ldc 1;
 {72}new;
 
-//Esto es una declaracion
-
-
-//Esto es una asignación
+\\Esto es una asignación
 
 {73}lda 0 11;
 {74}inc 0;

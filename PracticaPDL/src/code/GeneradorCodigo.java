@@ -318,14 +318,14 @@ public class GeneradorCodigo {
 	private void generaCodigoIns(Ins ins) {
 		switch (ins.tipo()) {
 		case INSASIG:
-			insertComentario("\n//Esto es una asignación\n");
+			insertComentario("\n\\\\Esto es una asignación\n");
 			InsAsig insAsig = (InsAsig) ins;
 			generaCodigoL(insAsig.getVar());
 			generaCodigoExp(insAsig.getValor());
 			insertIns("sto", -2);
 			break;
 		case INSCALL:
-			insertComentario("\n//Esto es una llamada a procedimiento\n");
+			insertComentario("\n\\\\Esto es una llamada a procedimiento\n");
 			InsCall insCall = (InsCall) ins;
 			int l = ((InsProc) insCall.getRef()).getDirIni();
 			int s = ((InsProc) insCall.getRef()).getTamParams();
@@ -337,7 +337,7 @@ public class GeneradorCodigo {
 
 			break;
 		case INSCOND:
-			insertComentario("\n//Esto es un if ó if con else\\n");
+			insertComentario("\n\\\\Esto es un if ó if con else\n");
 			InsCond insCond = (InsCond) ins;
 			generaCodigoExp(insCond.getCondicion());
 			maxAmbitos++;
@@ -359,9 +359,9 @@ public class GeneradorCodigo {
 				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + codigo.size());
 			break;
 		case INSDEC:
-			insertComentario("\n//Esto es una declaracion\n");
 			InsDec insDec = (InsDec) ins;
 			if (insDec.isConValorInicial()) {
+				insertComentario("\n\\\\Esto es una declaracion\n");
 				if (insDec.getTipo().tipo() == TipoT.VECTOR) {
 					if (utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())) {
 						// bloqueActGenera().insertaDimensiones(((Iden) insDec.getVar()).id(),
@@ -454,7 +454,7 @@ public class GeneradorCodigo {
 		case INSENUM:
 			break;
 		case INSFOR:
-			insertComentario("\n//Esto es un bucle for\n");
+			insertComentario("\n\\\\Esto es un bucle for\n");
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
 			InsFor insFor = (InsFor) ins;
@@ -499,7 +499,7 @@ public class GeneradorCodigo {
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSPROC:
-			insertComentario("\n//Esto es una declaracion de procedimiento\n");
+			insertComentario("\n\\\\Esto es una declaracion de procedimiento\n");
 			InsProc insProc = (InsProc) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
@@ -521,14 +521,14 @@ public class GeneradorCodigo {
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSSWITCH:
-			insertComentario("\n//Esto es un switch\n");
+			insertComentario("\n\\\\Esto es un switch\n");
 			InsSwitch insSwitch = (InsSwitch) ins;
 			generaCodigoProg(utils.switchACond(insSwitch.getVarSwitch(), insSwitch.getListaCase(), 0));
 			break;
 		case INSTYPEDEF:
 			break;
 		case INSWHILE:
-			insertComentario("\n//Esto es un bucle while\n");
+			insertComentario("\n\\\\Esto es un bucle while\n");
 			InsWhile insWhile = (InsWhile) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;

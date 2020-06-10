@@ -21,10 +21,7 @@
 {20}sto;
 {21}retf;
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {22}lda 0 5;
 {23}ldc 3;
@@ -39,27 +36,21 @@
 {32}ldc 3;
 {33}sto;
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
-
-
-//Esto es una asignación
+\\Esto es una asignación
 
 {34}lda 0 5;
 {35}inc 4;
 {36}ldc 3;
 {37}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {38}lda 0 5;
 {39}inc 5;
 {40}ldc 7;
 {41}sto;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {42}lda 0 5;
 {43}inc 0;
@@ -76,7 +67,7 @@
 {54}add;
 {55}sto;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {56}lda 0 11;
 {57}mst 0;

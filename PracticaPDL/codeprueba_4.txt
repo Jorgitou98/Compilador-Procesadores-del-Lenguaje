@@ -1,10 +1,7 @@
 {0}ssp 15;
 {1}sep 2;
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {2}lda 0 5;
 {3}ldc 0;
@@ -19,10 +16,7 @@
 {12}ldc 0;
 {13}sto;
 
-//Esto es una declaracion
-
-
-//Esto es una asignación
+\\Esto es una asignación
 
 {14}lda 0 5;
 {15}inc 0;
@@ -32,13 +26,10 @@
 {19}ldc 77;
 {20}sto;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 
-//Esto es una declaracion
-
-
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {21}lda 0 10;
 {22}ldc 0;
@@ -52,9 +43,6 @@
 {30}lda 0 13;
 {31}ldc 0;
 {32}sto;
-
-//Esto es una declaracion
-
 {33}lda 0 10;
 {34}lda 0 5;
 {35}ind;

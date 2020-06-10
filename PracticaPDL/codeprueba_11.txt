@@ -1,19 +1,17 @@
 {0}ssp 6;
 {1}sep 26;
-{2}ujp 72;
+{2}ujp 70;
 {3}ssp 8;
 {4}sep 19;
 
-//Esto es una declaracion
+\\Esto es un if ó if con else
 
-
-//Esto es un if ó if con else\n
 {5}lda 0 5;
 {6}ind;
 {7}ldc 0;
 {8}grt;
-{9}fjp 33;
-{10}ujp 23;
+{9}fjp 32;
+{10}ujp 22;
 {11}ssp 7;
 {12}sep 3;
 {13}lda 0 0;
@@ -25,7 +23,7 @@
 {19}sto;
 {20}retf;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {21}lda 0 7;
 {22}mst 0;
@@ -33,23 +31,20 @@
 {24}ind;
 {25}lda 0 6;
 {26}ind;
-{27}cup 2 13;
+{27}cup 2 12;
 {28}sto;
-{29}ujp 67;
-{30}ujp 58;
+{29}ujp 65;
+{30}ujp 56;
 {31}ssp 8;
 {32}sep 7;
+{33}ujp 48;
 
-//Esto es una declaracion
-
-{33}ujp 50;
-
-//Esto es una declaracion de procedimiento
+\\Esto es una declaracion de procedimiento
 
 {34}ssp 5;
 {35}sep 3;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {36}lda 1 7;
 {37}lda 1 5;
@@ -60,17 +55,17 @@
 {42}sto;
 {43}retp;
 
-//Esto es una llamada a procedimiento
+\\Esto es una llamada a procedimiento
 
 {44}mst 0;
-{45}cup 0 39;
+{45}cup 0 37;
 {46}lda 0 0;
 {47}lda 0 7;
 {48}ind;
 {49}sto;
 {50}retf;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {51}lda 0 7;
 {52}mst 0;
@@ -78,7 +73,7 @@
 {54}ind;
 {55}lda 0 6;
 {56}ind;
-{57}cup 2 34;
+{57}cup 2 33;
 {58}sto;
 {59}lda 0 0;
 {60}lda 0 7;
@@ -86,7 +81,7 @@
 {62}sto;
 {63}retf;
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {64}lda 0 5;
 {65}mst 0;

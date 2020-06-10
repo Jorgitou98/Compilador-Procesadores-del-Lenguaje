@@ -1,10 +1,10 @@
 {0}ssp 6;
 {1}sep 3;
 
-//Esto es un bucle for
+\\Esto es un bucle for
 
 
-//Esto es una declaracion
+\\Esto es una declaracion
 
 {2}lda 0 5;
 {3}ldc 0;
@@ -15,7 +15,7 @@
 {8}les;
 {9}fjp 20;
 
-//Esto es una asignación
+\\Esto es una asignación
 
 {10}lda 0 5;
 {11}lda 0 5;
