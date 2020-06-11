@@ -1,3 +1,5 @@
+#Funciones y procedimeintos anidados
+
 fun int suma(int x, int y){
 	int res;
 	if(x>0){
@@ -9,9 +11,9 @@ fun int suma(int x, int y){
 	else {
 		fun int mult(int b, int c){
 			int a;
-				proc multiplica(){
-					a = b*c;
-				}
+			proc multiplica(){
+				a = b*c;
+			}
 			call multiplica();
 			return a;
 		}
@@ -20,4 +22,5 @@ fun int suma(int x, int y){
 	return res;
 }
 
-int l = suma(2, 3*4);	
+int l = suma(2, 3*4);
+int m = suma(-1, 3);	

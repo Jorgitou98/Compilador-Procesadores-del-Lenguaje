@@ -11,10 +11,11 @@ import ast.*;
 
 public class GeneradorCodigo {
 
-	private File archivo = new File("code" + Main.nombreFichero);
+	private File archivo = new File("code_" + Main.nombreFichero);
 	private PrintWriter pw;
 	private static int nivelAmbito = 0;
 	private List<InsMaquina> codigo = new ArrayList<>();
+	private int numInst = 0;
 	private int maxAmbitos = 0;
 	private UtilsGeneracion utils;
 
@@ -268,16 +269,6 @@ public class GeneradorCodigo {
 		} else if (exp.tipo() == TipoE.ACCESOPUNTERO) {
 			par = generaCodigoL(exp.opnd1());
 			insertIns("ind", 0);
-		/*} else if (exp.tipo() == TipoE.SIZE) {
-			par = generaCodigoL(exp.opnd1());
-			// Si es estático (esta mal!!!!)
-			if (par.getValue().getKey()) {
-				insertIns("ldc " + par.getKey().getKey().get(par.getKey().getValue()), 1);
-			} else {
-				insertIns("ldc " + (2 + par.getKey().getValue()), 1);
-				insertIns("add", -1);
-				insertIns("ind", 0);
-			}*/
 		}
 		return par;
 
@@ -362,12 +353,12 @@ public class GeneradorCodigo {
 				nivelAmbito = maxAmbitos;
 				int posSalto2 = codigo.size();
 				insertIns("ujp ", 0);
-				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + codigo.size());
+				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + numInst);
 				generaCodigoProg(insCond.getInsElse());
-				codigo.get(posSalto2).setName(codigo.get(posSalto2).getName() + codigo.size());
+				codigo.get(posSalto2).setName(codigo.get(posSalto2).getName() + numInst);
 				nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			} else
-				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + codigo.size());
+				codigo.get(posSalto1).setName(codigo.get(posSalto1).getName() + numInst);
 			break;
 		case INSDEC:
 			InsDec insDec = (InsDec) ins;
@@ -458,7 +449,7 @@ public class GeneradorCodigo {
 			nivelAmbito = maxAmbitos;
 			InsFor insFor = (InsFor) ins;
 			generaCodigoIns(insFor.getDecIni());
-			int posCond = codigo.size();
+			int posCond = numInst;
 			generaCodigoExp(insFor.getCond());
 			int posFjpFor = codigo.size();
 			insertIns("fjp ", -1);
@@ -470,14 +461,15 @@ public class GeneradorCodigo {
 				var = (Iden) ((InsAsig) insFor.getDecIni()).getVar();
 			generaCodigoIns(insFor.getPaso());
 			insertIns("ujp " + posCond, 0);
-			codigo.get(posFjpFor).setName(codigo.get(posFjpFor).getName() + codigo.size());
+			codigo.get(posFjpFor).setName(codigo.get(posFjpFor).getName() + numInst);
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		case INSFUN:
+			insertComentario("\n\\\\Esto es una declaracion de función\n");
 			InsFun insFun = (InsFun) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
-			insFun.setDirIni(codigo.size());
+			insFun.setDirIni(numInst);
 			for (Param p : insFun.getParametros()) {
 				if (p.getTipo().tipo() == TipoT.USUARIO && p.getTipoDeParam() == TipoParam.VALOR) {
 					insFun.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
@@ -502,7 +494,7 @@ public class GeneradorCodigo {
 			InsProc insProc = (InsProc) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
-			insProc.setDirIni(codigo.size());
+			insProc.setDirIni(numInst);
 			for (Param p : insProc.getParametros()) {
 				if (p.getTipo().tipo() == TipoT.USUARIO && p.getTipoDeParam() == TipoParam.VALOR) {
 					insProc.incTamParams(bloqueActGenera().queTamano(((TipoUsuario) p.getTipo()).getNombreTipo()));
@@ -510,6 +502,7 @@ public class GeneradorCodigo {
 					insProc.incTamParams(1);
 				}
 			}
+			Bloque b = bloqueActGenera();
 			insertIns("ssp " + bloqueActGenera().getSsp(), 0);
 			int posSep = codigo.size();
 			insertIns("sep ", 0);
@@ -531,13 +524,13 @@ public class GeneradorCodigo {
 			InsWhile insWhile = (InsWhile) ins;
 			maxAmbitos++;
 			nivelAmbito = maxAmbitos;
-			int posSaltoW1 = codigo.size();
+			int posSaltoW1 = numInst;
 			generaCodigoExp(insWhile.getCondicion());
 			int posFjp = codigo.size();
 			insertIns("fjp ", -1);
 			generaCodigoProg(insWhile.getInsWhile());
 			insertIns("ujp " + posSaltoW1, 0);
-			codigo.get(posFjp).setName(codigo.get(posFjp).getName() + codigo.size());
+			codigo.get(posFjp).setName(codigo.get(posFjp).getName() + numInst);
 			nivelAmbito = bloqueActGenera().getPadre().getPosLista();
 			break;
 		default:
@@ -569,7 +562,7 @@ public class GeneradorCodigo {
 				int posUjp = codigo.size();
 				insertIns("ujp ", 0);
 				generaCodigoIns(ins);
-				codigo.get(posUjp).setName(codigo.get(posUjp).getName() + codigo.size());
+				codigo.get(posUjp).setName(codigo.get(posUjp).getName() + numInst);
 			} else
 				generaCodigoIns(ins);
 		}
@@ -613,6 +606,7 @@ public class GeneradorCodigo {
 
 	private void insertIns(String ins, int tipo) {
 		codigo.add(new InsMaquina(ins, tipo));
+		numInst++;
 	}
 	
 	private void insertComentario(String ins) {

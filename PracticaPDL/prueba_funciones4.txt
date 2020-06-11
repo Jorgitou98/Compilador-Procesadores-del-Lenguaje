@@ -4,13 +4,15 @@ struct persona{
 	int dni;
 }
 
+#Podemos pasar como parámetro una estructura tan compleja 
+#como se quiera a una función
 
 fun int sumaCampos(persona p){
 	return p.nombre + p.dni + p.numeritos[0];
 }
 
 persona pepe;
-pepe.nombre = 3;
+pepe.nombre = 5;
 pepe.dni = 7;
 pepe.numeritos[0] = pepe.numeritos[1] + 1;
 int x = sumaCampos(pepe);

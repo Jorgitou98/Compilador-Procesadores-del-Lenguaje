@@ -1,7 +1,9 @@
 enum meses = {ENERO|FEBRERO|MARZO};
 
+#Variable de tipo enumerado
 meses mes1 = meses.ENERO;
 
+#Podemos hacer un switch con ellos
 int x = 0;
 switch(mes1){
 case meses.ENERO:
@@ -14,8 +16,16 @@ default:
 	x = 22;
 }
 
+#Podemos redefinirlos
 typedef meses meses2;
 meses2 mio = meses.FEBRERO;
 meses2 enero = meses.ENERO;
 meses marzo = enero +2;
 
+bool esMarzo;
+if(marzo > meses.FEBRERO){
+	esMarzo = true;
+}
+
+# Observación: nótese que al generar el ast ya aparecen como enteros y los
+# valores tiene el correspondiente valor numérico.

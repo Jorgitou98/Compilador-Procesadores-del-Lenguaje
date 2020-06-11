@@ -1,5 +1,0 @@
-fun int esPar(int x){
-	return 25;
-}
-
-int ok = esPar(2) + 45;

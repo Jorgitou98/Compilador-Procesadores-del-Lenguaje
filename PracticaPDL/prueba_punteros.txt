@@ -1,0 +1,59 @@
+#Reservamos memoria dinámica para p
+<int>* p = new int();
+<int>* q;
+
+# q apunta a lo mismo que apuntaba p
+q = p;
+
+#Damos valor a la variable dinámica apuntada
+*q = 20;
+
+#Podemos tener punteros a vectores (hay que indicarles las dimensiones)
+<vector<int>>* luis = new vector<int> (4);
+
+#Accdemos a posiciones del vector en memoria dinámica
+*luis[0] = 3;
+*luis[1] = 4;
+
+# Ahora pepe apunta al mismo vector al que apuntava luis.
+<vector<int>>* pepe = luis;
+
+#Esta modificación afecta a luis y pepe (apuntan al mismo vector)
+*pepe[2] = 5;
+
+#Podemos apuntar a vectores de más dimensiones
+<vector<vector<int>>>* juana = new vector<vector<int>> (2,2);
+*juana[1][0] = 77;
+
+
+struct persona{
+	int nombre;
+	int dni;
+}
+
+#Podemos tener punteros a estructuras
+<persona>* javi = new persona();
+(*javi).nombre = 40;
+
+
+#Podemos tener punteros a vectores de estructuras
+<vector<persona>>* alumnos = new vector<persona> (3);
+*alumnos[0].dni = 66;
+*alumnos[1].dni = 333;
+
+#Podemos tener punteros como campo de un struct
+struct animal{
+	<int>* pata = new int();
+	int edad;
+}
+animal perro;
+*(perro.pata) = 20;
+
+animal gato;
+*(gato.pata) = 10;
+
+# Incluso podemos tener punteros a punteros
+<int> * x= new int();
+<<int>*>* y = new <int>*();
+*y = x;
+*(*y) = 3;

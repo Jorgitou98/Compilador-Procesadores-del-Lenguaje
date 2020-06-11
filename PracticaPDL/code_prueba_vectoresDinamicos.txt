@@ -1,0 +1,199 @@
+{0}ssp 19;
+{1}sep 5;
+
+\\Esto es una declaracion
+
+{2}lda 0 5;
+{3}ldc 3;
+{4}sto;
+
+\\Esto es una declaracion
+
+{5}lda 0 6;
+{6}ldc 2;
+{7}sto;
+
+\\Esto es una declaracion
+
+{8}lda 0 8;
+{9}lda 0 5;
+{10}ind;
+{11}lda 0 6;
+{12}ind;
+{13}mul;
+{14}ldc 1;
+{15}mul;
+{16}sto;
+{17}lda 0 7;
+{18}lda 0 8;
+{19}ind;
+{20}new;
+{21}lda 0 9;
+{22}lda 0 5;
+{23}ind;
+{24}lda 0 6;
+{25}ind;
+{26}mul;
+{27}sto;
+
+\\Esto es una asignación
+
+{28}lda 0 7;
+{29}ind;
+{30}ldc 0;
+{31}ldc 1;
+{32}mul;
+{33}add;
+{34}ldc 1;
+{35}sto;
+
+\\Esto es una asignación
+
+{36}lda 0 7;
+{37}ind;
+{38}ldc 1;
+{39}ldc 1;
+{40}mul;
+{41}add;
+{42}ldc 2;
+{43}sto;
+
+\\Esto es una asignación
+
+{44}lda 0 7;
+{45}ind;
+{46}ldc 2;
+{47}ldc 1;
+{48}mul;
+{49}add;
+{50}lda 0 7;
+{51}ind;
+{52}ldc 0;
+{53}ldc 1;
+{54}mul;
+{55}add;
+{56}ind;
+{57}lda 0 7;
+{58}ind;
+{59}ldc 1;
+{60}ldc 1;
+{61}mul;
+{62}add;
+{63}ind;
+{64}add;
+{65}sto;
+
+\\Esto es una declaracion
+
+{66}lda 0 13;
+{67}lda 0 6;
+{68}ind;
+{69}lda 0 5;
+{70}ind;
+{71}lda 0 6;
+{72}ind;
+{73}add;
+{74}mul;
+{75}ldc 2;
+{76}mul;
+{77}sto;
+{78}lda 0 12;
+{79}lda 0 13;
+{80}ind;
+{81}new;
+{82}lda 0 14;
+{83}lda 0 6;
+{84}ind;
+{85}sto;
+{86}lda 0 15;
+{87}lda 0 5;
+{88}ind;
+{89}lda 0 6;
+{90}ind;
+{91}add;
+{92}sto;
+
+\\Esto es una asignación
+
+{93}lda 0 12;
+{94}ind;
+{95}ldc 1;
+{96}ldo 15;
+{97}mul;
+{98}ldc 0;
+{99}add;
+{100}ldc 2;
+{101}mul;
+{102}add;
+{103}inc 0;
+{104}ldc 37;
+{105}sto;
+
+\\Esto es una asignación
+
+{106}lda 0 12;
+{107}ind;
+{108}ldc 1;
+{109}ldo 15;
+{110}mul;
+{111}ldc 0;
+{112}add;
+{113}ldc 2;
+{114}mul;
+{115}add;
+{116}inc 1;
+{117}lda 0 12;
+{118}ind;
+{119}ldc 1;
+{120}ldo 15;
+{121}mul;
+{122}ldc 0;
+{123}add;
+{124}ldc 2;
+{125}mul;
+{126}add;
+{127}inc 0;
+{128}ind;
+{129}lda 0 5;
+{130}ind;
+{131}add;
+{132}sto;
+
+\\Esto es una declaracion
+
+{133}lda 0 17;
+{134}lda 0 5;
+{135}ind;
+{136}ldc 2;
+{137}mul;
+{138}lda 0 6;
+{139}ind;
+{140}sub;
+{141}ldc 1;
+{142}mul;
+{143}sto;
+{144}lda 0 16;
+{145}lda 0 17;
+{146}ind;
+{147}new;
+{148}lda 0 18;
+{149}lda 0 5;
+{150}ind;
+{151}ldc 2;
+{152}mul;
+{153}lda 0 6;
+{154}ind;
+{155}sub;
+{156}sto;
+
+\\Esto es una asignación
+
+{157}lda 0 16;
+{158}ind;
+{159}ldc 0;
+{160}ldc 1;
+{161}mul;
+{162}add;
+{163}ldc 3;
+{164}sto;
+{165}stp;

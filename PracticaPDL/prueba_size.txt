@@ -1,0 +1,30 @@
+# La funcion size devuelve el tamaño de la primera dimensión del vector sobre la que se aplica
+
+# Tamaño de vectores estáticos
+
+vector<vector<int>> w = creaVector(creaVector(0, 3), 4);
+int d1 = w.size;     # d1 = 4
+int d2 = w[0].size;   # d2 = 3
+
+#Tamaño de vectores dinámicos
+
+int x = 3;
+vector<vector<int>> v = creaVector(creaVector(0, x+1), x*2);
+int y = v.size;      # y = 6
+int z = v[2].size;   # z = 4
+
+
+#Vector dinámico dentro de estructura
+
+struct persona{
+	int nombre;
+	int apellido;
+	vector<int> numeros = creaVector(0, x);
+}
+persona pepe;
+int a = 3*pepe.numeros.size;   # a = 9
+pepe.numeros[a-8] = 33;
+
+
+
+

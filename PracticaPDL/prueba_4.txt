@@ -1,8 +1,0 @@
-struct persona{
-	vector<int> numeros = creaVector(0, 4);
-	int edad;
-}
-
-persona pepe;
-pepe.numeros[0] = 77;
-persona juan = pepe;

@@ -1,0 +1,20 @@
+# Ejemplo simple de funciones
+
+fun bool esPar(int x){
+	bool par;
+	if(x % 2== 0){
+		par = true;
+	}
+	else{
+		par = false;
+	}
+	return par;
+}
+
+fun bool esImpar(int x){
+	return !esPar(x);
+}
+
+int x = 5;
+bool par = esPar(x);
+bool impar = esImpar(x);

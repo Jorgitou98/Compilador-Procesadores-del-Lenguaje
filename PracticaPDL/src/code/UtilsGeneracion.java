@@ -35,19 +35,23 @@ public class UtilsGeneracion {
 		Bloque b = new Bloque(asignaDirs.getBloqueAct(), AsignadorDirecciones.listaBloques.size());
 		AsignadorDirecciones.listaBloques.add(b);
 		asignaDirs.setBloqueAct(b);
+		//b.setNextDir(b.getPadre().getNextDir());
 	}
 
 	protected void insertaId(String iden, int tam) {
 		asignaDirs.getBloqueAct().insertaId(iden, tam);
-		asignaDirs.setNextDir(asignaDirs.getNextDir() + tam);
-		asignaDirs.getBloqueAct().setSsp(asignaDirs.getBloqueAct().getSsp() + tam);
+		//asignaDirs.setNextDir(asignaDirs.getNextDir() + tam);
+		//asignaDirs.getBloqueAct().setSsp(asignaDirs.getBloqueAct().getSsp() + tam);
 	}
 
 	protected void cierraAmbito() {
 		if (!asignaDirs.getBloqueAct().isFunProc()) {
-			asignaDirs.getBloqueAct().getPadre().setSsp(Math.max(asignaDirs.getBloqueAct().getPadre().getSsp(), asignaDirs.getNextDir()));
+			asignaDirs.getBloqueAct().getPadre().setSsp(Math.max(asignaDirs.getBloqueAct().getPadre().getSsp(), asignaDirs.getBloqueAct().getNextDir()));
+			asignaDirs.getBloqueAct().getPadre().setNextDir(asignaDirs.getBloqueAct().getNextDir());
 		}
-		asignaDirs.setNextDir(asignaDirs.getNextDir() - asignaDirs.getBloqueAct().getTamBloque());
+		else{
+			//asignaDirs.setNextDir(asignaDirs.getNextDir() - asignaDirs.getBloqueAct().getTamBloque());
+		}
 		asignaDirs.setBloqueAct(asignaDirs.getBloqueAct().getPadre());
 
 	}

@@ -1,0 +1,102 @@
+{0}ssp 15;
+{1}sep 3;
+
+\\Esto es una declaracion
+
+{2}lda 0 5;
+{3}ldc 0;
+{4}sto;
+{5}lda 0 6;
+{6}ldc 0;
+{7}sto;
+{8}lda 0 7;
+{9}ldc 0;
+{10}sto;
+{11}lda 0 8;
+{12}ldc 0;
+{13}sto;
+
+\\Esto es una asignación
+
+{14}lda 0 5;
+{15}inc 4;
+{16}ldc 18;
+{17}sto;
+
+\\Esto es una asignación
+
+{18}lda 0 5;
+{19}inc 0;
+{20}ldc 0;
+{21}chk 0 3;
+{22}ixa 1;
+{23}ldc 77;
+{24}sto;
+
+\\Esto es una asignación
+
+{25}lda 0 5;
+{26}inc 0;
+{27}ldc 2;
+{28}chk 0 3;
+{29}ixa 1;
+{30}lda 0 5;
+{31}inc 0;
+{32}ldc 1;
+{33}chk 0 3;
+{34}ixa 1;
+{35}ind;
+{36}ldc 3;
+{37}add;
+{38}sto;
+
+\\Esto es una declaracion
+
+
+\\Esto es una declaracion
+
+{39}lda 0 10;
+{40}ldc 0;
+{41}sto;
+{42}lda 0 11;
+{43}ldc 0;
+{44}sto;
+{45}lda 0 12;
+{46}ldc 0;
+{47}sto;
+{48}lda 0 13;
+{49}ldc 0;
+{50}sto;
+{51}lda 0 10;
+{52}lda 0 5;
+{53}ind;
+{54}sto;
+{55}lda 0 11;
+{56}lda 0 6;
+{57}ind;
+{58}sto;
+{59}lda 0 12;
+{60}lda 0 7;
+{61}ind;
+{62}sto;
+{63}lda 0 13;
+{64}lda 0 8;
+{65}ind;
+{66}sto;
+{67}lda 0 14;
+{68}lda 0 9;
+{69}ind;
+{70}sto;
+
+\\Esto es una asignación
+
+{71}lda 0 10;
+{72}inc 0;
+{73}ldc 0;
+{74}chk 0 3;
+{75}ixa 1;
+{76}ldc 7;
+{77}ldc 2;
+{78}sub;
+{79}sto;
+{80}stp;

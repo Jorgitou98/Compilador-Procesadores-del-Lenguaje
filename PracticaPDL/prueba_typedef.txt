@@ -1,6 +1,15 @@
+# Redefinición de tipo básico
+
 typedef int numeros2;
 numeros2 x = 3;
 int y = x;
+
+#Redefinición de tipo redefinido
+
+typedef numeros2 numeros3;
+numeros3 z = y;
+
+# Redifinición de vectores
 
 typedef vector<vector<int>> matriz;
 matriz A = creaVector(creaVector(0,3),4);
@@ -11,10 +20,14 @@ struct persona{
 	matriz a = creaVector(creaVector(0,3),4);
 }
 
+#Redefinición de estructuras
+
 typedef persona persona2;
 
 persona2 juan;
 juan.a[0][1] = 77;
+
+#Redefinición de punteros
 
 typedef <int>* puntero;
 puntero p = new int();

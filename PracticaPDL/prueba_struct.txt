@@ -1,0 +1,20 @@
+#Definición simple de estructuras con vector estático dentro
+
+struct persona{
+	vector<int> numeros = creaVector(0, 4);
+	int edad;
+}
+
+# Podemos dar valor a cualquier campo
+
+persona pepe;
+pepe.edad = 18;
+pepe.numeros[0] = 77;
+pepe.numeros[2] = pepe.numeros[1] + 3;
+
+#Creamos una copia de la estructura
+
+persona juan = pepe;
+
+#Editamos solo los cambios de la nueva copia
+juan.numeros[0] = 7-2;

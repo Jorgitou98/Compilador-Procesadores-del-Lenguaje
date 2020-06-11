@@ -1,0 +1,26 @@
+#Vectores dinámicos 
+#Nótese que el valor inicial no llega nunca a asignarse pero debemos indicarlo por simplicidad
+
+int x = 3;
+int y = 2;
+struct persona{
+	int nombre;
+	int apellido;
+}
+
+#Vector dinámico de tipo simple
+
+vector<int> v2 = creaVector(0, x*y);
+v2[0] = 1;
+v2[1] = 2;
+v2[2] = v2[0] + v2[1];
+
+#Matriz dinámica de estructuras
+
+persona juan;
+vector<vector<persona>> v = creaVector(creaVector(juan, x+y), y);
+v[1][0].nombre = 37;
+v[1][0].apellido = v[1][0].nombre+x;
+
+vector<int> w = creaVector(0, x*2-y);
+w[0] = 3;

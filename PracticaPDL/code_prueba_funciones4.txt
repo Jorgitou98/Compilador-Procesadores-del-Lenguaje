@@ -1,6 +1,9 @@
 {0}ssp 12;
 {1}sep 12;
 {2}ujp 22;
+
+\\Esto es una declaracion de función
+
 {3}ssp 11;
 {4}sep 4;
 {5}lda 0 0;
@@ -40,7 +43,7 @@
 
 {34}lda 0 5;
 {35}inc 4;
-{36}ldc 3;
+{36}ldc 5;
 {37}sto;
 
 \\Esto es una asignación

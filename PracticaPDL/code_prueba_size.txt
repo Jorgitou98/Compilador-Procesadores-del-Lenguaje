@@ -1,0 +1,147 @@
+{0}ssp 32;
+{1}sep 4;
+
+\\Esto es una declaracion
+
+{2}lda 0 5;
+{3}ldc 0;
+{4}sto;
+{5}lda 0 6;
+{6}ldc 0;
+{7}sto;
+{8}lda 0 7;
+{9}ldc 0;
+{10}sto;
+{11}lda 0 8;
+{12}ldc 0;
+{13}sto;
+{14}lda 0 9;
+{15}ldc 0;
+{16}sto;
+{17}lda 0 10;
+{18}ldc 0;
+{19}sto;
+{20}lda 0 11;
+{21}ldc 0;
+{22}sto;
+{23}lda 0 12;
+{24}ldc 0;
+{25}sto;
+{26}lda 0 13;
+{27}ldc 0;
+{28}sto;
+{29}lda 0 14;
+{30}ldc 0;
+{31}sto;
+{32}lda 0 15;
+{33}ldc 0;
+{34}sto;
+{35}lda 0 16;
+{36}ldc 0;
+{37}sto;
+
+\\Esto es una declaracion
+
+{38}lda 0 17;
+{39}ldc 4;
+{40}sto;
+
+\\Esto es una declaracion
+
+{41}lda 0 18;
+{42}ldc 3;
+{43}sto;
+
+\\Esto es una declaracion
+
+{44}lda 0 19;
+{45}ldc 3;
+{46}sto;
+
+\\Esto es una declaracion
+
+{47}lda 0 21;
+{48}lda 0 19;
+{49}ind;
+{50}ldc 2;
+{51}mul;
+{52}lda 0 19;
+{53}ind;
+{54}ldc 1;
+{55}add;
+{56}mul;
+{57}ldc 1;
+{58}mul;
+{59}sto;
+{60}lda 0 20;
+{61}lda 0 21;
+{62}ind;
+{63}new;
+{64}lda 0 22;
+{65}lda 0 19;
+{66}ind;
+{67}ldc 2;
+{68}mul;
+{69}sto;
+{70}lda 0 23;
+{71}lda 0 19;
+{72}ind;
+{73}ldc 1;
+{74}add;
+{75}sto;
+
+\\Esto es una declaracion
+
+{76}lda 0 24;
+{77}lda 0 22;
+{78}ind;
+{79}sto;
+
+\\Esto es una declaracion
+
+{80}lda 0 25;
+{81}lda 0 23;
+{82}ind;
+{83}sto;
+
+\\Esto es una declaracion
+
+{84}lda 0 29;
+{85}lda 0 19;
+{86}ind;
+{87}ldc 1;
+{88}mul;
+{89}sto;
+{90}lda 0 28;
+{91}lda 0 29;
+{92}ind;
+{93}new;
+{94}lda 0 30;
+{95}lda 0 19;
+{96}ind;
+{97}sto;
+
+\\Esto es una declaracion
+
+{98}lda 0 31;
+{99}ldc 3;
+{100}lda 0 30;
+{101}ind;
+{102}mul;
+{103}sto;
+
+\\Esto es una asignación
+
+{104}lda 0 26;
+{105}inc 2;
+{106}ind;
+{107}lda 0 31;
+{108}ind;
+{109}ldc 8;
+{110}sub;
+{111}ldc 1;
+{112}mul;
+{113}add;
+{114}ldc 33;
+{115}sto;
+{116}stp;

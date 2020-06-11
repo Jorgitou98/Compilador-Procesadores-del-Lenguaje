@@ -1,6 +1,9 @@
-{0}ssp 6;
-{1}sep 26;
-{2}ujp 70;
+{0}ssp 7;
+{1}sep 31;
+{2}ujp 64;
+
+\\Esto es una declaracion de función
+
 {3}ssp 8;
 {4}sep 19;
 
@@ -10,8 +13,11 @@
 {6}ind;
 {7}ldc 0;
 {8}grt;
-{9}fjp 32;
-{10}ujp 22;
+{9}fjp 30;
+{10}ujp 21;
+
+\\Esto es una declaracion de función
+
 {11}ssp 7;
 {12}sep 3;
 {13}lda 0 0;
@@ -31,13 +37,16 @@
 {24}ind;
 {25}lda 0 6;
 {26}ind;
-{27}cup 2 12;
+{27}cup 2 11;
 {28}sto;
-{29}ujp 65;
-{30}ujp 56;
+{29}ujp 59;
+{30}ujp 51;
+
+\\Esto es una declaracion de función
+
 {31}ssp 8;
 {32}sep 7;
-{33}ujp 48;
+{33}ujp 44;
 
 \\Esto es una declaracion de procedimiento
 
@@ -58,7 +67,7 @@
 \\Esto es una llamada a procedimiento
 
 {44}mst 0;
-{45}cup 0 37;
+{45}cup 0 34;
 {46}lda 0 0;
 {47}lda 0 7;
 {48}ind;
@@ -73,7 +82,7 @@
 {54}ind;
 {55}lda 0 6;
 {56}ind;
-{57}cup 2 33;
+{57}cup 2 31;
 {58}sto;
 {59}lda 0 0;
 {60}lda 0 7;
@@ -91,4 +100,14 @@
 {69}mul;
 {70}cup 2 3;
 {71}sto;
-{72}stp;
+
+\\Esto es una declaracion
+
+{72}lda 0 6;
+{73}mst 0;
+{74}ldc 1;
+{75}neg;
+{76}ldc 3;
+{77}cup 2 3;
+{78}sto;
+{79}stp;

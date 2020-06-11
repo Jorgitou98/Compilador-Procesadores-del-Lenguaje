@@ -1,0 +1,34 @@
+# Paso de parámetros por referencia
+proc incrementa(int & x){
+	x = x+1;
+}
+
+fun int inc(int & x){
+	x = x+1;
+	call incrementa(x);
+	return x;
+}
+
+int x = 5;
+x = inc(x);
+
+proc decrementa(int & x, int y){
+	x = x - y;
+}
+
+int y = 5;
+call decrementa(y, 10);
+
+struct persona{
+	int dni;
+	vector<int> v = creaVector(0,3);
+}
+
+proc p(persona & p){
+	p.dni = 7;
+	p.v[0] = 1;
+	p.v[1] = 3;
+}
+
+persona pepe;
+call p(pepe);

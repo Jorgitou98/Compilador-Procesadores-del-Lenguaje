@@ -1,0 +1,80 @@
+{0}ssp 8;
+{1}sep 12;
+{2}ujp 29;
+
+\\Esto es una declaracion de función
+
+{3}ssp 7;
+{4}sep 4;
+
+\\Esto es un if ó if con else
+
+{5}lda 0 5;
+{6}ind;
+{7}ldc 2;
+{8}lda 0 5;
+{9}ind;
+{10}ldc 2;
+{11}div;
+{12}mul;
+{13}sub;
+{14}ldc 0;
+{15}equ;
+{16}fjp 21;
+
+\\Esto es una asignación
+
+{17}lda 0 6;
+{18}ldc true;
+{19}sto;
+{20}ujp 24;
+
+\\Esto es una asignación
+
+{21}lda 0 6;
+{22}ldc false;
+{23}sto;
+{24}lda 0 0;
+{25}lda 0 6;
+{26}ind;
+{27}sto;
+{28}retf;
+{29}ujp 40;
+
+\\Esto es una declaracion de función
+
+{30}ssp 6;
+{31}sep 7;
+{32}lda 0 0;
+{33}mst 1;
+{34}lda 0 5;
+{35}ind;
+{36}cup 1 3;
+{37}not;
+{38}sto;
+{39}retf;
+
+\\Esto es una declaracion
+
+{40}lda 0 5;
+{41}ldc 5;
+{42}sto;
+
+\\Esto es una declaracion
+
+{43}lda 0 6;
+{44}mst 0;
+{45}lda 0 5;
+{46}ind;
+{47}cup 1 3;
+{48}sto;
+
+\\Esto es una declaracion
+
+{49}lda 0 7;
+{50}mst 0;
+{51}lda 0 5;
+{52}ind;
+{53}cup 1 30;
+{54}sto;
+{55}stp;

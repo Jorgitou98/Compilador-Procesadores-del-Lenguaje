@@ -1,0 +1,466 @@
+{0}ssp 40;
+{1}sep 5;
+
+\\Esto es una declaracion
+
+{2}lda 0 5;
+{3}ldc 0;
+{4}sto;
+{5}lda 0 6;
+{6}ldc 0;
+{7}sto;
+{8}lda 0 7;
+{9}ldc 0;
+{10}sto;
+{11}lda 0 8;
+{12}ldc 0;
+{13}sto;
+{14}lda 0 9;
+{15}ldc 0;
+{16}sto;
+{17}lda 0 10;
+{18}ldc 0;
+{19}sto;
+{20}lda 0 11;
+{21}ldc 0;
+{22}sto;
+{23}lda 0 12;
+{24}ldc 0;
+{25}sto;
+{26}lda 0 13;
+{27}ldc 0;
+{28}sto;
+{29}lda 0 14;
+{30}ldc 0;
+{31}sto;
+{32}lda 0 15;
+{33}ldc 0;
+{34}sto;
+{35}lda 0 16;
+{36}ldc 0;
+{37}sto;
+
+\\Esto es una declaracion
+
+{38}lda 0 17;
+{39}ldc 0;
+{40}sto;
+{41}lda 0 18;
+{42}ldc 0;
+{43}sto;
+{44}lda 0 19;
+{45}ldc 0;
+{46}sto;
+{47}lda 0 20;
+{48}ldc 0;
+{49}sto;
+{50}lda 0 21;
+{51}ldc 0;
+{52}sto;
+{53}lda 0 22;
+{54}ldc 0;
+{55}sto;
+{56}lda 0 23;
+{57}ldc 0;
+{58}sto;
+{59}lda 0 24;
+{60}ldc 0;
+{61}sto;
+{62}lda 0 25;
+{63}ldc 0;
+{64}sto;
+{65}lda 0 26;
+{66}ldc 0;
+{67}sto;
+{68}lda 0 27;
+{69}ldc 0;
+{70}sto;
+{71}lda 0 28;
+{72}ldc 0;
+{73}sto;
+
+\\Esto es una declaracion
+
+{74}lda 0 30;
+{75}ldc 4;
+{76}ldc 4;
+{77}mul;
+{78}ldc 1;
+{79}mul;
+{80}sto;
+{81}lda 0 29;
+{82}lda 0 30;
+{83}ind;
+{84}new;
+{85}lda 0 31;
+{86}ldc 4;
+{87}sto;
+{88}lda 0 32;
+{89}ldc 4;
+{90}sto;
+
+\\Esto es una declaracion
+
+{91}lda 0 33;
+{92}ldc 0;
+{93}sto;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{94}lda 0 34;
+{95}ldc 0;
+{96}sto;
+{97}lda 0 34;
+{98}ind;
+{99}ldc 4;
+{100}les;
+{101}fjp 142;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{102}lda 0 35;
+{103}ldc 0;
+{104}sto;
+{105}lda 0 35;
+{106}ind;
+{107}ldc 3;
+{108}les;
+{109}fjp 135;
+
+\\Esto es una asignación
+
+{110}lda 0 5;
+{111}lda 0 34;
+{112}ind;
+{113}chk 0 3;
+{114}ixa 3;
+{115}lda 0 35;
+{116}ind;
+{117}chk 0 2;
+{118}ixa 1;
+{119}lda 0 33;
+{120}ind;
+{121}sto;
+
+\\Esto es una asignación
+
+{122}lda 0 33;
+{123}lda 0 33;
+{124}ind;
+{125}ldc 2;
+{126}add;
+{127}sto;
+
+\\Esto es una asignación
+
+{128}lda 0 35;
+{129}lda 0 35;
+{130}ind;
+{131}ldc 1;
+{132}add;
+{133}sto;
+{134}ujp 105;
+
+\\Esto es una asignación
+
+{135}lda 0 34;
+{136}lda 0 34;
+{137}ind;
+{138}ldc 1;
+{139}add;
+{140}sto;
+{141}ujp 97;
+
+\\Esto es una asignación
+
+{142}lda 0 33;
+{143}ldc 1;
+{144}sto;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{145}lda 0 36;
+{146}ldc 0;
+{147}sto;
+{148}lda 0 36;
+{149}ind;
+{150}ldc 3;
+{151}les;
+{152}fjp 193;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{153}lda 0 37;
+{154}ldc 0;
+{155}sto;
+{156}lda 0 37;
+{157}ind;
+{158}ldc 4;
+{159}les;
+{160}fjp 186;
+
+\\Esto es una asignación
+
+{161}lda 0 17;
+{162}lda 0 36;
+{163}ind;
+{164}chk 0 2;
+{165}ixa 4;
+{166}lda 0 37;
+{167}ind;
+{168}chk 0 3;
+{169}ixa 1;
+{170}lda 0 33;
+{171}ind;
+{172}sto;
+
+\\Esto es una asignación
+
+{173}lda 0 33;
+{174}lda 0 33;
+{175}ind;
+{176}ldc 2;
+{177}add;
+{178}sto;
+
+\\Esto es una asignación
+
+{179}lda 0 37;
+{180}lda 0 37;
+{181}ind;
+{182}ldc 1;
+{183}add;
+{184}sto;
+{185}ujp 156;
+
+\\Esto es una asignación
+
+{186}lda 0 36;
+{187}lda 0 36;
+{188}ind;
+{189}ldc 1;
+{190}add;
+{191}sto;
+{192}ujp 148;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{193}lda 0 38;
+{194}ldc 0;
+{195}sto;
+{196}lda 0 38;
+{197}ind;
+{198}lda 0 31;
+{199}ind;
+{200}les;
+{201}fjp 239;
+
+\\Esto es un bucle for
+
+
+\\Esto es una declaracion
+
+{202}lda 0 39;
+{203}ldc 0;
+{204}sto;
+{205}lda 0 39;
+{206}ind;
+{207}lda 0 32;
+{208}ind;
+{209}les;
+{210}fjp 232;
+
+\\Esto es una asignación
+
+{211}lda 0 29;
+{212}ind;
+{213}lda 0 38;
+{214}ind;
+{215}ldo 32;
+{216}mul;
+{217}lda 0 39;
+{218}ind;
+{219}add;
+{220}ldc 1;
+{221}mul;
+{222}add;
+{223}ldc 0;
+{224}sto;
+
+\\Esto es una asignación
+
+{225}lda 0 39;
+{226}lda 0 39;
+{227}ind;
+{228}ldc 1;
+{229}add;
+{230}sto;
+{231}ujp 205;
+
+\\Esto es una asignación
+
+{232}lda 0 38;
+{233}lda 0 38;
+{234}ind;
+{235}ldc 1;
+{236}add;
+{237}sto;
+{238}ujp 196;
+{239}ujp 340;
+
+\\Esto es una declaracion de procedimiento
+
+{240}ssp 8;
+{241}sep 5;
+
+\\Esto es un if ó if con else
+
+{242}ldc 3;
+{243}ldc 3;
+{244}equ;
+{245}fjp 339;
+
+\\Esto es una declaracion
+
+{246}lda 0 5;
+{247}ldc 0;
+{248}sto;
+
+\\Esto es un bucle while
+
+{249}lda 0 5;
+{250}ind;
+{251}ldc 4;
+{252}les;
+{253}fjp 339;
+
+\\Esto es una declaracion
+
+{254}lda 0 6;
+{255}ldc 0;
+{256}sto;
+
+\\Esto es un bucle while
+
+{257}lda 0 6;
+{258}ind;
+{259}ldc 4;
+{260}les;
+{261}fjp 332;
+
+\\Esto es una declaracion
+
+{262}lda 0 7;
+{263}ldc 0;
+{264}sto;
+
+\\Esto es un bucle while
+
+{265}lda 0 7;
+{266}ind;
+{267}ldc 3;
+{268}les;
+{269}fjp 325;
+
+\\Esto es una asignación
+
+{270}lda 1 29;
+{271}ind;
+{272}lda 0 5;
+{273}ind;
+{274}ldo 32;
+{275}mul;
+{276}lda 0 6;
+{277}ind;
+{278}add;
+{279}ldc 1;
+{280}mul;
+{281}add;
+{282}lda 1 29;
+{283}ind;
+{284}lda 0 5;
+{285}ind;
+{286}ldo 32;
+{287}mul;
+{288}lda 0 6;
+{289}ind;
+{290}add;
+{291}ldc 1;
+{292}mul;
+{293}add;
+{294}ind;
+{295}lda 1 5;
+{296}lda 0 5;
+{297}ind;
+{298}chk 0 3;
+{299}ixa 3;
+{300}lda 0 7;
+{301}ind;
+{302}chk 0 2;
+{303}ixa 1;
+{304}ind;
+{305}lda 1 17;
+{306}lda 0 7;
+{307}ind;
+{308}chk 0 2;
+{309}ixa 4;
+{310}lda 0 6;
+{311}ind;
+{312}chk 0 3;
+{313}ixa 1;
+{314}ind;
+{315}mul;
+{316}add;
+{317}sto;
+
+\\Esto es una asignación
+
+{318}lda 0 7;
+{319}lda 0 7;
+{320}ind;
+{321}ldc 1;
+{322}add;
+{323}sto;
+{324}ujp 265;
+
+\\Esto es una asignación
+
+{325}lda 0 6;
+{326}lda 0 6;
+{327}ind;
+{328}ldc 1;
+{329}add;
+{330}sto;
+{331}ujp 257;
+
+\\Esto es una asignación
+
+{332}lda 0 5;
+{333}lda 0 5;
+{334}ind;
+{335}ldc 1;
+{336}add;
+{337}sto;
+{338}ujp 249;
+{339}retp;
+
+\\Esto es una llamada a procedimiento
+
+{340}mst 0;
+{341}cup 0 240;
+{342}stp;

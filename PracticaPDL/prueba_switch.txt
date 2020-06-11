@@ -4,6 +4,8 @@ struct persona{
 	int nombre;
 	int apellido;
 }
+
+#Podemos tener cualquier expresión en los case
 x =7*2%3;
 switch(x){
 	case 1:
@@ -18,6 +20,8 @@ switch(x){
 	default:
 	y=88;
 	}
+
+#Podemos hacer switch sobre cualquier expresion de tipo básico
 
 persona pepe;
 pepe.nombre = y;

@@ -1,0 +1,12 @@
+# Podemos combinar expresiones en partes derechas como queramos
+# div indica división entera (la única soportada por la máquina-P).
+
+# Ejemplos de expresiones enteras
+int x = 3 + 2 - 1 % 7 * 5 div (-1);
+int y = x + 3 * 5 % (x+3);
+
+# Ejemplos de expresiones booleanas
+bool a = x == 3 && x > y;
+bool b = a || x <= 3;
+bool c = !b;
+

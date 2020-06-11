@@ -1,0 +1,84 @@
+{0}ssp 10;
+{1}sep 7;
+
+\\Esto es una declaracion
+
+{2}lda 0 5;
+{3}ldc 3;
+{4}ldc 2;
+{5}add;
+{6}ldc 1;
+{7}ldc 7;
+{8}ldc 1;
+{9}ldc 7;
+{10}div;
+{11}mul;
+{12}sub;
+{13}ldc 5;
+{14}mul;
+{15}ldc 1;
+{16}neg;
+{17}div;
+{18}sub;
+{19}sto;
+
+\\Esto es una declaracion
+
+{20}lda 0 6;
+{21}lda 0 5;
+{22}ind;
+{23}ldc 3;
+{24}ldc 5;
+{25}mul;
+{26}lda 0 5;
+{27}ind;
+{28}ldc 3;
+{29}add;
+{30}ldc 3;
+{31}ldc 5;
+{32}mul;
+{33}lda 0 5;
+{34}ind;
+{35}ldc 3;
+{36}add;
+{37}div;
+{38}mul;
+{39}sub;
+{40}add;
+{41}sto;
+
+\\Esto es una declaracion
+
+{42}lda 0 7;
+{43}lda 0 5;
+{44}ind;
+{45}ldc 3;
+{46}equ;
+{47}lda 0 5;
+{48}ind;
+{49}lda 0 6;
+{50}ind;
+{51}grt;
+{52}and;
+{53}sto;
+
+\\Esto es una declaracion
+
+{54}lda 0 8;
+{55}lda 0 7;
+{56}ind;
+{57}lda 0 5;
+{58}ind;
+{59}ldc 3;
+{60}leq;
+{61}or;
+{62}sto;
+
+\\Esto es una declaracion
+
+{63}lda 0 9;
+{64}lda 0 8;
+{65}ind;
+{66}not;
+{67}sto;
+{68}stp;

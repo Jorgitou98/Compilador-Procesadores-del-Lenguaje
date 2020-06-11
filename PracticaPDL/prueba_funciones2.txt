@@ -1,3 +1,8 @@
+# Procedimientos anidados
+# Vemos como podemos acceder a cualquier variable 
+# del ámbito en el que se declaran
+
+
 int x = 0;
 proc p(int y){
 	proc q (int z){

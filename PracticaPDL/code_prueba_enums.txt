@@ -1,4 +1,4 @@
-{0}ssp 10;
+{0}ssp 11;
 {1}sep 3;
 
 \\Esto es una declaracion
@@ -22,14 +22,14 @@
 {9}ind;
 {10}ldc 0;
 {11}equ;
-{12}fjp 22;
+{12}fjp 17;
 
 \\Esto es una asignación
 
 {13}lda 0 6;
 {14}ldc 3;
 {15}sto;
-{16}ujp 37;
+{16}ujp 29;
 
 \\Esto es un if ó if con else
 
@@ -37,14 +37,14 @@
 {18}ind;
 {19}ldc 1;
 {20}equ;
-{21}fjp 33;
+{21}fjp 26;
 
 \\Esto es una asignación
 
 {22}lda 0 6;
 {23}ldc 4;
 {24}sto;
-{25}ujp 37;
+{25}ujp 29;
 
 \\Esto es una asignación
 
@@ -72,4 +72,18 @@
 {38}ldc 2;
 {39}add;
 {40}sto;
-{41}stp;
+
+\\Esto es un if ó if con else
+
+{41}lda 0 9;
+{42}ind;
+{43}ldc 1;
+{44}grt;
+{45}fjp 49;
+
+\\Esto es una asignación
+
+{46}lda 0 10;
+{47}ldc true;
+{48}sto;
+{49}stp;

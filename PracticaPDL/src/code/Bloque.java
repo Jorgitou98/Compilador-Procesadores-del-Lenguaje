@@ -10,7 +10,7 @@ public class Bloque {
 	private Map<String, List<Integer>> dimensionesVect = new HashMap<>();
 	private Map<String, Boolean> tablaEsEstatico = new HashMap<>();
 	private int tamBloque = 0;
-	private int ssp = 0;
+	private int ssp = 5;
 	private boolean funProc = false;
 	private Bloque padre;
 	private int posLista;
@@ -54,6 +54,7 @@ public class Bloque {
 		identificadores.put(id, nextDir);
 		tamBloque += tam;
 		nextDir += tam;
+		ssp += tam;
 
 	}
 
