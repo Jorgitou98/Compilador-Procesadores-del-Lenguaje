@@ -3,6 +3,7 @@ package asem;
 import java.util.List;
 
 import ast.Case;
+import ast.E;
 import ast.Iden;
 import ast.Ins;
 import ast.InsAsig;
@@ -20,11 +21,12 @@ import ast.P;
 import ast.Param;
 import ast.TipoE;
 import ast.TipoIns;
+import ast.TipoParam;
 import ast.TipoPuntero;
 import ast.TipoT;
 import ast.TipoVector;
 import ast.Tipos;
-
+import ast.Vector;
 import errors.GestionErroresTiny;
 
 public class ComprobadorTiposIns {
@@ -68,12 +70,15 @@ public class ComprobadorTiposIns {
 				if (parametros.size() == llamada.getArgumentos().size()) {
 					boolean coincide = true;
 					for (int i = 0; i < parametros.size(); ++i) {
+						if(parametros.get(i).getTipoDeParam() == TipoParam.REFERENCIA ) {
+							coincide = llamada.getArgumentos().get(i).isAsignable();
+						}
 						coincide = coincide && (parametros.get(i).getTipo())
 								.tipo() == compruebaExp.comprobacionTiposExp(llamada.getArgumentos().get(i)).tipo();
 					}
 					if (!coincide)
 						GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
-								"Error insCall: los parámetros no son del mismo tipo que los declarados");
+								"Error insCall: los parámetros no son del mismo tipo que los declarados o algún parametro por referencia no es asignable");
 
 					return coincide;
 				}
@@ -94,12 +99,18 @@ public class ComprobadorTiposIns {
 			case INSDEC:
 				InsDec insDec = (InsDec) ins;
 				if (insDec.getVar().tipo() == TipoE.IDEN) {
-					if (insDec.isConValorInicial())
+					if (insDec.isConValorInicial()) {
+						if(insDec.getTipo().tipo() == TipoT.VECTOR && !compruebaCreaVector(insDec.getTipo(), insDec.getValorInicial())) {
+							GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
+									"Error tipos InsDec: un vector solo puede ser inicializado con la funcion creaVector(valorIni, tam))");
+							return false;
+						}
 						if (compruebaTiposDecAsig(insDec.getTipo(), compruebaExp.comprobacionTiposExp(insDec.getValorInicial())))
 							return true;
 						else
 							GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
 									"Error tipos InsDec: el tipo del valor inicial no coincide con el tipo declarado");
+					}
 					else {
 						if (insDec.getTipo().tipo() == TipoT.VECTOR) {
 							GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
@@ -126,15 +137,32 @@ public class ComprobadorTiposIns {
 				return comprobacionTipos(insFor.getInst()) && correcto;
 			case INSFUN:
 				InsFun insFun = (InsFun) ins;
+				boolean sinVectores = true;
+				for(Param p: insFun.getParametros()) {
+					if(p.getTipo().tipo() == TipoT.VECTOR) {
+						sinVectores = false;
+						GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
+								"Error tipos InsFun: en el parámetro " + ((Iden)p.getIden()).id() +". Los parámetros de una función no pueden ser de tipo vector");
+					}
+				}
 				if(compruebaExp.comprobacionTiposExp(insFun.getValorReturn()).tipo() == insFun.getTipoReturn().tipo()){
-					return comprobacionTipos(((InsFun) ins).getInstr());
+					return sinVectores && comprobacionTipos(((InsFun) ins).getInstr());
 				}
 				else 
 					GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
 							"Error tipos InsFun: El tipo del return no se corresponde con el de la función");
 				break;
 			case INSPROC:
-				return comprobacionTipos(((InsProc) ins).getInstr());
+				InsProc insProc = (InsProc) ins;
+				boolean sinVectoresP = true;
+				for(Param p: insProc.getParametros()) {
+					if(p.getTipo().tipo() == TipoT.VECTOR) {
+						sinVectoresP = false;
+						GestionErroresTiny.errorSemantico(nodo.getFila(), nodo.getColumna(), 
+								"Error tipos InsProc: en el parámetro " + ((Iden)p.getIden()).id() +". Los parámetros de un procedimiento no pueden ser de tipo vector");
+					}
+				}
+				return sinVectoresP && comprobacionTipos(insProc.getInstr());
 			case INSSTRUCT:
 				InsStruct insStruct = (InsStruct) ins;
 				boolean correctoStruct = true;
@@ -207,6 +235,16 @@ public class ComprobadorTiposIns {
 			return compruebaTiposDecAsig(((TipoPuntero) v1).getTipoPuntero(), ((TipoPuntero) v2).getTipoPuntero());
 		} else
 			return false;
+	}
+	
+	private boolean compruebaCreaVector(Tipos tipo, E exp) {
+		if(tipo.tipo() == TipoT.VECTOR) {
+			if(exp.tipo() == TipoE.VECTOR) {
+				return compruebaCreaVector(((TipoVector)tipo).getTipoVector(), ((Vector)exp).getValorIni());
+			}
+			else return false;
+		}
+		else return true;
 	}
 
 }

@@ -1,4 +1,20 @@
+#int x = 3;
+#vector<vector<int>> v = creaVector(creaVector(0, x+1), x*2);
+#int y = v.size;
+#int z = v[2].size;
+#
 int x = 3;
-vector<int> v = creaVector(0, 4);
-int y = v.size;
+
+struct persona{
+	int nombre;
+	int apellido;
+	vector<int> numeros = creaVector(0, x);
+}
+persona pepe;
+
+#int a = 3*pepe.numeros.size;
+
+pepe.numeros[0] = 33;
+
+
 

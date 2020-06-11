@@ -73,7 +73,10 @@ public class Bloque {
 	public int queTamano(String tipo) {
 		if (tamanosTipos.containsKey(tipo))
 			return tamanosTipos.get(tipo);
-		return padre.queTamano(tipo);
+		if(padre!=null) {
+			return padre.queTamano(tipo);
+		}
+		return 1;
 	}
 
 	public int getPosLista() {

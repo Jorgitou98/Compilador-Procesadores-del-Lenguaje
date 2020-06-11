@@ -220,7 +220,7 @@ public class AnalizadorSemantico {
 
 			} else if (exp.tipo() == TipoE.VECTOR) {
 				Vector vector = (Vector) exp;
-				vincula(vector.getTam()); // Como es un entero no hace falta vincular
+				vincula(vector.getTam());
 				vincula(vector.getValorIni());
 			} else if (exp.tipo() == TipoE.LLAMADAFUN) {
 				LlamadaFun llamada = (LlamadaFun) exp;

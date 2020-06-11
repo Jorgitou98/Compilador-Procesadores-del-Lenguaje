@@ -144,7 +144,14 @@ public class GeneradorCodigo {
 			insertIns("neg", 0);
 			break;
 		case SIZE:
-			generaCodigoL(exp);
+			Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Pair<Integer, Integer>>>par = calculaSize(exp.opnd1());
+			if(par.getValue().getKey()) {
+				insertIns("ldc " + par.getKey().getKey().get(par.getKey().getValue()), 1);
+			}
+			else {
+				insertIns("lda " + (bloqueActGenera().getPa() + 1 - par.getValue().getValue().getValue()) + " " + (2 + par.getValue().getValue().getKey() + par.getKey().getValue()), 1);
+				insertIns("ind", 0);
+			}
 			break;
 		case SUMA:
 			generaCodigoExp(exp.opnd1());
@@ -232,6 +239,8 @@ public class GeneradorCodigo {
 
 		} else if (exp.tipo() == TipoE.PUNTO) {
 			par = generaCodigoL(exp.opnd1());
+			int despl = bloqueActGenera().dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) exp.opnd2()).id());
+			insertIns("inc " + despl, 0);
 			for (Ins dec : ((InsStruct) ((Punto) exp).getTipo().getRef()).getDeclaraciones()) {
 				InsDec insDec = (InsDec) dec;
 				if (((Iden) insDec.getVar()).id().equals(((Iden) exp.opnd2()).id())
@@ -241,23 +250,25 @@ public class GeneradorCodigo {
 						par.getKey().setKey(lista);
 					} else {
 						List<Integer> l = new ArrayList<>();
-						l.add(0, bloqueActGenera().queTamano(((Iden) insDec.getVar()).id()));
+						l.add(0, bloqueActGenera().queTamano(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) insDec.getVar()).id()));
 						l.add(1, utils.tipoFinalSize(utils.tipoFinal(insDec.getTipo())));
 						par.getKey().setKey(l);
+						par.getValue().setValue(par.getValue().getValue() + bloqueActGenera().dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden)insDec.getVar()).id()));
+						insertIns("ind", 0);
 					}
 					par.getKey().setValue(0);
 					par.getValue().setKey(utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial()));
 					par.getValue().setValue(bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()));
 				}
+				else {
+					
+				}
 			}
-			int despl = bloqueActGenera()
-					.dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden) exp.opnd2()).id());
-			insertIns("inc " + despl, 0);
 
 		} else if (exp.tipo() == TipoE.ACCESOPUNTERO) {
 			par = generaCodigoL(exp.opnd1());
 			insertIns("ind", 0);
-		} else if (exp.tipo() == TipoE.SIZE) {
+		/*} else if (exp.tipo() == TipoE.SIZE) {
 			par = generaCodigoL(exp.opnd1());
 			// Si es estático (esta mal!!!!)
 			if (par.getValue().getKey()) {
@@ -266,7 +277,7 @@ public class GeneradorCodigo {
 				insertIns("ldc " + (2 + par.getKey().getValue()), 1);
 				insertIns("add", -1);
 				insertIns("ind", 0);
-			}
+			}*/
 		}
 		return par;
 
@@ -414,18 +425,6 @@ public class GeneradorCodigo {
 							v = ((Vector) v).getValorIni();
 							dirTam++;
 						}
-
-						// Doy valor inicial
-						/*
-						 * if (tipoFinal(insDec.getTipo()).tipo() != TipoT.USUARIO) {
-						 * asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
-						 * bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()), -1,
-						 * calculaValorIni(insDec.getValorInicial()), 0); } else {
-						 * asignacionMultiple((Iden) insDec.getVar(), insDec.getTipo(),
-						 * bloqueActGenera().dirVar(((Iden) insDec.getVar()).id()),
-						 * bloqueActGenera().dirVar(stringPuntos(calculaValorIni(insDec.getValorInicial(
-						 * )))), calculaValorIni(insDec.getValorInicial()), 0); }
-						 */
 					}
 
 				} else if (insDec.getTipo().tipo() == TipoT.USUARIO) {
@@ -653,6 +652,46 @@ public class GeneradorCodigo {
 			return calculaValorIni(((Vector) v).getValorIni());
 		} else
 			return v;
+	}
+	
+	private Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Pair<Integer, Integer>>> calculaSize(E exp) {
+		Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Pair<Integer,Integer>>> par = new Pair<>(new Pair<>(null, null), new Pair<>(null, new Pair<>(null, null)));
+		if (exp.tipo() == TipoE.IDEN) {
+			Iden id;
+			if (((Iden) exp).getRef().tipoNodo() == TipoN.INS) {
+				id = ((Iden) ((InsDec) ((Iden) exp).getRef()).getVar());
+				// Si no es vector me devuelve un null y no pasa nada (está bien así)
+				List<Integer> lista = bloqueActGenera().dimensionVect(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id());
+				par = new Pair<>(new Pair<>(lista, 0),
+						new Pair<>(
+								bloqueActGenera().esEstatico(((Iden) ((InsDec) ((Iden) exp).getRef()).getVar()).id()),
+								new Pair<>(bloqueActGenera().dirVar(((Iden) exp).id()), id.getPa())));
+			} else {
+				id = ((Iden) ((Param) ((Iden) exp).getRef()).getIden());
+			}
+		} else if (exp.tipo() == TipoE.CORCHETES) {
+			par = calculaSize(exp.opnd1());
+			par.getKey().setValue(par.getKey().getValue() + 1);
+		
+		} else if (exp.tipo() == TipoE.PUNTO) {
+			par = calculaSize(exp.opnd1());
+			for (Ins dec : ((InsStruct) ((Punto) exp).getTipo().getRef()).getDeclaraciones()) {
+				InsDec insDec = (InsDec) dec;
+				if (((Iden) insDec.getVar()).id().equals(((Iden) exp.opnd2()).id())
+						&& insDec.getTipo().tipo() == TipoT.VECTOR) {
+					if (utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial())) {
+						List<Integer> lista = utils.dimensionesVector(insDec.getTipo(), insDec.getValorInicial());
+						par.getKey().setKey(lista);
+					}
+	
+					par.getKey().setValue(0);
+					par.getValue().setKey(utils.esVectorEstatico(insDec.getTipo(), insDec.getValorInicial()));
+					par.getValue().getValue().setKey(par.getValue().getValue().getKey() + bloqueActGenera().dirVar(((Punto) exp).getTipo().getNombreTipo() + "." + ((Iden)insDec.getVar()).id()));
+					par.getValue().getValue().setValue(((Iden) insDec.getVar()).getPa()+1);
+				}
+			}
+		}
+		return par;
 	}
 
 }

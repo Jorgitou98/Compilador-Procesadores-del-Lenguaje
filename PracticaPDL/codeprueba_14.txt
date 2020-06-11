@@ -9,23 +9,30 @@
 
 \\Esto es una declaracion
 
-{5}lda 0 6;
-{6}ldc 0;
-{7}sto;
-{8}lda 0 7;
-{9}ldc 0;
+{5}lda 0 9;
+{6}lda 0 5;
+{7}ind;
+{8}ldc 1;
+{9}mul;
 {10}sto;
 {11}lda 0 8;
-{12}ldc 0;
-{13}sto;
-{14}lda 0 9;
-{15}ldc 0;
-{16}sto;
+{12}lda 0 9;
+{13}ind;
+{14}new;
+{15}lda 0 10;
+{16}lda 0 5;
+{17}ind;
+{18}sto;
 
-\\Esto es una declaracion
+\\Esto es una asignación
 
-{17}lda 0 10;
-{18}lda 0 6;
-{19}ldc 4;
-{20}sto;
-{21}stp;
+{19}lda 0 6;
+{20}inc 2;
+{21}ind;
+{22}ldc 0;
+{23}ldc 1;
+{24}mul;
+{25}add;
+{26}ldc 33;
+{27}sto;
+{28}stp;
