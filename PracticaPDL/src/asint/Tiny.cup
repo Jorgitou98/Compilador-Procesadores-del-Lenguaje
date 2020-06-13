@@ -298,7 +298,7 @@ Parametros ::= Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
 		RESULT = lista; :};
 	 
 Parametros ::= Tipo:tipoParam IDEN:lexDeIden ParamElige:lista
-	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), false, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 
 Parametros ::= 
@@ -309,7 +309,7 @@ ParamElige ::= COMA Tipo:tipoParam AMPERSAND IDEN:lexDeIden ParamElige:lista
 		RESULT = lista; :};
 		 
 ParamElige ::= COMA Tipo:tipoParam IDEN:lexDeIden ParamElige:lista  
-	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), false, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
+	{: lista.add(0, as.param(tipoParam, TipoParam.VALOR, as.iden(lexDeIden.getLexema(), true, lexDeIden.getFila(), lexDeIden.getColumna()), lexDeIden.getFila(), lexDeIden.getColumna()));
 		RESULT = lista; :};
 		
 ParamElige ::= 

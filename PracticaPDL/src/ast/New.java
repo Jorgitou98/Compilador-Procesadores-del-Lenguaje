@@ -61,7 +61,7 @@ public class New extends E {
 			for (int i = 0; i < "   \\__Tamanos".length(); ++i) {
 				nextValor += " ";
 			}
-			s += "[" + tamanos.get(0);
+			s += nextValor+ "\\__[" + tamanos.get(0);
 			for (int i = 1; i < tamanos.size(); ++i) {
 				s += ", " + tamanos.get(i);
 			}

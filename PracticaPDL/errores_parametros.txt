@@ -10,9 +10,13 @@ proc p1(int & x, vector<int>v1, vector<int> & v2){
 vector<int> v = creaVector(0, 3);
 vector<int> w = creaVector(5, 4);
 
-proc p1(int & x){
+proc p2(int & x){
 	x = 7;
 }
-call p1(3*2-4+x);
+
+# Pasamos como parámetro por referencia una expresión 
+# no asignable
+
+call p2(3*2-4);
 
 vector<vector<int>> v = creaVector(v, 3);

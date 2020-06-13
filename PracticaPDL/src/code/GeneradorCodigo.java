@@ -169,6 +169,29 @@ public class GeneradorCodigo {
 			break;
 		}
 	}
+	
+	/*
+	 * La función devuelve un Par de pares. Esxplicamos que es cada uno de los valores retornados:
+	 * 	- Par1 (Key):
+	 * 		- Elemento 1 (Key):
+	 * 				- Para vectores estáticos: lista con el tamaño por cada una de las dimensiones
+	 * 				- Para vectores dinámicos: lista de tamaño 2:
+	 * 						- pos 0: número de dimensiones del vector o matriz dinámica
+	 * 						- pos 1: tamaño de los elementos de la matriz (si es de tipo básico 1, si
+	 * 								 es un registro el tamaño del mismo
+	 * 				- Para elementos que no sean vectores va a null
+	 * 		- Elemento 2 (Value):
+	 * 				- Índice de la dimensión de la matriz o vector (estático o dinámico) en la que estamos
+	 * 				- La idea es que el identificador lo pone a 0 y cada operador corchetes que aplicamos lo
+	 * 				  incrementa en 1
+	 * 				- A null si el identificador final no se corresponde con un vector o matriz dinámica.
+	 * 	- Par 2 (Value):
+	 * 		- Elemento 1 (Key):
+	 * 				- Booleano que indica si se trata de un vector estático o dinámico
+	 * 				- A null si el identificador final no se corresponde con un vector
+	 * 		- Elemento 2 (value):
+	 * 				- Dirección estática de comienzo del vector en memoria	
+	 */
 
 	private Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Integer>> generaCodigoL(E exp) {
 		Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Integer>> par = new Pair<>(new Pair<>(null, null),
@@ -647,6 +670,32 @@ public class GeneradorCodigo {
 		} else
 			return v;
 	}
+	
+	/*
+	 * La función devuelve un Par de pares. Esxplicamos que es cada uno de los valores retornados:
+	 * 	- Par1 (Key):
+	 * 		- Elemento 1 (Key):
+	 * 				- Para vectores estáticos: lista con el tamaño por cada una de las dimensiones
+	 * 				- Para vectores dinámicos: lista de tamaño 2:
+	 * 						- pos 0: número de dimensiones del vector o matriz dinámica
+	 * 						- pos 1: tamaño de los elementos de la matriz (si es de tipo básico 1, si
+	 * 								 es un registro el tamaño del mismo
+	 * 				- Para elementos que no sean vectores va a null
+	 * 		- Elemento 2 (Value):
+	 * 				- Índice de la dimensión de la matriz o vector (estático o dinámico) en la que estamos
+	 * 				- La idea es que el identificador lo pone a 0 y cada operador corchetes que aplicamos lo
+	 * 				  incrementa en 1
+	 * 				- A null si el identificador final no se corresponde con un vector o matriz dinámica.
+	 * 	- Par 2 (Value):
+	 * 		- Elemento 1 (Key):
+	 * 				- Booleano que indica si se trata de un vector estático o dinámico
+	 * 				- A null si el identificador final no se corresponde con un vector
+	 * 		- Elemento 2 (Value) PAR:
+	 * 				- Elemento 1 (Key):	
+	 * 					- Dirección estática de comienzo del vector en memoria
+	 * 				- Elemnto 2 (Value):
+	 * 					- Profundidad de anidamiento del director final (para poder hacer luego el load del tamaño correctamente)	
+	 */
 	
 	private Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Pair<Integer, Integer>>> calculaSize(E exp) {
 		Pair<Pair<List<Integer>, Integer>, Pair<Boolean, Pair<Integer,Integer>>> par = new Pair<>(new Pair<>(null, null), new Pair<>(null, new Pair<>(null, null)));
