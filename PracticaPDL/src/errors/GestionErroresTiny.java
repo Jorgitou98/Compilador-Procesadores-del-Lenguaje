@@ -14,18 +14,23 @@ public class GestionErroresTiny {
 	}
 
 	public static void errorSintactico(UnidadLexica unidadLexica) {
-		System.err.println("***ERROR sintactico. Fila: " + unidadLexica.fila() + ", Columna: " + unidadLexica.columna()
-				+ " Elemento inesperado " + unidadLexica.lexema());
-		// System.exit(1);
+		if (numErroresSintacticos >= 15) {
+			System.out.println("Exceso de errores sintácticos. 15 errores encontrados. Compilación abortada");
+			System.exit(1);
+		}
+		else {
+			System.err.println("***ERROR sintactico. Fila: " + unidadLexica.fila() + ", Columna: "
+					+ unidadLexica.columna() + " Elemento inesperado " + unidadLexica.lexema());
+		}
 	}
 
 	public static void errorSemantico(int fila, int columna, String mensaje) {
 		numErroresSemanticos++;
-		if(numErroresSemanticos >= 15) {
+		if (numErroresSemanticos >= 15) {
 			System.out.println("Exceso de errores semánticos. 15 errores encontrados. Comprobación abortada");
 			System.exit(1);
 		}
 		System.err.println("***ERROR semantico. Fila: " + fila + " Columna: " + columna + ". \n" + mensaje + '\n');
 	}
-	
+
 }

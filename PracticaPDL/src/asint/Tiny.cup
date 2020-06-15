@@ -105,7 +105,7 @@ InsCond ::= IF: ifR Exp0:cond LLAVESAP P:insIf LLAVESCIERRE ELSE LLAVESAP P:insE
 	{: RESULT = as.insIfConElse(cond, insIf, insElse, ifR.getFila(), ifR.getColumna()); :};
 	
 InsCond ::= IF error LLAVESCIERRE
-	{: System.err.println("Error en la condición del if\n"); GestionErroresTiny.numErroresSintacticos++;  GestionErroresTiny.numErroresSintacticos++; RESULT = null; :};
+	{: System.err.println("Error en la condición del if\n"); GestionErroresTiny.numErroresSintacticos++; RESULT = null; :};
 
 InsCond ::= IF Exp0 error LLAVESCIERRE
 	{: System.err.println("Error en el cuerpo del if/else\n"); GestionErroresTiny.numErroresSintacticos++;  RESULT = null; :};

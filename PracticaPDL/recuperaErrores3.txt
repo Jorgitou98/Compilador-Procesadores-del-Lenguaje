@@ -1,9 +1,9 @@
 
-# Errores varios en una declaració
+# Errores varios en una declaración
 
 int x = (x+++y)
 
-# Error
+# Error sin timpo a recuperarse del anterior
 %++ 6;
 if(x>3){
 	hola.adios = 3;
