@@ -2,7 +2,7 @@
 
 Esta práctica para la asignatura de **Procesadores del Lenguaje** consistió en el desarrollo de un compilador que además generase código máquina ejecutable para un lenguaje de programación escogido por nosotros, que al menos debía ser Turing completo.
 
-Se recomienda consultar la [memoria de la práctica]() que explica las instrucciones de las que goza el lenguaje reconocido, su sintaxis exacta y diversos detalles de implementación relevantes como la gestión y recuperación de errores.
+Se recomienda consultar la [memoria de la práctica](https://github.com/Jorgitou98/PracticasProcesadoresDelLenguaje/blob/master/Memoria%20de%20la%20pr%C3%A1ctica.pdf) que explica las instrucciones de las que goza el lenguaje reconocido, su sintaxis exacta y diversos detalles de implementación relevantes como la gestión y recuperación de errores.
 
 ## Fases de desarrollo
 
@@ -15,7 +15,7 @@ La compilación del lenguaje consta fundamentalmente de 3 fases:
 | Semántica | Tabla de símbolos| **Vinculación** de apariciones de uso de variables y funciones con sus instrucciones de declaración y **comprobación estática de tipos** | `asem` |
 
 
-Además, siempre y cuando la compilación se supere sin errores se genera código para la [***máquina P***]() (desarrollada en Haskell por un profesor), que sobre una memoria de 100 posiciones simula el comportamiento del programa. Incluyendo un espacio de ***Heap*** para emular gestión de memoria dinámica que permite nuestro lenguaje mediante la instrucióon ***new***.
+Además, siempre y cuando la compilación se supere sin errores se genera código para la [***máquina P***](https://github.com/Jorgitou98/PracticasProcesadoresDelLenguaje/blob/master/maquinaP.zip) (desarrollada en Haskell por un profesor), que sobre una memoria de 100 posiciones simula el comportamiento del programa. Incluyendo un espacio de ***Heap*** para emular gestión de memoria dinámica que permite nuestro lenguaje mediante la instrucióon ***new***.
 
 La generación de código se realiza en el paquete ***code*** y consta de 2 fases:
 
@@ -24,7 +24,7 @@ La generación de código se realiza en el paquete ***code*** y consta de 2 fase
 | Asignación estática de memoria | Establecer las **direcciones de memoria** de la máquina P donde se almacenarán las variables de programa calculando el tamaño de los tipos definidos por el usuario (*struct*, *typedef*...)  | `AsignadorDirecciones.java`
 | Generación de instrucciones máquina | Escribir en un fichero de salida las instrucciones máquina que al ser ejecutadas sobre la *máquina P* emulan el comportamiento de la instrucción reconocida en la compilación  | `GeneradorCodigo.java` |
 
-Se recomienda consultar el [repertorio de instrucciones máquina]() y algunos de los [patrones de generación]() de las sentencias más habituales en los lenguajes de programación, que se han utilizado en esta fase de la práctica.
+Se recomienda consultar el [repertorio de instrucciones máquina](https://github.com/Jorgitou98/PracticasProcesadoresDelLenguaje/blob/master/Instrucciones%20de%20la%20maquina%20p.pdf) y algunos de los [patrones de generación](https://github.com/Jorgitou98/PracticasProcesadoresDelLenguaje/blob/master/Patrones%20de%20generacion%20de%20codigo.pdf) de las sentencias más habituales en los lenguajes de programación, que se han utilizado en esta fase de la práctica.
 
 ## Funcionalidades más importantes del compilador y extras
 A continuación se enumeran algunas de los aspectos más importantes del compilador:
