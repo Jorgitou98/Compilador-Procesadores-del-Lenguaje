@@ -33,23 +33,23 @@ A continuación se enumeran algunas de los aspectos más importantes del compila
 
 - Se muestran la **fila** y **columna** asociadas al *token* donde se ha producido el error y un mensaje suficientemente descriptivo que permita localizarlo y solventarlo.
 
-- Se permiten **vectores dinámicos** en el sentido de vectores suyo tamaño solo es conocido en tiempo de compilación.
+- Se permiten **vectores dinámicos** en el sentido de vectores cuyo tamaño solo es conocido en tiempo de ejecución.
 
 - El lenguaje permite **anidamiento arbitrario de funciones y procedimientos** (i.e. procedimientos o funciones locales al ámbito de otro procedimiento o función).
 
-- Ausencia de una función de inicio de la ejecución (***main***). El programa se ejecuta *de arriba a abajo* según el usuario lo escribe.
+- Ausencia de una función de inicio de la ejecución (***main***). El programa se ejecuta *de arriba a abajo* según lo escribe el usuario.
 
-- Cierto ***azúcar sintáctico*** que haga mas legible y cómoda la programación en nuestro lenguaje. Por ejemplo el bucle ***for*** que podría ser siempre simulado con un *while* o la instrucción ***switch*** que puede obetnerse a partir de sucesivos *if's*.
+- Cierto ***azúcar sintáctico*** que hace legible y cómoda la programación en nuestro lenguaje. Por ejemplo el bucle ***for*** que podría ser siempre simulado con un *while* o la instrucción ***switch*** que puede obtenerse a partir de sucesivos *if's*.
 
-- Alguna **función predefinida** para la que se genera automáticamente código que desempeña labores rutinarias y habituales para simplificar la labor al usuario. 
-	- La función `CreaVector(Tamaño, Valor Inicial)` para dar tamaño y valores inicial a las posiciones de un vector.
+- Alguna **función predefinida** para la que se genera automáticamente código que desempeña labores rutinarias y habituales para simplificar la labor del usuario. 
+	- La función `CreaVector(Tamaño, Valor Inicial)` para dar tamaño y valor inicial a las posiciones de un vector.
 	
-	- Una función ***size*** que devuelva automáticamente el tamaño de un vector mediante la sintaxis: `vector.size()`
+	- Una función ***size*** que devuelve automáticamente el tamaño de un vector mediante la sintaxis: `vector.size()`
 	
-- Visualización por la salida estándar de java de una representación intuitiva y detallada del ***AST*** (árbol de sintaxis abstracta) que resume la estructura del programa compilado.
+- Visualización por la salida estándar de *Java* de una representación intuitiva y detallada del ***AST*** (árbol de sintaxis abstracta) que resume la estructura del programa compilado.
 
 ## Juegos de prueba del compilador
 
-La práctica incluye alrededor de une veintena de **ficheros de prueba** tanto con ejemplos de programas correctos que generan un fichero de salida en *código P*, como con errores de diversa índole para probar la correcta detección y recuperación de los mismos.
+La práctica incluye alrededor de une veintena de **ficheros de prueba**, tanto con ejemplos de programas correctos que generan un fichero de salida en *código P*, como con errores de diversa índole para probar la correcta detección y recuperación de los mismos.
 
-Para los ficheros correctos se genera como salida u fichero con idéntico nombre que el de entrada precedido de la palabra *code*.
+Para los ficheros correctos se genera como salida un fichero con idéntico nombre que el de entrada precedido de la palabra *code*.
